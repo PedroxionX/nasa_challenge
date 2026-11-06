@@ -76,6 +76,7 @@ class Provenance:
     source_annual_values: dict[int, float] = field(default_factory=dict)  # p. ej. el "mes 13" de POWER
     notes: list[str] = field(default_factory=list)
     extra: dict[str, Any] = field(default_factory=dict)
+    origin: str = "unknown"  # "synthetic" | "nasa_power" | "csv": decide advertencias y redacción
 
     @staticmethod
     def now_utc() -> str:

@@ -61,8 +61,11 @@ def location_phrase(res: TrendResult) -> str:
     loc = res.location
     if res.is_synthetic:
         return f"el **{loc.name}** (ficticio)"
-    return (f"el punto de cuadrícula de NASA POWER más cercano a **{loc.name}** "
-            f"({loc.lat:.2f}°, {loc.lon:.2f}°)")
+    if res.provenance.origin == "nasa_power":
+        return (f"el punto de cuadrícula de NASA POWER más cercano a **{loc.name}** "
+                f"({loc.lat:.2f}°, {loc.lon:.2f}°)")
+    coords = f" ({loc.lat:.2f}°, {loc.lon:.2f}°)" if math.isfinite(loc.lat) and math.isfinite(loc.lon) else ""
+    return f"**{loc.name}**{coords} (datos cargados desde CSV; fuente declarada: {res.provenance.source})"
 
 
 def per_decade(res: TrendResult) -> str:
@@ -138,9 +141,13 @@ def explain_trend(res: TrendResult) -> dict[str, list[str] | str]:
     nc = [CAUSAL_DISCLAIMER, "Que la tendencia vaya a continuar: esto no es un pronóstico."]
     if res.is_synthetic:
         nc.insert(0, "Nada sobre el mundo real: son **datos sintéticos** generados para practicar.")
-    else:
+    elif res.provenance.origin == "nasa_power":
         nc.append("Que el resultado represente a toda la ciudad, el estado o el país: es una celda de "
                   "~50–60 km de un reanálisis, no una estación ni un promedio regional.")
+    if res.provenance.origin == "csv":
+        spatial = res.provenance.extra.get("spatial_resolution") or "no declarada"
+        nc.append(f"Que represente un área distinta de la que cubren los datos (resolución declarada: {spatial}).")
+        nc.append("Que la procedencia sea la declarada: el laboratorio no puede verificar un archivo subido.")
     if res.step is not None and res.step.favors_step:
         nc.append(f"Que el cambio sea gradual: un salto alrededor de {res.step.change_year} explica mejor los datos.")
     if res.processing.incomplete_years:

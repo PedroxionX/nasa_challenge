@@ -97,11 +97,20 @@ def compare_results(ra: TrendResult, rb: TrendResult) -> ComparisonResult:
     checks.append(ComparabilityCheck(f"Al menos {MIN_YEARS_FOR_TEST} años comunes", len(common) >= MIN_YEARS_FOR_TEST,
                                      f"{len(common)} años"))
     notes: list[str] = []
-    ca, cb = merra2_cell(ra.location.lat, ra.location.lon), merra2_cell(rb.location.lat, rb.location.lon)
-    if ca is not None and ca == cb:
-        checks.append(ComparabilityCheck("Celdas de cuadrícula distintas", False,
-                                         "Ambos puntos caen en la misma celda MERRA-2: los datos serían idénticos."))
-    comparable = all(c.ok for c in checks[:4]) and (ca is None or ca != cb)
+    same_cell = False
+    if ra.provenance.origin == "nasa_power" and rb.provenance.origin == "nasa_power":
+        ca, cb = merra2_cell(ra.location.lat, ra.location.lon), merra2_cell(rb.location.lat, rb.location.lon)
+        same_cell = ca is not None and ca == cb
+        if same_cell:
+            checks.append(ComparabilityCheck("Celdas de cuadrícula distintas", False,
+                                             "Ambos puntos caen en la misma celda MERRA-2: los datos serían idénticos."))
+    va_map = dict(zip(ra.core.years.astype(int), ra.core.values))
+    vb_map = dict(zip(rb.core.years.astype(int), rb.core.values))
+    identical = bool(common) and all(va_map[y] == vb_map[y] for y in common)
+    if identical:
+        checks.append(ComparabilityCheck("Series distintas", False,
+                                         "A y B tienen exactamente los mismos valores (¿el mismo archivo dos veces?)."))
+    comparable = all(c.ok for c in checks[:4]) and not same_cell and not identical
     nan = float("nan")
     if not comparable:
         return ComparisonResult(checks, False, common, only_a, only_b, None, None, None, nan, nan, nan,

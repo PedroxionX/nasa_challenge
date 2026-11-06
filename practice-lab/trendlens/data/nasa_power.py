@@ -121,6 +121,7 @@ def parse_power_monthly(payload: dict, variable: VariableSpec, location: Locatio
         is_synthetic=False,
         retrieved_at_utc=retrieved_at_utc,
         request_url=request_url,
+        origin="nasa_power",
         api_version=((header.get("api") or {}).get("version")),
         grid_cell={"lon": coords[0], "lat": coords[1], "elevation_m": coords[2] if len(coords) > 2 else None},
         from_cache=from_cache,

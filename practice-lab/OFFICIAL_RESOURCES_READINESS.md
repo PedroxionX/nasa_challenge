@@ -44,10 +44,15 @@ Toda fuente nueva debe producir un `SeriesBundle` (`trendlens/schema.py`) con es
 
 Más un objeto `Provenance` con URL, fecha de consulta, versión, celda, semilla y notas.
 
-Adaptadores: `data/synthetic.py`, `data/nasa_power.py` (JSON) y `data/csv_source.py` (CSV mensual genérico, ya probado).
+Adaptadores: `data/synthetic.py`, `data/nasa_power.py` (JSON) y `data/csv_source.py` (CSV mensual genérico,
+probado y **conectado a la interfaz** como modo «CSV propio»).
 
 ### Cómo se integraría cada formato
-- **CSV:** `load_monthly_csv(path, variable, location, unit=..., source_name=..., product=...)`. Exige declarar la unidad y fechas AAAA-MM-01.
+- **CSV:** en la interfaz, modo «CSV propio». En código: `load_monthly_csv(contenido, variable, ubicación, unit=...,
+  source_name=..., product=..., fmt=CsvFormat(...))`. Exige declarar unidad y fuente. Acepta fechas AAAA-MM,
+  AAAA-MM-DD o AAAAMM, y fechas a mitad de mes con la opción explícita.
+  **Prueba rápida del día 13:** exportar la serie mensual de un punto (p. ej. desde Giovanni) a CSV largo, cargarla en
+  el modo CSV y comparar contra NASA POWER en el mismo lugar. Si falla, el mensaje de error dice qué convertir.
 - **JSON:** escribir `parse_<fuente>()` siguiendo el modelo de `parse_power_monthly()`: validar estructura, unidad y relleno, y separar los agregados.
 - **NetCDF (pendiente):** `xarray.open_dataset` → `ds[var].sel(lat=..., lon=..., method="nearest")` → `to_dataframe()` → esquema.
   Atender `units`, `_FillValue`, `scale_factor` y `add_offset`, el calendario de `time` y la longitud 0–360 vs. −180–180.

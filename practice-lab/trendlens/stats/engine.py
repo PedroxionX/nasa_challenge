@@ -193,9 +193,18 @@ def analyze_bundle(bundle: SeriesBundle, start_year: int, end_year: int, alpha: 
 def build_warnings(res: TrendResult) -> list[TrendWarning]:
     w: list[TrendWarning] = []
     core, rep = res.core, res.processing
+    origin = res.provenance.origin
     if res.is_synthetic:
         w.append(TrendWarning("info", "synthetic", "DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN. No describen ningún lugar real."))
-    else:
+    if origin == "csv":
+        ex = res.provenance.extra
+        w.append(TrendWarning(
+            "info", "user_data",
+            f"Datos cargados desde CSV («{ex.get('filename') or 'archivo sin nombre'}»). Fuente declarada: "
+            f"{res.provenance.source}; resolución espacial declarada: {ex.get('spatial_resolution') or 'no declarada'}. "
+            "El laboratorio no verificó esa procedencia: las conclusiones valen lo que valga la declaración.",
+        ))
+    elif origin == "nasa_power":
         w.append(TrendWarning(
             "info", "grid_point",
             "El valor corresponde a la celda de la cuadrícula del producto (MERRA-2: ½° × ⅝°, ~50–60 km) que "

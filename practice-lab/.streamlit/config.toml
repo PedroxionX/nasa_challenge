@@ -8,6 +8,7 @@ font = "sans serif"
 
 [server]
 headless = true
+maxUploadSize = 5  # MB; una serie mensual por punto ocupa KB
 runOnSave = false
 
 [browser]

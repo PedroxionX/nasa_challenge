@@ -40,11 +40,18 @@ def header(title: str, subtitle: str, ctx: AnalysisContext, active: int) -> None
         chips.append(f'<span class="tl-step {cls}">{i + 1}. {name}</span>')
     st.markdown('<div class="tl-steps">' + '<span class="tl-arrow">→</span>'.join(chips) + "</div>",
                 unsafe_allow_html=True)
-    banner(ctx.cfg.synthetic)
+    cfg = ctx.cfg
+    if cfg.mode == "csv":
+        src = cfg.site_a.csv.source_name if cfg.site_a.csv else ""
+        banner("csv_synthetic" if cfg.data_is_synthetic else "csv", src)
+    else:
+        banner("synthetic" if cfg.synthetic else "power")
 
 
 def show_errors(ctx: AnalysisContext) -> bool:
-    """Muestra errores de datos. Devuelve True si se puede continuar."""
+    """Muestra lo que falta y los errores de datos. Devuelve True si se puede continuar."""
+    for slot, msg in ctx.pending.items():
+        st.info(msg, icon=":material/upload_file:")
     for slot, msg in ctx.errors.items():
         st.error(f"**Sitio {slot}:** {msg}", icon=":material/cloud_off:")
         det = ctx.error_details.get(slot)
@@ -54,8 +61,7 @@ def show_errors(ctx: AnalysisContext) -> bool:
     if ctx.errors:
         st.info("No se sustituyó nada por datos sintéticos. Puedes reintentar, elegir otra ubicación o cambiar "
                 "**tú** al modo sintético en el panel lateral.", icon=":material/info:")
-        return False
-    return True
+    return not ctx.errors and not ctx.pending
 
 
 def warnings_block(res: TrendResult) -> None:
@@ -93,6 +99,38 @@ def footer() -> None:
                 unsafe_allow_html=True)
 
 
+def _csv_variable_note(var) -> str:
+    return (f"Serie mensual cargada desde CSV. Debe medir {var.name_es.lower()} en {var.native_unit}"
+            + (" (tasa media diaria de cada mes)" if var.aggregation == "sum_from_rate" else "")
+            + "; el laboratorio aplica las mismas reglas de limpieza y agregación que a NASA POWER.")
+
+
+def _product_label(cfg) -> str:
+    if cfg.synthetic:
+        return "generador sintético"
+    if cfg.mode == "csv":
+        c = cfg.site_a.csv
+        if not (c and c.source_name):
+            return "no declarado"
+        return c.source_name + (f" · {c.product}" if c.product else "")
+    return cfg.variable.product
+
+
+def _csv_sites_card(cfg) -> None:
+    st.markdown("Series cargadas por el usuario. Las coordenadas son **opcionales** y solo sirven de contexto.")
+    pts = []
+    for spec in (cfg.site_a, cfg.site_b):
+        loc = spec.location()
+        fname = spec.csv.filename if spec.csv else "sin archivo"
+        st.markdown(site_tag(spec.slot, loc.name), unsafe_allow_html=True)
+        st.caption(f"Archivo: {fname}")
+        if math.isfinite(loc.lat) and math.isfinite(loc.lon):
+            pts.append((spec.slot, loc.lat, loc.lon, loc.name))
+    if pts:
+        st.plotly_chart(viz.map_figure(pts), config={"displayModeBar": False}, key="map_csv")
+        st.caption("Mapa de contexto con las coordenadas declaradas; no es un mapa de tendencias.")
+
+
 # ---------------------------------------------------------------------------------------------
 # Pantalla 1 — Laboratorio
 # ---------------------------------------------------------------------------------------------
@@ -108,16 +146,18 @@ def lab() -> None:
     with c1:
         st.markdown(
             f'<div class="tl-card"><h4>Paso 1 · Variable: {esc(var.name_es)} ({esc(var.code)})</h4>'
-            f'<div class="sub">{esc(var.description_es)}</div><br>'
+            f'<div class="sub">{esc(var.description_es if cfg.mode != "csv" else _csv_variable_note(var))}</div><br>'
             + kv([("Unidad de llegada", var.native_unit), ("Serie mensual", var.monthly_unit),
                   ("Serie anual analizada", var.annual_unit),
                   ("Agregación anual", "promedio ponderado por días" if var.aggregation == "mean"
                    else "suma de acumulados mensuales (tasa × días)"),
-                  ("Producto", var.product if not cfg.synthetic else "generador sintético")])
+                  ("Producto", _product_label(cfg))])
             + "</div>", unsafe_allow_html=True)
     with c2, st.container(border=True):
         st.markdown("**Paso 2 · Ubicaciones**")
-        if cfg.synthetic:
+        if cfg.mode == "csv":
+            _csv_sites_card(cfg)
+        elif cfg.synthetic:
             st.markdown("Los sitios sintéticos **no tienen coordenadas**: así nunca se confunden con lugares reales.")
             for spec in (cfg.site_a, cfg.site_b):
                 sc = SCENARIOS[spec.scenario]
@@ -148,6 +188,12 @@ def lab() -> None:
                              + (f" · elevación reportada {elev} m" if elev is not None else "")))
             if p.seed is not None:
                 rows.append(("Semilla", str(p.seed)))
+            if p.origin == "csv":
+                ex = p.extra
+                rows += [("Archivo", ex.get("filename") or "—"),
+                         ("Columnas", f"{ex.get('date_column')} → {ex.get('value_column')} ({ex.get('n_rows')} filas)"),
+                         ("Unidad declarada", ex.get("declared_unit") or "—"),
+                         ("Resolución espacial declarada", ex.get("spatial_resolution") or "—")]
             rows += [("Meses en el período", f"{rep.n_months_valid} válidos de {rep.n_months_expected}"),
                      ("Años completos", f"{len(rep.complete_years)}"),
                      ("Años excluidos", ", ".join(map(str, sorted(rep.incomplete_years))) or "ninguno")]
@@ -370,7 +416,8 @@ def methods() -> None:
             rows.append({"Sitio": slot, "Ubicación": r.location.name, "¿Sintético?": "sí" if p.is_synthetic else "no",
                          "Fuente": p.source, "Producto": p.product, "Consultado (UTC)": p.retrieved_at_utc,
                          "Caché": "sí" if p.from_cache else "no", "API": p.api_version or "—",
-                         "Semilla": p.seed if p.seed is not None else "—", "URL": p.request_url or "—"})
+                         "Semilla": p.seed if p.seed is not None else "—", "URL": p.request_url or "—",
+                         "Origen": p.origin, "Archivo": p.extra.get("filename") or "—"})
         st.dataframe(pd.DataFrame(rows), hide_index=True)
     show_errors(ctx)
 

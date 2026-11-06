@@ -220,6 +220,7 @@ def generate_monthly(
         is_synthetic=True,
         retrieved_at_utc=Provenance.now_utc(),
         seed=seed,
+        origin="synthetic",
         notes=[
             "DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN. No representan ningún lugar ni medición de NASA.",
             f"Generador: numpy.random.default_rng({seed}).",

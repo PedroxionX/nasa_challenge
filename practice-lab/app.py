@@ -27,7 +27,9 @@ pages.PAGES.update({
 })
 current = st.navigation(list(nav.values()), position="top")
 
-with st.spinner("Obteniendo y procesando datos…" if not cfg.synthetic else "Generando datos sintéticos…"):
+SPINNER = {"synthetic": "Generando datos sintéticos…", "power": "Obteniendo datos de NASA POWER…",
+           "csv": "Leyendo y procesando los CSV…"}
+with st.spinner(SPINNER[cfg.mode]):
     st.session_state["ctx"] = state.compute(cfg)
 
 current.run()

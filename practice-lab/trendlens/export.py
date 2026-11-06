@@ -44,6 +44,7 @@ def results_table(results: dict[str, TrendResult], cmp: ComparisonResult | None 
             "anios_excluidos": ";".join(str(y) for y in sorted(r.processing.incomplete_years)),
             "es_sintetico": r.is_synthetic, "fuente": r.provenance.source, "producto": r.provenance.product,
             "url_solicitud": r.provenance.request_url, "consultado_utc": r.provenance.retrieved_at_utc,
+            "origen": r.provenance.origin, "archivo_origen": r.provenance.extra.get("filename"),
             "semilla": r.provenance.seed,
         })
     if cmp is not None and cmp.diff is not None:

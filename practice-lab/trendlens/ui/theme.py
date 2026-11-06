@@ -30,6 +30,7 @@ h1, h2, h3 { letter-spacing: -0.01em; }
 .tl-banner.synthetic { color: #fde3a7; border: 1px solid rgba(250,178,25,.55);
   background: repeating-linear-gradient(45deg, rgba(250,178,25,.13) 0 12px, rgba(250,178,25,.05) 12px 24px); }
 .tl-banner.real { color: #c9f1f6; border: 1px solid rgba(63,184,201,.5); background: rgba(63,184,201,.08); }
+.tl-banner.user { color: #e2dcff; border: 1px solid rgba(144,133,233,.55); background: rgba(144,133,233,.10); }
 .tl-card { background: var(--tl-surface); border: 1px solid var(--tl-border); border-radius: 12px; padding: 14px 16px; height: 100%; }
 .tl-card h4 { margin: 0 0 6px 0; font-size: .95rem; color: var(--tl-ink); }
 .tl-card .sub { color: var(--tl-muted); font-size: .8rem; }
@@ -63,10 +64,16 @@ def esc(x) -> str:
     return html.escape(str(x))
 
 
-def banner(synthetic: bool) -> None:
-    if synthetic:
-        st.markdown('<div class="tl-banner synthetic">⚠ DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN · '
+def banner(kind: str, source: str = "") -> None:
+    """kind: 'synthetic' | 'csv_synthetic' | 'power' | 'csv'."""
+    if kind in ("synthetic", "csv_synthetic"):
+        origin = " · cargados desde CSV" if kind == "csv_synthetic" else ""
+        st.markdown(f'<div class="tl-banner synthetic">⚠ DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN{origin} · '
                     'no describen ningún lugar real ni son mediciones de NASA</div>', unsafe_allow_html=True)
+    elif kind == "csv":
+        src = f"fuente declarada: {esc(source)}" if source else "fuente aún no declarada"
+        st.markdown(f'<div class="tl-banner user">● Datos cargados desde CSV · {src} · '
+                    'procedencia no verificada por el laboratorio</div>', unsafe_allow_html=True)
     else:
         st.markdown('<div class="tl-banner real">● Datos públicos reales de NASA POWER (MERRA-2) · '
                     'valores de punto de cuadrícula, no promedios regionales</div>', unsafe_allow_html=True)

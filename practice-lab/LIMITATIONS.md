@@ -6,11 +6,16 @@
 - Conector NASA POWER (T2M, PRECTOTCORR) con validación de unidades, relleno, errores HTTP y caché.
 - Motor estadístico: MK, MK con corrección AR(1), Hamed-Rao, Seasonal MK, Theil-Sen con IC, MCO con ajuste de Santer, escalón vs. recta, detectabilidad y sensibilidad.
 - Opposite Trends Explorer con prueba formal sobre la serie de diferencias.
+- **Modo «CSV propio»:** carga de una serie mensual por sitio desde la interfaz, con procedencia declarada, opciones de
+  formato (separador, coma decimal, filas a omitir, fechas a mitad de mes) y validaciones estrictas. La ruta CSV
+  reproduce exactamente el análisis directo de NASA POWER (`test_csv_path_reproduces_direct_power_analysis`).
 - Explicaciones deterministas en español. Exportación CSV con procedencia.
-- 93 pruebas fuera de línea + 9 en vivo (`--run-live`), todas aprobadas.
+- 120 pruebas fuera de línea + 9 en vivo (`--run-live`), todas aprobadas.
 
 ## Parcialmente implementado
-- **Adaptador CSV:** existe y está probado, pero **no** está conectado a la interfaz (no hay carga de archivos).
+- **Modo CSV:** solo **formato largo** (fecha, valor). No acepta el formato ancho (año + 12 columnas de meses, como el
+  CSV que exporta NASA POWER), no convierte unidades (K, °F, mm/mes y mm/h se deben convertir antes) y solo admite
+  las dos variables del catálogo. La procedencia es la que declara el usuario: el laboratorio no puede verificarla.
 - **Seasonal Mann-Kendall:** implementado y validado, pero sin la corrección de Hirsch-Slack por dependencia entre meses. Solo es diagnóstico.
 - **Revisión visual de la interfaz:** no se pudo hacer con navegador en esta sesión (la extensión de Chrome no estaba conectada). La interfaz se verificó con `AppTest` y el servidor respondió `health ok`; falta una revisión humana del diseño, sobre todo en móvil.
 - **Diseño adaptable:** columnas de Streamlit y CSS con un punto de quiebre a 640 px. No se ha probado en un dispositivo real.
@@ -46,4 +51,4 @@ Las reglas oficiales sobre trabajo previo deben confirmarse antes de reutilizar 
 - Bootstrap por bloques (moving block bootstrap) como alternativa no paramétrica para IC con autocorrelación.
 - Corrección por FDR (Benjamini-Hochberg) si se analizan muchas ubicaciones.
 - Pruebas de interfaz visuales (Playwright) y de accesibilidad automatizadas.
-- Carga de CSV en la interfaz para probar datos oficiales en minutos.
+- Formato ancho (año × mes) y conversiones de unidades explícitas y probadas en el modo CSV.
