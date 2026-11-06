@@ -1,15 +1,18 @@
 [theme]
 base = "dark"
-primaryColor = "#3FB8C9"
-backgroundColor = "#0B1420"
-secondaryBackgroundColor = "#121F2E"
-textColor = "#E6EDF3"
+primaryColor = "#57A9B5"
+backgroundColor = "#0E151E"
+secondaryBackgroundColor = "#131C26"
+textColor = "#E3E9EF"
 font = "sans serif"
 
 [server]
 headless = true
 maxUploadSize = 5  # MB; una serie mensual por punto ocupa KB
 runOnSave = false
+
+[client]
+toolbarMode = "minimal"  # sin botón Deploy ni menú de desarrollo: menos ruido en la barra superior
 
 [browser]
 gatherUsageStats = false

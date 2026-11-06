@@ -1,6 +1,6 @@
 """Visualizaciones interactivas con Plotly (Módulo B). Sin lógica estadística: solo dibuja resultados.
 
-Paleta validada con el validador de la skill dataviz contra la superficie oscura #121F2E
+Paleta validada con el validador de la skill dataviz contra el fondo #0E151E (gráficos transparentes)
 (azul / naranja / violeta: todas las comprobaciones CVD, de luminosidad y de contraste en PASS).
 La identidad A/B nunca depende solo del color: leyenda + etiquetas directas + nombre en el tooltip.
 """
@@ -16,12 +16,13 @@ from .stats.compare import ComparisonResult
 from .stats.engine import TrendResult
 from .stats.ols import confidence_band
 
-SURFACE = "#121F2E"
-INK = "#E6EDF3"
-INK_2 = "#B4C0CC"
-MUTED = "#8A97A6"
-GRID = "#1F2E42"
-AXIS = "#33465F"
+SURFACE = "#0E151E"  # fondo de la página: los gráficos no se dibujan sobre una tarjeta propia
+INK = "#E3E9EF"
+INK_2 = "#AEB9C4"
+MUTED = "#8794A1"
+GRID = "#1A2430"
+AXIS = "#2B3746"
+SYNTH = "#E2B04A"
 SERIES = {"A": "#3987e5", "B": "#d95926", "diff": "#9085e9"}
 WATERMARK = "DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN"
 FONT = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
@@ -35,24 +36,26 @@ def _rgba(hex_color: str, a: float) -> str:
 
 def _base(fig: go.Figure, title: str, y_title: str, synthetic: bool, height: int = 420, x_title: str = "Año") -> go.Figure:
     fig.update_layout(
-        title=dict(text=title, font=dict(size=15, color=INK), x=0, xanchor="left"),
-        paper_bgcolor=SURFACE, plot_bgcolor=SURFACE, height=height,
+        title=dict(text=title, font=dict(size=13, color=INK_2), x=0, xanchor="left"),
+        paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)", height=height,
         font=dict(family=FONT, color=INK_2, size=12),
-        margin=dict(l=56, r=20, t=64 if synthetic else 48, b=48),
+        margin=dict(l=56, r=16, t=62 if synthetic else 44, b=44),
         hovermode="x unified",
         hoverlabel=dict(bgcolor="#0B1420", bordercolor=AXIS, font=dict(color=INK, family=FONT)),
-        legend=dict(orientation="h", yanchor="bottom", y=1.0, xanchor="right", x=1, font=dict(color=INK_2),
-                    bgcolor="rgba(0,0,0,0)"),
+        legend=dict(orientation="h", yref="container", yanchor="bottom", y=0.0, xanchor="left", x=0,
+                    font=dict(color=MUTED, size=11), bgcolor="rgba(0,0,0,0)"),
     )
+    # La leyenda va debajo del gráfico: nunca choca con el título, ni en pantallas estrechas
+    n_legend = sum(1 for t in fig.data if t.showlegend is not False)
+    if n_legend >= 2:
+        fig.update_layout(margin=dict(b=78))
     fig.update_xaxes(title=dict(text=x_title, font=dict(color=MUTED)), gridcolor=GRID, linecolor=AXIS,
                      zerolinecolor=AXIS, tickfont=dict(color=MUTED), showline=True)
     fig.update_yaxes(title=dict(text=y_title, font=dict(color=MUTED)), gridcolor=GRID, linecolor=AXIS,
                      zerolinecolor=AXIS, tickfont=dict(color=MUTED), showline=True)
-    if synthetic:
-        fig.add_annotation(text=WATERMARK, xref="paper", yref="paper", x=0.5, y=0.5, showarrow=False,
-                           font=dict(size=26, color="rgba(250,178,25,0.16)", family=FONT), textangle=-12)
-        fig.add_annotation(text="⚠ " + WATERMARK, xref="paper", yref="paper", x=0, y=1.0, yshift=34,
-                           xanchor="left", showarrow=False, font=dict(size=11, color="#fab219", family=FONT))
+    if synthetic:  # una etiqueta legible dentro de la imagen: sobrevive a capturas y recortes
+        fig.add_annotation(text=WATERMARK, xref="paper", yref="paper", x=0, y=1.0, yshift=30,
+                           xanchor="left", showarrow=False, font=dict(size=11, color=SYNTH, family=FONT))
     return fig
 
 
@@ -84,29 +87,30 @@ def annual_trend_figure(res: TrendResult, slot: str = "A", show_anomaly: bool = 
         lo, hi = confidence_band(res.core.ols, grid)
         fig.add_trace(go.Scatter(x=np.r_[grid, grid[::-1]], y=np.r_[hi, lo[::-1]] - offset, fill="toself",
                                  fillcolor=_rgba(color, 0.14), line=dict(width=0), hoverinfo="skip",
-                                 name="IC 95 % de la recta (MCO, ajustado)"))
+                                 name="IC 95 % (MCO)"))
     fig.add_trace(go.Scatter(
-        x=years, y=vals, mode="lines+markers", name=f"Observado ({res.location.name})",
+        x=years, y=vals, mode="lines+markers", name="Observado",
         line=dict(color=color, width=1.2), marker=dict(size=8, color=color, line=dict(color=SURFACE, width=2)),
         hovertemplate="%{x}: %{y:.3g} " + unit + "<extra></extra>",
     ))
     if res.n >= 2 and np.isfinite(res.core.sen_slope):
         fit = res.core.sen_intercept + res.core.sen_slope * years - offset
-        fig.add_trace(go.Scatter(x=years, y=fit, mode="lines", name="Tendencia Theil-Sen",
+        fig.add_trace(go.Scatter(x=years, y=fit, mode="lines", name="Tendencia (Sen)",
                                  line=dict(color=INK, width=2),
                                  hovertemplate="Sen: %{y:.3g} " + unit + "<extra></extra>"))
     if res.processing.incomplete_years:
         ex = sorted(res.processing.incomplete_years)
         ybase = np.nanmin(vals) if len(vals) else 0
         fig.add_trace(go.Scatter(
-            x=ex, y=[ybase] * len(ex), mode="markers", name="Año incompleto (excluido)",
+            x=ex, y=[ybase] * len(ex), mode="markers", name="Año excluido",
             marker=dict(symbol="x-thin", size=10, color=MUTED, line=dict(width=2, color=MUTED)),
             customdata=[res.processing.incomplete_years[y] for y in ex],
             hovertemplate="%{x}: %{customdata}/12 meses válidos — excluido<extra></extra>",
         ))
     if show_anomaly and offset:
         fig.add_hline(y=0, line=dict(color=AXIS, width=1))
-    title = f"{res.variable.short_es} — {res.location.name} · serie anual de años completos"
+    title = f"{res.location.name} · media anual de años completos" if res.variable.aggregation == "mean" \
+        else f"{res.location.name} · total anual de años completos"
     return _base(fig, title, y_title, res.is_synthetic), note
 
 
@@ -127,7 +131,7 @@ def monthly_figure(res: TrendResult, slot: str = "A") -> go.Figure:
                                  customdata=miss["quality_flag"],
                                  hovertemplate="%{x|%Y-%m}: faltante (%{customdata})<extra></extra>"))
     conv = "" if res.variable.aggregation == "mean" else f" (convertido de {res.variable.native_unit})"
-    return _base(fig, f"Serie mensual — {res.location.name}{conv}", f"{res.variable.short_es} [{unit}]",
+    return _base(fig, f"{res.location.name} · valores mensuales{conv}", f"{res.variable.short_es} [{unit}]",
                  res.is_synthetic, height=320, x_title="Fecha")
 
 
@@ -152,8 +156,8 @@ def comparison_figure(ra: TrendResult, rb: TrendResult, cmp: ComparisonResult, u
                                  hovertemplate=f"{slot}: " + "%{y:.3g} " + unit + "<extra></extra>"))
         if core is not None and np.isfinite(core.sen_slope):
             fit = core.sen_intercept + core.sen_slope * core.years - offset
-            fig.add_trace(go.Scatter(x=core.years, y=fit, mode="lines", name=f"Sen {slot} (años comunes)",
-                                     line=dict(color=color, width=2.5), showlegend=True,
+            fig.add_trace(go.Scatter(x=core.years, y=fit, mode="lines", name=f"Sen {slot}",
+                                     line=dict(color=color, width=2.5), showlegend=False,
                                      hovertemplate=f"Sen {slot}: " + "%{y:.3g}<extra></extra>"))
             fig.add_annotation(x=core.years[-1], y=fit[-1], text=f" {slot}", showarrow=False, xanchor="left",
                                font=dict(color=INK, size=13))
@@ -161,13 +165,13 @@ def comparison_figure(ra: TrendResult, rb: TrendResult, cmp: ComparisonResult, u
                else f"{ra.variable.short_es} [{unit}]")
     if use_anomalies:
         fig.add_hline(y=0, line=dict(color=AXIS, width=1))
-    title = f"{ra.variable.short_es}: A vs. B"
-    return _base(fig, title, y_title, ra.is_synthetic, height=440), " ".join(notes)
+    title = "Series anuales y tendencias de Sen en los años comunes"
+    return _base(fig, title, y_title, ra.is_synthetic, height=400), " ".join(notes)
 
 
 def forest_figure(cmp: ComparisonResult, ra: TrendResult, rb: TrendResult) -> go.Figure:
-    """Pendientes por década con IC 95 % (Sen, prueba principal) y MCO ajustado como referencia."""
-    rows = [("A − B (diferencia)", cmp.diff, SERIES["diff"]), (f"B · {rb.location.name}", cmp.core_b, SERIES["B"]),
+    """Pendiente de Sen por década con IC 95 % para A, B y la diferencia A − B."""
+    rows = [("A − B", cmp.diff, SERIES["diff"]), (f"B · {rb.location.name}", cmp.core_b, SERIES["B"]),
             (f"A · {ra.location.name}", cmp.core_a, SERIES["A"])]
     fig = go.Figure()
     unit = f"{ra.unit}/década"
@@ -175,25 +179,17 @@ def forest_figure(cmp: ComparisonResult, ra: TrendResult, rb: TrendResult) -> go
         s, (lo, hi) = core.sen_slope * 10, (core.sen_ci[0] * 10, core.sen_ci[1] * 10)
         fig.add_trace(go.Scatter(
             x=[s], y=[label], mode="markers", name=label, showlegend=False,
-            marker=dict(size=13, color=color, symbol="circle", line=dict(color=SURFACE, width=2)),
+            marker=dict(size=11, color=color, line=dict(color=SURFACE, width=2)),
             error_x=dict(type="data", symmetric=False, array=[hi - s], arrayminus=[s - lo], color=color,
-                         thickness=2, width=6),
-            hovertemplate=f"{label}<br>Sen: {s:+.3g} {unit}<br>IC 95 %: {lo:+.3g} a {hi:+.3g}"
+                         thickness=2, width=5),
+            hovertemplate=f"{label}<br>{s:+.3g} {unit} (IC 95 %: {lo:+.3g} a {hi:+.3g})"
                           f"<br>p = {core.primary.p_value:.3g}<extra></extra>",
         ))
-        o = core.ols
-        if o is not None and not o.constant_series:
-            olo, ohi = (o.adj_ci_low, o.adj_ci_high) if o.adj_valid else (o.ci_low, o.ci_high)
-            fig.add_trace(go.Scatter(
-                x=[o.slope * 10], y=[label], mode="markers", showlegend=False, name="MCO",
-                marker=dict(size=9, color=SURFACE, symbol="diamond", line=dict(color=INK_2, width=1.5)),
-                hovertemplate=f"MCO ajustado: {o.slope * 10:+.3g} ({olo * 10:+.3g} a {ohi * 10:+.3g})<extra></extra>",
-            ))
-    fig.add_vline(x=0, line=dict(color=INK_2, width=1))
-    fig = _base(fig, "Pendientes con intervalo de confianza 95 %  (● Sen · ◇ MCO ajustado)", "", ra.is_synthetic,
-                height=300, x_title=f"Pendiente [{unit}]")
+    fig.add_vline(x=0, line=dict(color=MUTED, width=1))
+    fig = _base(fig, "Pendiente por década con intervalo de confianza del 95 %", "", ra.is_synthetic,
+                height=250, x_title=f"Pendiente [{unit}]")
     fig.update_layout(hovermode="closest", margin=dict(l=10))
-    fig.update_yaxes(automargin=True, showgrid=False)
+    fig.update_yaxes(automargin=True, showgrid=False, tickfont=dict(color=INK_2))
     return fig
 
 

@@ -54,10 +54,10 @@ class ComparisonResult:
 PATTERNS = {
     "no_comparable": "No comparable",
     "insuficiente": "Datos insuficientes para comparar",
-    "opuestas_con_evidencia": "Signos opuestos, ambas tendencias con evidencia estadística",
-    "opuestas_descriptivo": "Signos opuestos solo en lo descriptivo",
-    "mismo_signo_con_evidencia": "Mismo signo, ambas tendencias con evidencia estadística",
-    "mismo_signo_descriptivo": "Mismo signo solo en lo descriptivo",
+    "opuestas_con_evidencia": "Cambian en sentidos opuestos, y ambas tendencias tienen respaldo estadístico",
+    "opuestas_descriptivo": "Las pendientes apuntan en sentidos opuestos, pero al menos una no es concluyente",
+    "mismo_signo_con_evidencia": "Cambian en el mismo sentido, y ambas tendencias tienen respaldo estadístico",
+    "mismo_signo_descriptivo": "Las pendientes apuntan en el mismo sentido, pero al menos una no es concluyente",
     "sin_cambio_estimado": "Al menos una pendiente estimada es exactamente cero",
 }
 

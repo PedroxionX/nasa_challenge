@@ -6,7 +6,8 @@ Material de PRÁCTICA previo a NASA Space Apps 2026; no es la solución competit
 
 import streamlit as st
 
-st.set_page_config(page_title="TrendLens Lab", page_icon="🛰️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="TrendLens Lab", page_icon=":material/satellite_alt:", layout="wide",
+                   initial_sidebar_state="auto")  # abierto en escritorio, cerrado en móvil
 
 from trendlens.ui import pages, sidebar, state, theme  # noqa: E402  (set_page_config debe ir primero)
 
@@ -20,10 +21,10 @@ nav = {
     "methods": st.Page(pages.methods, title="Métodos y fuentes", icon=":material/menu_book:", url_path="metodos"),
 }
 pages.PAGES.update({
-    "lab": (nav["lab"], "Volver al laboratorio", ":material/science:"),
-    "analysis": (nav["analysis"], "Ver el análisis por ubicación →", ":material/monitoring:"),
-    "compare": (nav["compare"], "Abrir el Opposite Trends Explorer →", ":material/compare_arrows:"),
-    "methods": (nav["methods"], "Métodos, fuentes y limitaciones →", ":material/menu_book:"),
+    "lab": (nav["lab"], "Laboratorio", ":material/science:"),
+    "analysis": (nav["analysis"], "Ver análisis", ":material/arrow_forward:"),
+    "compare": (nav["compare"], "Comparar A y B", ":material/arrow_forward:"),
+    "methods": (nav["methods"], "Métodos y fuentes", ":material/arrow_forward:"),
 })
 current = st.navigation(list(nav.values()), position="top")
 

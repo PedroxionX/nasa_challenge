@@ -45,8 +45,8 @@ def _apply_pair() -> None:
 def _power_site(slot: str) -> SiteSpec:
     options = [loc.id for loc in PRESET_LOCATIONS] + [CUSTOM]
     choice = st.selectbox(
-        f"Ubicación {slot}", options, key=f"loc_{slot}",
-        format_func=lambda i: "Coordenadas personalizadas…" if i == CUSTOM else PRESETS_BY_ID[i].label,
+        f"Sitio {slot}", options, key=f"loc_{slot}",
+        format_func=lambda i: "Coordenadas personalizadas…" if i == CUSTOM else PRESETS_BY_ID[i].name,
     )
     if choice == CUSTOM:
         c1, c2 = st.columns(2)
@@ -54,9 +54,7 @@ def _power_site(slot: str) -> SiteSpec:
         lon = c2.number_input(f"Longitud {slot}", -180.0, 180.0, step=0.25, format="%.2f", key=f"lon_{slot}")
         return SiteSpec(slot, "power", loc_id=f"custom_{slot}_{lat:.2f}_{lon:.2f}",
                         name=f"Punto {slot} ({lat:.2f}, {lon:.2f})", lat=float(lat), lon=float(lon))
-    loc = PRESETS_BY_ID[choice]
-    st.caption(loc.context_es)
-    return SiteSpec(slot, "power", loc_id=loc.id)
+    return SiteSpec(slot, "power", loc_id=PRESETS_BY_ID[choice].id)
 
 
 # ------------------------------------------------------------------------------------------
@@ -90,21 +88,22 @@ def _unit_confirmation(var) -> str:
 
 def _csv_common(code: str) -> dict:
     var = VARIABLES[code]
-    st.caption(f"Una fila por mes: una columna de **fecha** (AAAA-MM, AAAA-MM-DD o AAAAMM) y una de **valor** "
-               f"de {var.name_es.lower()} en {var.native_unit}.")
-    st.download_button("Descargar CSV de ejemplo (sintético)", _example_csv(code),
-                       file_name=f"ejemplo_{code}_sintetico.csv", mime="text/csv", icon=":material/download:",
-                       help="Formato esperado, con datos del escenario sintético «Tendencia creciente».")
-    source = st.text_input("Fuente de los datos *", key="csv_source",
-                           placeholder="p. ej. GPM IMERG V07 vía Giovanni",
-                           help="Obligatoria: aparece en cada resultado y en el CSV exportado.")
-    product = st.text_input("Producto / versión", key="csv_product", placeholder="p. ej. GPM_3IMERGM v07")
-    spatial = st.text_input("Resolución espacial", key="csv_spatial",
-                            placeholder="p. ej. celda de 0.1°, estación, promedio de área")
-    kind = st.radio("Los datos son…", ["real", "synthetic"], key="csv_kind", horizontal=True,
-                    format_func=lambda k: "Reales" if k == "real" else "Sintéticos / de prueba")
-    unit_ok = st.checkbox(_unit_confirmation(var), key=f"csv_unit_ok_{code}")
+    has_files = any(st.session_state.get(f"csv_file_{s}") is not None for s in ("A", "B"))
+    incomplete = not st.session_state.get("csv_source", "").strip() or not st.session_state.get(f"csv_unit_ok_{code}")
+    with st.expander("Procedencia (obligatoria)", expanded=has_files and incomplete):
+        source = st.text_input("Fuente de los datos", key="csv_source",
+                               placeholder="p. ej. GPM IMERG V07 vía Giovanni",
+                               help="Aparece en cada resultado y en el CSV exportado.")
+        product = st.text_input("Producto / versión", key="csv_product", placeholder="p. ej. GPM_3IMERGM v07")
+        spatial = st.text_input("Resolución espacial", key="csv_spatial",
+                                placeholder="p. ej. celda de 0.1°, estación, promedio de área")
+        kind = st.radio("Los datos son", ["real", "synthetic"], key="csv_kind", horizontal=True,
+                        format_func=lambda k: "Reales" if k == "real" else "Sintéticos")
+        unit_ok = st.checkbox(_unit_confirmation(var), key=f"csv_unit_ok_{code}")
     with st.expander("Formato del archivo"):
+        st.caption(f"Una fila por mes: fecha (AAAA-MM, AAAA-MM-DD o AAAAMM) y valor en {var.native_unit}.")
+        st.download_button("CSV de ejemplo (sintético)", _example_csv(code), file_name=f"ejemplo_{code}_sintetico.csv",
+                           mime="text/csv", icon=":material/download:")
         sep = st.selectbox("Separador de columnas", list(SEPARATORS), key="csv_sep", format_func=SEPARATORS.get)
         dec = st.selectbox("Separador decimal", [".", ","], key="csv_dec")
         skip = st.number_input("Filas a omitir al inicio", 0, 500, step=1, key="csv_skip",
@@ -115,23 +114,23 @@ def _csv_common(code: str) -> dict:
     fmt = CsvFormat(sep=None if sep == "auto" else sep, decimal=dec, skiprows=int(skip), normalize_to_month_start=norm)
     pending = None
     if not source.strip():
-        pending = "Declara la **fuente de los datos** en el panel lateral (sin procedencia no hay resultado verificable)."
+        pending = "Declara la **fuente de los datos** en «Procedencia», en el panel lateral."
     elif not unit_ok:
-        pending = f"Confirma en el panel lateral que los valores están en **{var.native_unit}**."
+        pending = f"Confirma en «Procedencia» que los valores están en **{var.native_unit}**."
     return dict(source=source.strip(), product=product.strip(), spatial=spatial.strip() or "no declarada",
                 synthetic=kind == "synthetic", fmt=fmt, pending=pending)
 
 
 def _csv_site(slot: str, common: dict) -> tuple[SiteSpec, tuple[int, int] | None]:
-    with st.expander(f"Sitio {slot}", expanded=True):
-        up = st.file_uploader(f"CSV del sitio {slot}", type=["csv", "txt"], key=f"csv_file_{slot}")
-        name = st.text_input(f"Nombre del sitio {slot}", key=f"csv_name_{slot}").strip() or f"Sitio {slot}"
-        c1, c2 = st.columns(2)
-        lat = c1.number_input("Latitud (opcional)", -90.0, 90.0, value=None, format="%.2f", key=f"csv_lat_{slot}")
-        lon = c2.number_input("Longitud (opcional)", -180.0, 180.0, value=None, format="%.2f", key=f"csv_lon_{slot}")
+    with st.container():
+        up = st.file_uploader(f"Archivo del sitio {slot}", type=["csv", "txt"], key=f"csv_file_{slot}")
+        with st.expander(f"Nombre y coordenadas de {slot} (opcional)"):
+            name = st.text_input("Nombre", key=f"csv_name_{slot}").strip() or f"Sitio {slot}"
+            c1, c2 = st.columns(2)
+            lat = c1.number_input("Latitud", -90.0, 90.0, value=None, format="%.2f", key=f"csv_lat_{slot}")
+            lon = c2.number_input("Longitud", -180.0, 180.0, value=None, format="%.2f", key=f"csv_lon_{slot}")
         if up is None:
-            return SiteSpec(slot, "csv", name=name, lat=lat, lon=lon,
-                            pending=f"Sube el archivo CSV del **sitio {slot}** en el panel lateral."), None
+            return SiteSpec(slot, "csv", name=name, lat=lat, lon=lon, pending="upload"), None
         content = up.getvalue()
         date_col = value_col = ""
         try:
@@ -142,9 +141,8 @@ def _csv_site(slot: str, common: dict) -> tuple[SiteSpec, tuple[int, int] | None
             date_col = st.selectbox("Columna de fecha", cols, index=cols.index(g_date), key=f"csv_dcol_{tag}")
             value_col = st.selectbox("Columna de valor", cols, key=f"csv_vcol_{tag}",
                                      index=cols.index(g_value) if g_value in cols else min(1, len(cols) - 1))
-            st.caption(f"{len(preview)} filas · {len(cols)} columnas")
         except DataSourceError as exc:
-            st.caption(f"⚠ {exc.user_message} Revisa «Formato del archivo».")
+            st.caption(f"{exc.user_message} Revisa «Formato del archivo».")
         spec = CsvSpec(content=content, filename=up.name, date_column=date_col, value_column=value_col,
                        fmt=common["fmt"], source_name=common["source"], product=common["product"],
                        spatial_resolution=common["spatial"], declared_synthetic=common["synthetic"])
@@ -158,49 +156,38 @@ def render() -> LabConfig:
     last = last_complete_year()
     csv_synthetic = False
     with st.sidebar:
-        st.markdown('<div class="tl-brand">Trend<span>Lens</span> Lab</div>', unsafe_allow_html=True)
-        st.caption("Laboratorio de práctica para Space Apps 2026. **No es la solución competitiva.**")
+        st.markdown('<div class="tl-brand">TrendLens Lab</div>', unsafe_allow_html=True)
+        st.caption("Práctica para Space Apps 2026 · no es la solución competitiva")
 
-        st.markdown("**1 · Fuente de datos**")
-        mode = st.radio("Fuente de datos", list(MODES), key="mode", label_visibility="collapsed",
-                        format_func=MODES.get)
-        st.markdown("**2 · Variable**")
-        code = st.selectbox("Variable", list(VARIABLES), key="code", label_visibility="collapsed",
-                            format_func=lambda c: VARIABLES[c].short_es)
-        var = VARIABLES[code]
-        st.caption(f"Llega en {var.native_unit} · se analiza en {var.annual_unit} (serie anual).")
+        mode = st.radio("Datos", list(MODES), key="mode", format_func=MODES.get)
+        code = st.selectbox("Variable", list(VARIABLES), key="code", format_func=lambda c: VARIABLES[c].short_es)
 
         bounds = (POWER_FIRST_YEAR, last)
         if mode == "synthetic":
-            st.markdown("**3 · Ubicaciones**")
-            st.selectbox("Ejemplo rápido", ["—"] + list(SUGGESTED_PAIRS), key="pair", on_change=_apply_pair,
-                         help="Carga un par de escenarios en A y B.")
-            sa = st.selectbox("Sitio sintético A", list(SCENARIOS), key="scen_A",
-                              format_func=lambda k: SCENARIOS[k].name_es)
-            sb = st.selectbox("Sitio sintético B", list(SCENARIOS), key="scen_B",
-                              format_func=lambda k: SCENARIOS[k].name_es)
+            sa = st.selectbox("Sitio A", list(SCENARIOS), key="scen_A", format_func=lambda k: SCENARIOS[k].name_es)
+            sb = st.selectbox("Sitio B", list(SCENARIOS), key="scen_B", format_func=lambda k: SCENARIOS[k].name_es)
+            st.selectbox("Cargar un par de ejemplo", ["—"] + list(SUGGESTED_PAIRS), key="pair", on_change=_apply_pair)
             site_a, site_b = SiteSpec("A", "synthetic", scenario=sa), SiteSpec("B", "synthetic", scenario=sb)
         elif mode == "power":
-            st.markdown("**3 · Ubicaciones**")
             site_a, site_b = _power_site("A"), _power_site("B")
         else:
-            st.markdown("**3 · Archivos CSV y procedencia**")
-            common = _csv_common(code)
+            files_box, decl_box = st.container(), st.container()
+            with decl_box:
+                common = _csv_common(code)
             csv_synthetic = common["synthetic"]
-            site_a, years_a = _csv_site("A", common)
-            site_b, years_b = _csv_site("B", common)
+            with files_box:
+                site_a, years_a = _csv_site("A", common)
+                site_b, years_b = _csv_site("B", common)
             ranges = [r for r in (years_a, years_b) if r]
             if ranges:
                 bounds = (min(r[0] for r in ranges), max(r[1] for r in ranges))
 
-        st.markdown("**4 · Período (años completos)**")
         if mode == "csv":
             lo, hi = bounds if bounds[0] < bounds[1] else (bounds[0], bounds[0] + 1)
             y0, y1 = st.slider("Período", lo, hi, value=(lo, hi), key=f"years_csv_{lo}_{hi}",
-                               label_visibility="collapsed",
                                help="El rango se ajusta a las fechas de los archivos cargados.")
         else:
-            y0, y1 = st.slider("Período", POWER_FIRST_YEAR, last, key="years", label_visibility="collapsed")
+            y0, y1 = st.slider("Período", POWER_FIRST_YEAR, last, key="years")
 
         with st.expander("Opciones avanzadas"):
             alpha = st.select_slider("Nivel de significancia α", list(ALPHA_CHOICES), key="alpha",
@@ -210,7 +197,6 @@ def render() -> LabConfig:
                             help="Por defecto 1991–2020, la normal climatológica vigente de la OMM.")
             if mode == "power" and st.button("Volver a descargar de NASA POWER", help="Ignora la caché local."):
                 st.session_state["nonce"] += 1
-        st.caption("Los cambios se aplican al instante en todas las pantallas.")
 
     return LabConfig(mode=mode, code=code, site_a=site_a, site_b=site_b, start=int(y0), end=int(y1),
                      alpha=float(alpha), reference=(int(ref[0]), int(ref[1])), nonce=int(st.session_state["nonce"]),

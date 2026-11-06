@@ -89,7 +89,7 @@ practice-lab/
 │   └── ui/                     # Streamlit: state, sidebar, pages, theme
 ├── tests/                      # pytest + fixtures reales de NASA POWER
 ├── scripts/reproduce_example.py
-└── RESEARCH.md · SCIENTIFIC_METHOD.md · DATA_SOURCES.md · OFFICIAL_RESOURCES_READINESS.md · LIMITATIONS.md
+└── RESEARCH.md · SCIENTIFIC_METHOD.md · DATA_SOURCES.md · OFFICIAL_RESOURCES_READINESS.md · LIMITATIONS.md · DESIGN.md
 ```
 
 ## Estado

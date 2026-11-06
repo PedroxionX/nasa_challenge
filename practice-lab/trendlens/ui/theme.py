@@ -1,4 +1,9 @@
-"""Estilos de la interfaz (observatorio oscuro). Tokens de color en :root; contraste AA en texto."""
+"""Estilos de la interfaz. Modo Operate (Impeccable): la herramienta desaparece detrás de la tarea.
+
+Reglas (ver DESIGN.md): una familia tipográfica, 4 tamaños, 2 pesos; color solo con función
+(acento = acción/selección; A/B = identidad de series; ámbar = datos sintéticos); sin tarjetas
+decorativas, sin franjas, sin etiquetas sobre los títulos.
+"""
 
 import html
 
@@ -7,50 +12,51 @@ import streamlit as st
 CSS = """
 <style>
 :root {
-  --tl-page:#0B1420; --tl-surface:#121F2E; --tl-surface-2:#172739;
-  --tl-ink:#E6EDF3; --tl-ink-2:#B4C0CC; --tl-muted:#8A97A6;
-  --tl-accent:#3FB8C9; --tl-a:#3987e5; --tl-b:#d95926; --tl-diff:#9085e9;
-  --tl-warn:#fab219; --tl-border:rgba(255,255,255,0.09);
+  --tl-bg:#0E151E; --tl-panel:#131C26; --tl-line:rgba(230,237,243,0.09);
+  --tl-ink:#E3E9EF; --tl-ink-2:#AEB9C4; --tl-muted:#8794A1;
+  --tl-accent:#57A9B5; --tl-a:#3987e5; --tl-b:#d95926; --tl-diff:#9085e9;
+  --tl-synth:#E2B04A;
+  --tl-s1:0.25rem; --tl-s2:0.5rem; --tl-s3:0.75rem; --tl-s4:1rem; --tl-s6:1.5rem; --tl-s8:2rem;
 }
-.block-container { padding-top: 2.2rem; max-width: 1280px; }
-h1, h2, h3 { letter-spacing: -0.01em; }
-.tl-hero { padding: 4px 0 6px 0; }
-.tl-hero .kicker { color: var(--tl-accent); font-size: .78rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
-.tl-hero h1 { font-size: 2.1rem; margin: .1rem 0 .2rem 0; color: var(--tl-ink); }
-.tl-hero p { color: var(--tl-ink-2); margin: 0; font-size: 1rem; }
-.tl-question { background: var(--tl-surface); border: 1px solid var(--tl-border); border-left: 3px solid var(--tl-accent);
-  border-radius: 10px; padding: 12px 16px; margin: 10px 0 8px 0; color: var(--tl-ink); }
-.tl-question .lbl { color: var(--tl-muted); font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; font-weight: 700; }
-.tl-steps { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 14px 0; align-items: center; }
-.tl-step { padding: 3px 10px; border-radius: 999px; border: 1px solid var(--tl-border); font-size: .78rem; color: var(--tl-muted); }
-.tl-step.done { color: var(--tl-ink); border-color: rgba(63,184,201,.55); background: rgba(63,184,201,.10); }
-.tl-step.fail { color: #ffd0c2; border-color: rgba(208,59,59,.7); background: rgba(208,59,59,.14); }
-.tl-arrow { color: var(--tl-muted); font-size: .75rem; }
-.tl-banner { border-radius: 8px; padding: 8px 14px; font-weight: 650; letter-spacing: .03em; margin: 4px 0 12px 0; font-size: .9rem; }
-.tl-banner.synthetic { color: #fde3a7; border: 1px solid rgba(250,178,25,.55);
-  background: repeating-linear-gradient(45deg, rgba(250,178,25,.13) 0 12px, rgba(250,178,25,.05) 12px 24px); }
-.tl-banner.real { color: #c9f1f6; border: 1px solid rgba(63,184,201,.5); background: rgba(63,184,201,.08); }
-.tl-banner.user { color: #e2dcff; border: 1px solid rgba(144,133,233,.55); background: rgba(144,133,233,.10); }
-.tl-card { background: var(--tl-surface); border: 1px solid var(--tl-border); border-radius: 12px; padding: 14px 16px; height: 100%; }
-.tl-card h4 { margin: 0 0 6px 0; font-size: .95rem; color: var(--tl-ink); }
-.tl-card .sub { color: var(--tl-muted); font-size: .8rem; }
-.tl-kv { display: grid; grid-template-columns: max-content 1fr; gap: 3px 12px; font-size: .85rem; }
-.tl-kv .k { color: var(--tl-muted); } .tl-kv .v { color: var(--tl-ink); overflow-wrap: anywhere; }
-.tl-site { display: inline-flex; align-items: center; gap: 6px; font-weight: 650; color: var(--tl-ink); }
-.tl-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+::selection { background: rgba(87,169,181,0.35); color: var(--tl-ink); }
+input, textarea { caret-color: var(--tl-accent); }
+:focus-visible { outline: 2px solid var(--tl-accent) !important; outline-offset: 2px; }
+.block-container { padding-top: 3.2rem; padding-bottom: 4rem; max-width: 1120px; }
+h1, h2, h3 { letter-spacing: -0.02em; font-weight: 600 !important; }
+/* Secciones: por debajo del título de pantalla, con más aire arriba que abajo */
+[data-testid="stMainBlockContainer"] h3 { font-size: 1.1rem !important; padding: var(--tl-s6) 0 var(--tl-s1) 0 !important; }
+/* Medida de lectura: 65–75 caracteres en la prosa (las tablas y gráficos usan todo el ancho) */
+[data-testid="stMainBlockContainer"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stMainBlockContainer"] [data-testid="stMarkdownContainer"] li,
+[data-testid="stMainBlockContainer"] [data-testid="stCaptionContainer"] { max-width: 75ch; }
+[data-testid="stDataFrame"], [data-testid="stMetricValue"], .tl-num { font-variant-numeric: tabular-nums; }
+
+/* Título de pantalla + línea de contexto */
+.tl-title { font-size: 1.6rem; font-weight: 600; color: var(--tl-ink); margin: 0 0 var(--tl-s1) 0; letter-spacing: -0.02em; }
+.tl-context { color: var(--tl-muted); font-size: .9rem; margin: 0 0 var(--tl-s3) 0; }
+.tl-lead { color: var(--tl-ink-2); font-size: 1rem; max-width: 70ch; margin: 0 0 var(--tl-s4) 0; line-height: 1.55; }
+
+/* Estado de los datos: una línea, sin decoración */
+.tl-banner { display: inline-block; font-size: .82rem; padding: .3rem .65rem; border-radius: 6px;
+  border: 1px solid var(--tl-line); color: var(--tl-ink-2); margin: 0 0 var(--tl-s6) 0; }
+.tl-banner b { font-weight: 600; color: var(--tl-ink); }
+.tl-banner.synthetic { color: var(--tl-synth); border-color: rgba(226,176,74,0.45); background: rgba(226,176,74,0.06); }
+.tl-banner.synthetic b { color: var(--tl-synth); }
+
+/* Respuesta principal de cada pantalla */
+.tl-verdict { font-size: 1.3rem; font-weight: 600; color: var(--tl-ink); margin: var(--tl-s2) 0 var(--tl-s1) 0; }
+.tl-facts { color: var(--tl-ink-2); font-size: .92rem; margin: 0 0 var(--tl-s4) 0; font-variant-numeric: tabular-nums; }
+.tl-pattern { font-size: 1.15rem; font-weight: 600; color: var(--tl-ink); margin: 0 0 var(--tl-s1) 0; max-width: 70ch; }
+.tl-sub { color: var(--tl-ink-2); margin: 0 0 var(--tl-s4) 0; max-width: 70ch; }
+.tl-site { display: inline-flex; align-items: center; gap: .45rem; color: var(--tl-ink); font-weight: 600; }
+.tl-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
 .tl-dot.A { background: var(--tl-a); } .tl-dot.B { background: var(--tl-b); } .tl-dot.diff { background: var(--tl-diff); }
-.tl-verdict { font-size: 1.35rem; font-weight: 700; color: var(--tl-ink); margin: 2px 0; }
-.tl-pattern { background: var(--tl-surface-2); border: 1px solid var(--tl-border); border-radius: 12px; padding: 16px 18px; }
-.tl-pattern .t { font-size: 1.2rem; font-weight: 700; color: var(--tl-ink); }
-.tl-pattern .d { color: var(--tl-ink-2); margin-top: 4px; }
-.tl-check { font-size: .88rem; color: var(--tl-ink); margin: 2px 0; }
-.tl-check .ok { color: #0ca30c; font-weight: 700; } .tl-check .no { color: #ec835a; font-weight: 700; }
-.tl-foot { color: var(--tl-muted); font-size: .78rem; margin-top: 24px; border-top: 1px solid var(--tl-border); padding-top: 10px; }
-section[data-testid="stSidebar"] .tl-brand { font-weight: 800; font-size: 1.15rem; color: var(--tl-ink); }
-section[data-testid="stSidebar"] .tl-brand span { color: var(--tl-accent); }
+.tl-kv { display: grid; grid-template-columns: max-content 1fr; gap: 2px 14px; font-size: .86rem; margin-top: var(--tl-s2); }
+.tl-kv .k { color: var(--tl-muted); } .tl-kv .v { color: var(--tl-ink); overflow-wrap: anywhere; }
+section[data-testid="stSidebar"] .tl-brand { font-weight: 600; font-size: 1.05rem; color: var(--tl-ink); }
 @media (max-width: 640px) {
-  .tl-hero h1 { font-size: 1.6rem; }
-  .block-container { padding-left: 1rem; padding-right: 1rem; }
+  .block-container { padding-left: 1rem; padding-right: 1rem; padding-top: 2.6rem; }
+  .tl-title { font-size: 1.35rem; }
 }
 </style>
 """
@@ -65,18 +71,19 @@ def esc(x) -> str:
 
 
 def banner(kind: str, source: str = "") -> None:
-    """kind: 'synthetic' | 'csv_synthetic' | 'power' | 'csv'."""
+    """Estado de los datos en una sola línea. kind: 'synthetic' | 'csv_synthetic' | 'power' | 'csv'."""
     if kind in ("synthetic", "csv_synthetic"):
-        origin = " · cargados desde CSV" if kind == "csv_synthetic" else ""
-        st.markdown(f'<div class="tl-banner synthetic">⚠ DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN{origin} · '
-                    'no describen ningún lugar real ni son mediciones de NASA</div>', unsafe_allow_html=True)
+        origin = " (cargados desde CSV)" if kind == "csv_synthetic" else ""
+        html_ = (f'<div class="tl-banner synthetic"><b>DATOS SINTÉTICOS — SOLO DEMOSTRACIÓN</b>{origin} · '
+                 'no describen ningún lugar real ni son mediciones de NASA</div>')
     elif kind == "csv":
         src = f"fuente declarada: {esc(source)}" if source else "fuente aún no declarada"
-        st.markdown(f'<div class="tl-banner user">● Datos cargados desde CSV · {src} · '
-                    'procedencia no verificada por el laboratorio</div>', unsafe_allow_html=True)
+        html_ = (f'<div class="tl-banner user"><b>Datos cargados desde CSV</b> · {src} · '
+                 'procedencia no verificada por el laboratorio</div>')
     else:
-        st.markdown('<div class="tl-banner real">● Datos públicos reales de NASA POWER (MERRA-2) · '
-                    'valores de punto de cuadrícula, no promedios regionales</div>', unsafe_allow_html=True)
+        html_ = ('<div class="tl-banner real"><b>Datos reales de NASA POWER</b> (MERRA-2) · '
+                 'valores de punto de cuadrícula, no promedios regionales</div>')
+    st.markdown(html_, unsafe_allow_html=True)
 
 
 def site_tag(slot: str, label: str) -> str:
