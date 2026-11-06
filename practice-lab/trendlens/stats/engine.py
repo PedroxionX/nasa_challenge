@@ -248,7 +248,7 @@ def build_warnings(res: TrendResult) -> list[TrendWarning]:
                                   f"MCO (p = {p_ols:.3g}) y Mann-Kendall (p = {core.primary.p_value:.3g}) no coinciden "
                                   "en la significancia: el resultado depende del método; interpretar con cautela."))
     if res.seasonal is not None and res.seasonal.note:
-        w.append(TrendWarning("info", "seasonal_ties", res.seasonal.note))
+        w.append(TrendWarning("info", "seasonal_note", res.seasonal.note))
     return w
 
 

@@ -237,9 +237,12 @@ def seasonal_mann_kendall(matrix: pd.DataFrame, alpha: float = 0.05) -> Seasonal
         slopes.append(sen_slope_pairs(ts, xs))
     vals = matrix.to_numpy(dtype=float)
     zero_frac = float(np.mean(vals[~np.isnan(vals)] == 0)) if np.isfinite(vals).any() else 0.0
-    if n_seasons == 0 or var_tot <= 0:
+    if n_seasons == 0:
         return SeasonalMKResult(s_tot, var_tot, 0.0, float("nan"), float("nan"), float("nan"), n_seasons,
                                 len(years), per, zero_frac, alpha, False, "Datos insuficientes por estación.")
+    if var_tot <= 0:  # cada mes es idéntico entre años: no hay tendencia que evaluar (como MK constante)
+        return SeasonalMKResult(0.0, 0.0, 0.0, 1.0, 0.0, 0.0, n_seasons, len(years), per, zero_frac, alpha, True,
+                                "Cada mes es constante entre años: no hay variabilidad interanual que evaluar.")
     z = z_score(s_tot, var_tot)
     slope = float(np.median(np.concatenate(slopes))) if slopes else float("nan")
     note = ""
