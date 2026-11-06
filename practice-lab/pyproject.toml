@@ -1,0 +1,12 @@
+[project]
+name = "trendlens-lab"
+version = "0.1.0"
+description = "Laboratorio de práctica (no competitivo) para análisis de tendencias en series temporales del sistema Tierra."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: pruebas que consultan la API real de NASA POWER (se omiten salvo que se use --run-live)",
+]
+addopts = "-ra"

@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest==9.2.0
+# Solo para pruebas: implementación independiente de Mann-Kendall usada como referencia cruzada.
+pymannkendall==1.4.3
