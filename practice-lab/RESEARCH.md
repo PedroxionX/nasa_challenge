@@ -96,7 +96,7 @@ La guía de 2022 **no publica ponderaciones**. Solo pide prestar "igual atenció
 ## D. Decisiones técnicas (justificación breve)
 
 - **Python 3.12 + Streamlit:** el estudio de la estadística y la interfaz viven en un solo lenguaje, que el equipo puede leer.
-- **SciPy:** `theilslopes` (IC de Sen) y `linregress`. Mann-Kendall, Hamed-Rao y Seasonal MK son **implementación propia**, validada contra `pymannkendall` en las pruebas. Así se puede usar el **tiempo real** (años) y no índices.
+- **SciPy:** `linregress` y `theilslopes` (referencia del IC de Sen). Mann-Kendall, MK con corrección AR(1) (prueba principal), Hamed-Rao y Seasonal MK son **implementación propia**, validada contra `pymannkendall` en las pruebas. Así se puede usar el **tiempo real** (años) y no índices. La prueba principal se eligió con un experimento Monte Carlo reproducible (ver `SCIENTIFIC_METHOD.md`).
 - **Plotly:** gráficas interactivas sin servidor adicional.
 - **Sin base de datos ni microservicios:** caché JSON local para trabajar sin red durante la demostración.
 - **Una sola API externa (NASA POWER):** las demás fuentes quedan documentadas en `DATA_SOURCES.md`.

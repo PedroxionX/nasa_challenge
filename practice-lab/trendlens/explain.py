@@ -123,9 +123,11 @@ def explain_trend(res: TrendResult) -> dict[str, list[str] | str]:
             unc.append("El intervalo de confianza **incluye el cero**: ni siquiera el signo de la tendencia está claro.")
         else:
             unc.append("El intervalo de confianza **no incluye el cero**: el signo de la pendiente es consistente con los datos.")
-    if res.core.autocorrelation_corrected:
-        unc.append(f"Se corrigió por autocorrelación ({res.core.primary.note}): los años vecinos se parecen, así que "
-                   "hay menos información independiente de la que sugiere el número de años.")
+    if res.core.primary.significant_lags:
+        unc.append(f"Hay autocorrelación significativa ({res.core.primary.note}): los años vecinos se parecen, así que "
+                   "hay menos información independiente de la que sugiere el número de años; el valor p ya lo considera.")
+    elif res.core.autocorrelation_corrected:
+        unc.append(f"Se aplicó una corrección leve por autocorrelación ({res.core.primary.note}).")
     o = res.core.ols
     if o is not None and not o.constant_series:
         ols_lo, ols_hi = (o.adj_ci_low, o.adj_ci_high) if o.adj_valid else (o.ci_low, o.ci_high)
