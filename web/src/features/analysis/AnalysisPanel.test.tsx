@@ -148,6 +148,19 @@ describe('AnalysisPanel · teclado y anuncio (T006)', () => {
     expect(screen.queryByRole('article')).toBeNull()
   })
 
+  it('tras cambiar el periodo, Escape devuelve el foco en el acto (sin esperar a un cuadro de animación)', async () => {
+    await renderPanel('?region=MX-BCN&var=T2M', true)
+    await screen.findByText('Sube')
+    const desde = screen.getByRole('combobox', { name: 'Desde' }) as HTMLSelectElement
+    desde.focus()
+    await act(async () => { fireEvent.change(desde, { target: { value: '2000' } }) })
+    const raf = vi.spyOn(window, 'requestAnimationFrame')
+    act(() => { fireEvent.keyDown(desde, { key: 'Escape' }) })
+    expect(document.activeElement?.id).toBe('region-search')
+    expect(params().get('region')).toBeNull()
+    expect(raf).not.toHaveBeenCalled()
+  })
+
   it('el resultado se anuncia en una región viva', async () => {
     await renderPanel('?region=MX-BCN&var=T2M')
     await screen.findByText('Sube')

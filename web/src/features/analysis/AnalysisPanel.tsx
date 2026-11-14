@@ -22,8 +22,12 @@ const SEARCH_INPUT_ID = 'region-search'
 
 const COUNTRY: Record<CountryCode, string> = { MX: 'México', US: 'Estados Unidos' }
 
+/**
+ * El buscador vive en la cabecera y nunca se desmonta: se enfoca en el acto, sin esperar a que el panel
+ * desaparezca (con requestAnimationFrame el navegador podía retrasarlo y el foco caía en <body>).
+ */
 function focusSearch() {
-  requestAnimationFrame(() => document.getElementById(SEARCH_INPUT_ID)?.focus())
+  document.getElementById(SEARCH_INPUT_ID)?.focus()
 }
 
 export default function AnalysisPanel() {

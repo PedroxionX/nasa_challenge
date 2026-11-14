@@ -27,8 +27,8 @@ Requiere la base 002 fusionada. Trabaja con el archivo de ejemplo hasta que 003 
 
 ## Phase 3: User Story 3 - Cambiar el periodo (P1)
 
-- [ ] T007 [US3] Dos `<select>` nativos «Desde» y «Hasta» que solo ofrecen años válidos, y «Usar todo el periodo», en web/src/features/analysis/PeriodControl.tsx — 2 h · T004 · Acepta: FR-A06; operable con teclado y tacto; nunca invertido ni más corto que `min_window_years`
-- [ ] T008 [US3] Aviso de periodo elegido y vista de variación según el año inicial (mini gráfica de `slope_decade` con banda contra año inicial, año final fijo, con «Ver como tabla») en web/src/features/analysis/PeriodVariation.tsx — 2 h · T007 · Acepta: FR-A07; el aviso solo aparece fuera del periodo completo; las cifras coinciden con las filas de `windows`
+- [x] T007 [US3] Dos `<select>` nativos «Desde» y «Hasta» que solo ofrecen años válidos, y «Usar todo el periodo», en web/src/features/analysis/PeriodControl.tsx — 2 h · T004 · Acepta: FR-A06; operable con teclado y tacto; nunca invertido ni más corto que `min_window_years`
+- [x] T008 [US3] Aviso de periodo elegido y vista de variación según el año inicial (mini gráfica de `slope_decade` con banda contra año inicial, año final fijo, con «Ver como tabla») en web/src/features/analysis/PeriodVariation.tsx — 2 h · T007 · Acepta: FR-A07; el aviso solo aparece fuera del periodo completo; las cifras coinciden con las filas de `windows`
 
 ## Phase 4: Polish
 
