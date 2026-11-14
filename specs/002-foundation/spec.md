@@ -32,6 +32,18 @@ function loadCatalog(): Promise<Catalog>
 function loadSeries(variableId: VariableId, regionId: string): Promise<SeriesFile>
 function loadMap(variableId: VariableId): Promise<MapFile>
 function pickWindow(series: SeriesFile, from: number, to: number): TrendRow | null  // null ⇒ datos insuficientes
+function windowKey(from: number, to: number): string                       // clave de MapFile.windows: "1981-2025"
+class DataError extends Error { kind: 'not_found' | 'network' | 'parse' | 'schema_version' | 'invalid'; url: string }
+function isDataError(e: unknown): e is DataError
+
+// web/src/app/state.ts — además de useAppState (uso del armazón y del globo)
+function useStateNotice(): string | null; function dismissStateNotice(): void   // aviso por valor de URL inválido
+function configureState(l: { firstYear: number; lastYear: number; regionIds: Iterable<string> }): void  // lo llama el armazón al cargar el catálogo
+function markWebglUnavailable(): void                                       // el globo (005) lo llama si WebGL falla tras arrancar
+function getLimits(): { firstYear: number; lastYear: number; regionIds: ReadonlySet<string> | null }
+
+// web/src/lib/assets.ts
+function asset(path: string): string   // URL de web/public/ válida bajo subruta; nunca usar '/data/...' directamente
 
 // Entradas que el armazón coloca; ninguna recibe props, todas leen useAppState()
 // features/query/index.ts    → QueryBar
