@@ -38,8 +38,8 @@ Esfuerzo: 20 h (18 h originales + T010 y T011).
 
 ## Phase 5: Convergence
 
-- [ ] T012 Definir en el panel, la primera vez que aparecen, «intervalo del 95 %», «valor p», «α» y «recta de Sen» con las definiciones de ../001-trend-explorer-mvp/research.md, accesibles con teclado y tacto, en web/src/features/analysis/ per Constitution: restricciones (términos técnicos definidos) (partial)
-- [ ] T013 Mostrar en la definición desplegable de web/src/features/query/VariablePicker.tsx la unidad (`unit_annual`) y el origen (`kind` y `product_short_name`) leídos del catálogo per FR-001 (partial)
-- [ ] T014 Añadir a «Detalles técnicos» en web/src/features/analysis/ResultCards.tsx los supuestos del método (cambio monótono, valores anuales de años completos, autocorrelación de lag 1 corregida, α fijado de antemano) per FR-012 (partial)
+- [x] T012 Definir en el panel, la primera vez que aparecen, «intervalo del 95 %», «valor p», «α» y «recta de Sen» con las definiciones de ../001-trend-explorer-mvp/research.md, accesibles con teclado y tacto, en web/src/features/analysis/ per Constitution: restricciones (términos técnicos definidos) (partial)
+- [x] T013 Mostrar en la definición desplegable de web/src/features/query/VariablePicker.tsx la unidad (`unit_annual`) y el origen (`kind` y `product_short_name`) leídos del catálogo per FR-001 (partial)
+- [x] T014 Añadir a «Detalles técnicos» en web/src/features/analysis/ResultCards.tsx los supuestos del método (cambio monótono, valores anuales de años completos, autocorrelación de lag 1 corregida, α fijado de antemano) per FR-012 (partial)
 - [ ] T015 Verificar, cuando 006 entregue `explainTrend`, que la frase de «En palabras» use punto decimal y menos tipográfico como el resto del panel, y avisar a 006 si no per FR-A08 (partial)
-- [ ] T016 Actualizar la estructura de plan.md: `fixtures/` sustituido por `testData.ts` (el contrato trae ya las columnas opcionales) y módulos de apoyo `analysisData.ts`, `useAnalysisData.ts`, `search.ts` per plan: Project Structure; T011 (contradicts)
+- [x] T016 Actualizar la estructura de plan.md: `fixtures/` sustituido por `testData.ts` (el contrato trae ya las columnas opcionales) y módulos de apoyo `analysisData.ts`, `useAnalysisData.ts`, `search.ts` per plan: Project Structure; T011 (contradicts)
