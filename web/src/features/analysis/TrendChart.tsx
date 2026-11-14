@@ -40,6 +40,13 @@ function useWidth(fallback = 320) {
   return { ref, width }
 }
 
+/** Por qué la gráfica no lleva recta: los puntos son los valores del archivo, no una tendencia. */
+function noLineReason(row: TrendRow | null): string {
+  if (!row || row.status === 'insufficient') return 'Sin recta de tendencia: hay menos de 10 años completos en este periodo.'
+  if (row.status === 'invalid') return 'Sin recta de tendencia: el análisis no es válido para estos datos (ver «Detalles técnicos»).'
+  return 'Recta de tendencia pendiente: el archivo aún no trae su posición.'
+}
+
 /** Inserta un hueco (`null`) entre años no consecutivos para que la línea no los una. */
 function withGaps(points: YearPoint[]): (YearPoint | null)[] {
   const out: (YearPoint | null)[] = []
@@ -222,9 +229,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
               {bandPath && <span className="legend-item"><i className="legend-swatch legend-band" aria-hidden="true" />Intervalo del 95 %</span>}
             </>
           )
-          : row && HAS_TREND.has(row.status) && (
-            <span className="legend-item legend-note">Recta de tendencia pendiente: el archivo aún no trae su posición.</span>
-          )}
+          : <span className="legend-item legend-note">{noLineReason(row)}</span>}
         {excludedText && <span className="legend-item"><i className="legend-swatch legend-excluded" aria-hidden="true" />{excludedText}</span>}
         {partial && (
           <span className="legend-item"><i className="legend-swatch legend-partial" aria-hidden="true" />

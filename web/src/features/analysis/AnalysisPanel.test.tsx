@@ -94,6 +94,9 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     expect(await screen.findByText('Análisis no válido')).toBeTruthy()
     expect(panel().textContent).not.toMatch(/p [=<]/)
     expect(panel().textContent).toMatch(/salto brusco hacia 2001/)
+    // La gráfica muestra los valores anuales y explica por qué no hay recta.
+    expect(screen.getByText(/Sin recta de tendencia: el análisis no es válido/)).toBeTruthy()
+    expect(document.querySelector('.trend-chart-sen')).toBeNull()
     expectMandatory()
   })
 })
