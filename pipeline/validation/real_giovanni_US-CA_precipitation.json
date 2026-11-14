@@ -1,0 +1,44 @@
+{
+ "check": "Giovanni frente al pipeline con dos reglas espaciales",
+ "region": "US-CA",
+ "variable": "precipitation",
+ "unit": "mm",
+ "giovanni": {
+  "region": "US-CA",
+  "variable": "precipitation",
+  "service": "Time Series, Area-Averaged (ArAvTs)",
+  "giovanni_variable": "GPM_3IMERGM_07_precipitation",
+  "shape": "tl_2014_us_state/shp_13 (California)",
+  "units_giovanni": "mm/hr",
+  "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2001-01-01T00:00:00Z&endtime=2024-12-31T23:59:59Z&shape=tl_2014_us_state/shp_13&data=GPM_3IMERGM_07_precipitation",
+  "retrieved": "2026-11-14",
+  "months": 288,
+  "annual_method": "suma de 12 meses de tasa (mm/hr) × 24 × días del mes, mm"
+ },
+ "rules": {
+  "fraccion_cubierta": {
+   "n_cells": 4394,
+   "n_years": 24,
+   "mean_diff": -2.8958,
+   "max_abs_diff": 5.5892,
+   "max_abs_diff_rel": 0.01056,
+   "slope_decade_pipeline": -6.6424,
+   "slope_decade_giovanni": -5.9852,
+   "tolerance": 10.5894,
+   "within_tolerance": true
+  },
+  "centro_dentro": {
+   "n_cells": 4160,
+   "n_years": 24,
+   "mean_diff": -3.3476,
+   "max_abs_diff": 6.0144,
+   "max_abs_diff_rel": 0.01136,
+   "slope_decade_pipeline": -6.5894,
+   "slope_decade_giovanni": -5.9852,
+   "tolerance": 10.5894,
+   "within_tolerance": true
+  }
+ },
+ "pass_with_giovanni_rule": true,
+ "checked_at_utc": "2026-11-14T22:41:34Z"
+}

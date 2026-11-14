@@ -1,22 +1,22 @@
-# Datos reales — versión PROVISIONAL (NASA POWER)
+# Datos reales — fuentes de GES DISC
 
-Publicado por 003 el 2026-11-14 con `python pipeline/build.py --source power --out web/public/data/trends`.
-**Son datos reales** (`provenance.is_synthetic: false`) de las 84 regiones y las dos variables, con las tendencias de
-todas las ventanas de al menos 10 años, según el [contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md)
-revisado el 2026-11-14.
+Publicado por 003 el 2026-11-14 con `python pipeline/build.py --out pipeline/out/gesdisc_all` (y `pipeline/fix_maps.py`),
+copiado a esta carpeta tras validarlo. **Son datos reales** (`provenance.is_synthetic: false`) de las 84 regiones y las
+dos variables, con las tendencias de todas las ventanas de al menos 10 años de cada variable, según el
+[contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md) revisado el 2026-11-14.
+Sustituye a la versión provisional con NASA POWER.
 
-**Por qué es provisional:** la fuente acordada por el equipo son los productos de GES DISC (MERRA-2 `M2TMNXSLV` e
-IMERG `GPM_3IMERGM`), cuya lectura completa tarda más de una hora. Mientras termina se publica la alternativa
-NASA POWER, elegida a mano y declarada en cada archivo. Esta carpeta se sustituirá entera por la salida de GES DISC.
+| Variable | Producto | Tipo | Periodo | Ventanas | Mapa |
+|---|---|---|---|---|---|
+| `air_temperature` | MERRA-2 `M2TMNXSLV` v5.12.4, `T2M` (K → °C), 0,5° × 0,625° | `reanalysis` | 1980–2025 (2026 parcial) | 703 | `°C/década` |
+| `precipitation` | GPM IMERG Final `GPM_3IMERGM` v07, mm/h → mm, 0,1° | `observation` | 2001–2024 (2025 parcial: la colección v07 termina en 2025-09) | 120 | `%/década` |
 
-| Variable | Fuente en esta versión | Periodo | Ventanas | Mapa |
-|---|---|---|---|---|
-| `air_temperature` | NASA POWER `T2M` = el mismo MERRA-2 (`kind: reanalysis`) | 1981–2025 | 666 | `°C/década` |
-| `precipitation` | NASA POWER `PRECTOTCORR`, reanálisis MERRA-2 (`kind: reanalysis`) | 1981–2025 | 666 | `%/década` |
+Cada serie es el promedio de área del estado (cos(latitud) × fracción de la celda dentro del polígono).
 
-Al pasar a GES DISC cambian: temperatura 1980–2025 (703 ventanas, mismo producto) y precipitación de IMERG, que es
-observación (`kind: observation`), 2001–2024 (120 ventanas). La interfaz debe tomar el periodo y el `kind` del catálogo.
+Validación (en `pipeline/validation/`):
+- `real_single_cell.json`: la serie de una celda (US-DC) coincide con el gránulo original (diferencia 0,0).
+- `real_sanity.json`: las 84 regiones con valores físicos plausibles.
+- `real_giovanni_*.json`: Texas y California frente a Giovanni con dos reglas espaciales. Precipitación dentro del
+  2 % con ambas; temperatura de Texas dentro de 0,1 °C con la regla de Giovanni; California explicado por el contorno.
 
-Validación: `pipeline/validation/power_sanity.json` (84 regiones con valores físicos plausibles) y
-`pipeline/validation/t005.json` (celdas y región de una sola celda iguales a la fuente).
-Cómo citar: `pipeline/ATTRIBUTION.md`, sección 2.
+Cómo citar: `pipeline/ATTRIBUTION.md`, sección 1. Lecturas: `pipeline/manifest/` (gránulo, URL, fecha y huella).

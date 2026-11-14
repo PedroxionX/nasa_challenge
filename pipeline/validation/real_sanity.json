@@ -1,0 +1,601 @@
+{
+ "check": "sanidad física de las 84 regiones",
+ "out": "out\\gesdisc_all",
+ "checked_at_utc": "2026-11-14T22:39:23Z",
+ "n_checks": 168,
+ "failed": [],
+ "jumps_to_review": [
+  {
+   "variable": "air_temperature",
+   "region": "US-AK",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    -5.5,
+    -2.74
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-AK",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    -1.55,
+    -4.06
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    11.8,
+    8.54
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-IL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    13.34,
+    10.54
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-KS",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    15.14,
+    12.58
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    6.19,
+    8.87
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.85,
+    4.44
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    3.75,
+    6.64
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    7.27,
+    4.67
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.82,
+    11.82
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MT",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    6.8,
+    4.12
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    6.9,
+    3.95
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.89,
+    4.79
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    4.35,
+    7.02
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    7.94,
+    5.09
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-NE",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    10.09,
+    12.81
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-NE",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    12.81,
+    10.01
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-OK",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    17.59,
+    15.08
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-SD",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    8.1,
+    10.84
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-SD",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    10.84,
+    7.88
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    5.63,
+    8.33
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    8.68,
+    5.36
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    4.27,
+    6.88
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-AGU",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    935.34,
+    518.81
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCN",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    68.93,
+    180.9
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCN",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    112.82,
+    209.93
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    198.36,
+    88.94
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    88.94,
+    291.56
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    200.31,
+    77.74
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    81.32,
+    250.8
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    270.71,
+    114.18
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    587.49,
+    201.31
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-DUR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    944.68,
+    539.75
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-NLE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    479.69,
+    910.03
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    910.03,
+    318.6
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    1088.54,
+    569.34
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    569.34,
+    1070.6
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    1070.6,
+    545.2
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-YUC",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    1107.05,
+    1881.25
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-AR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    1914.32,
+    1053.5
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-AZ",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    185.08,
+    365.23
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-CA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    424.83,
+    765.07
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-NM",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    258.31,
+    495.45
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-OK",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    807.02,
+    1405.81
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-SD",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    830.85,
+    445.88
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-TX",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    1118.88,
+    626.78
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-TX",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    625.41,
+    1099.03
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-UT",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    408.13,
+    202.14
+   ]
+  }
+ ],
+ "all_pass": true,
+ "examples": {
+  "MX-BCN": 19.852,
+  "MX-YUC": 26.253,
+  "US-AK": -3.949,
+  "US-HI": 21.667,
+  "US-TX": 18.922
+ },
+ "examples_precip_mm": {
+  "MX-BCS": 174.176,
+  "MX-SON": 415.647,
+  "MX-TAB": 2035.428,
+  "US-LA": 1565.099,
+  "US-NV": 246.713
+ },
+ "alaska_colder_than_texas": true
+}
