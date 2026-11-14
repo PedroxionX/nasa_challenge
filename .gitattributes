@@ -1,0 +1,3 @@
+# Los scripts de arranque deben conservar sus finales de línea en cualquier sistema.
+correr   text eol=lf
+*.cmd    text eol=crlf

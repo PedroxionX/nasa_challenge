@@ -1,0 +1,15 @@
+/* Estilos del globo (propiedad de 005 tras la fusión de la base). */
+.globe-container { position: absolute; inset: 0; overflow: hidden; }
+
+.globe-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px;
+  background: var(--glass-strong);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: var(--font-sans);
+}
+.globe-tooltip b { font-size: 13px; }
+.globe-tooltip span { font-size: 11px; color: var(--muted); }

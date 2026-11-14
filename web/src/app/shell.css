@@ -1,0 +1,148 @@
+/*
+ * Armazón adaptable (002 T005). Solo 002 edita este archivo.
+ * Escritorio (≥ 900 px): cabecera arriba; globo a todo el ancho detrás; panel opaco a la derecha.
+ * Móvil y tableta (< 900 px): hoja inferior con tres alturas. El punto de corte coincide con DESKTOP_QUERY.
+ * Ninguna zona se superpone a otra; el globo recibe la zona tapada en --panel-inset-*.
+ */
+.shell {
+  --panel-w: clamp(320px, 32vw, 420px);
+  --sheet-h: 50%;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-areas: "header" "notices" "stage";
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* ---------- Cabecera ---------- */
+.shell-header {
+  grid-area: header;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  padding-top: max(var(--space-2), env(safe-area-inset-top));
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-line);
+}
+.shell-brand { flex: 0 0 auto; min-width: 0; }
+.shell-brand h1 { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: 0.01em; }
+.shell-brand p { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+.shell-query { flex: 1 1 22rem; min-width: 0; }
+.shell-help { flex: 0 0 auto; margin-left: auto; }
+
+/* ---------- Avisos (en flujo: no tapan nada) ---------- */
+.shell-notices { grid-area: notices; z-index: 3; display: grid; gap: 1px; background: var(--color-line); }
+.shell-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-1) var(--space-4);
+  font-size: var(--text-sm);
+  background: var(--color-panel-raised);
+}
+
+/* ---------- Escenario ---------- */
+.shell-stage {
+  grid-area: stage;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+.shell-welcome {
+  position: absolute;
+  z-index: 2;
+  left: var(--space-4);
+  bottom: max(var(--space-4), env(safe-area-inset-bottom));
+  width: min(26rem, calc(100% - 2 * var(--space-4)));
+}
+
+/* ---------- Panel / hoja ---------- */
+.shell-panel {
+  grid-area: stage;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: var(--color-panel);
+  border-top: 1px solid var(--color-line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  align-self: end;
+  height: var(--sheet-h);
+  transition: height var(--dur);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.shell[data-sheet="peek"] { --sheet-h: 7.5rem; }
+.shell[data-sheet="half"] { --sheet-h: 50%; }
+.shell[data-sheet="full"] { --sheet-h: calc(100% - 5rem); } /* deja visible la barra del globo */
+
+.shell-sheet-handle {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: var(--tap);
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.shell-sheet-handle span { width: 2.5rem; height: 4px; border-radius: 2px; background: var(--color-text-muted); }
+.shell-panel-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-4) var(--space-4); }
+
+@media (min-width: 900px) {
+  .shell-panel {
+    justify-self: end;
+    align-self: stretch;
+    width: var(--panel-w);
+    height: auto;
+    border-top: 0;
+    border-left: 1px solid var(--color-line);
+    border-radius: 0;
+    transition: none;
+  }
+  .shell-sheet-handle { display: none; }
+  .shell-panel-body { padding-top: var(--space-4); }
+}
+
+/* ---------- Hoja de métodos ---------- */
+.shell-methods {
+  width: min(40rem, calc(100vw - 2 * var(--space-4)));
+  max-height: calc(100dvh - 2 * var(--space-6));
+  padding: var(--space-5);
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+.shell-methods::backdrop { background: var(--color-overlay); }
+.shell-methods-close { float: right; }
+
+/* ---------- Errores de zona ---------- */
+.zone-error {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  padding: var(--space-4);
+  color: var(--color-text);
+  background: var(--color-panel);
+}
+.shell-stage > .zone-error { position: absolute; inset: 0; place-content: center; justify-items: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .shell-panel { transition: none; }
+}
+
+/* Cabecera compacta en pantallas estrechas: marca + Métodos en una fila; consulta debajo. */
+@media (max-width: 899px) {
+  .shell-brand p { display: none; }
+  .shell-help { order: 2; }
+  .shell-query { order: 3; flex-basis: 100%; }
+}

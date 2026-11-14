@@ -1,0 +1,108 @@
+/*
+ * Variables de diseño compartidas. Solo 002 edita este archivo.
+ *
+ * Paleta «Ocaso» (violeta–ámbar) y tipografía entregadas por 006 (006 T001, docs/paleta.md, 2026-11-14).
+ * 006 midió los colores con simulación de deuteranopía, protanopía y tritanopía; tokens.test.ts mide el
+ * contraste de cada par de texto (mínimo 4,5:1).
+ *
+ * Nombres canónicos: --color-*. Los nombres anteriores (--bg, --surface, --trend-1…) quedan como ALIAS
+ * para no romper lo que ya los usa (005 lee --trend-1…5, --no-data y --selected con getComputedStyle).
+ * Código nuevo: usar --color-*.
+ */
+:root {
+  /* ---------- Ocaso: escala de tendencia (5 clases, de baja a sube) ---------- */
+  --color-trend-down-strong: #3b2a7a;  /* Baja mucho: 1,6:1 con el fondo → borde claro obligatorio */
+  --color-trend-down-weak: #8e86d6;    /* Baja */
+  --color-trend-neutral: #e3ded6;      /* Casi sin cambio */
+  --color-trend-up-weak: #f2b84b;      /* Sube */
+  --color-trend-up-strong: #b45309;    /* Sube mucho: 3,7:1 con el fondo → borde claro obligatorio */
+
+  /* ---------- Ocaso: mapa ---------- */
+  --color-no-data: #8a93a0;            /* trama diagonal sobre transparente, siempre con la etiqueta «Sin datos» */
+  --color-selection: #ffffff;          /* contorno de 3 px + elevación; nunca solo color */
+  --color-region-border: rgba(255, 255, 255, 0.6); /* borde de región, 1 px */
+  --map-fill-opacity: 0.9;             /* relleno de regiones con datos (con ~60 % los colores se ensucian) */
+
+  /* ---------- Ocaso: superficies y texto ---------- */
+  --color-bg: #16121f;                 /* fondo de la aplicación */
+  --color-panel: #1f1a2e;              /* panel de análisis y cabecera: opacos, sin vidrio */
+  --color-line: #3a3150;               /* bordes y divisores */
+  --color-text: #e8edf4;               /* 14,3:1 sobre el panel */
+  --color-text-muted: #a9b4c2;         /* 8,0:1 sobre el panel; también procedencia y notas */
+
+  /* ---------- Ocaso: veredictos (siempre icono dibujado + palabra; nunca solo color) ---------- */
+  --color-verdict-up: #f2b84b;         /* Sube con evidencia */
+  --color-verdict-down: #8e86d6;       /* Baja con evidencia */
+  --color-verdict-insufficient: #c4b08a; /* Evidencia insuficiente */
+  --color-verdict-invalid: #8a93a0;    /* Datos insuficientes / no válido */
+
+  /*
+   * ---------- Complementos de 002 (Ocaso no los define; pendientes de confirmar con 006) ----------
+   * Controles sobre el panel y color de interacción (foco, control activo). El acento es casi neutro
+   * a propósito: no debe confundirse con ningún color de dato (violeta = baja, ámbar = sube).
+   */
+  --color-panel-raised: #2a2340;       /* botones, selects, tarjetas sobre el panel */
+  --color-accent: #d9d2ff;             /* foco visible, control activo */
+  --color-on-accent: #16121f;
+  --color-danger: #ff8a80;
+  --color-overlay: rgba(22, 18, 31, 0.78);
+
+  /* ---------- Ocaso: tipografía ---------- */
+  /* Inter autoalojada (latino, 400/500/700, font-display: swap): PENDIENTE de añadir la fuente (ver tasks.md de 002). */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --text-xs: 0.75rem;    /* 400 · procedencia, notas (color --color-text-muted) */
+  --text-sm: 0.875rem;   /* 400 · etiquetas, controles */
+  --text-base: 1rem;     /* 400 · texto de lectura */
+  --text-lg: 1.125rem;   /* 500 · frase en palabras, nombre de región */
+  --text-xl: 1.5rem;     /* 700 · cifra principal (+X,XX °C/década) */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+  /* Toda cifra: font-variant-numeric: tabular-nums */
+
+  /* ---------- Espaciado y forma ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --tap: 44px;                 /* objetivo táctil mínimo */
+
+  /* ---------- Movimiento ---------- */
+  --dur-fast: 150ms;
+  --dur: 250ms;
+
+  /* ---------- Armazón: el panel tapa esta zona del escenario (las escribe Shell.tsx) ---------- */
+  --panel-inset-right: 0px;
+  --panel-inset-bottom: 0px;
+
+  /* ---------- Alias de compatibilidad (no usar en código nuevo) ---------- */
+  --bg: var(--color-bg);
+  --surface: var(--color-panel);
+  --surface-2: var(--color-panel-raised);
+  --border: var(--color-line);
+  --overlay: var(--color-overlay);
+  --text: var(--color-text);
+  --muted: var(--color-text-muted);
+  --accent: var(--color-accent);
+  --on-accent: var(--color-on-accent);
+  --danger: var(--color-danger);
+  --trend-1: var(--color-trend-down-strong);
+  --trend-2: var(--color-trend-down-weak);
+  --trend-3: var(--color-trend-neutral);
+  --trend-4: var(--color-trend-up-weak);
+  --trend-5: var(--color-trend-up-strong);
+  --no-data: var(--color-no-data);
+  --selected: var(--color-selection);
+  --text-md: var(--text-base);
+  --glass: rgba(31, 26, 46, 0.78);
+  --glass-strong: rgba(31, 26, 46, 0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur: 0ms; }
+}

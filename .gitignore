@@ -1,0 +1,23 @@
+# Configuración local del editor y del sistema.
+.idea/
+.DS_Store
+
+# Dependencias y salidas de compilación.
+node_modules/
+dist/
+dist-ssr/
+.venv/
+
+# Cachés y archivos generados del laboratorio.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+practice-lab/exports/
+
+# Credenciales de Earthdata y otras: solo en la máquina que ejecuta el pipeline (research D5).
+.netrc
+_netrc
+.env
+.env.*
+!.env.example
