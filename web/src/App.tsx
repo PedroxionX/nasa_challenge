@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import EarthGlobe, { type EarthGlobeHandle } from './components/EarthGlobe'
-import RegionPanel from './components/RegionPanel'
+import './app/shell.css'
+import EarthGlobe, { type EarthGlobeHandle } from './features/globe/EarthGlobe'
 import {
   COUNTRY_NAMES,
   COUNTRY_VIEWS,
@@ -9,7 +9,7 @@ import {
   type CountryCode,
   type GlobeFeature,
   type RegionProps,
-} from './lib/geo'
+} from './features/globe/geo'
 
 const COUNTRIES = Object.keys(COUNTRY_NAMES) as CountryCode[]
 
@@ -96,8 +96,6 @@ export default function App() {
           ))}
         </select>
       </nav>
-
-      <RegionPanel region={selected} onClose={() => setSelected(null)} />
     </main>
   )
 }

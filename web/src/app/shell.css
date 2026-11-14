@@ -1,0 +1,72 @@
+/* Armazón de la aplicación. Solo 002 edita este archivo. T005 lo sustituye por la disposición adaptable. */
+.app { position: relative; width: 100vw; height: 100vh; height: 100dvh; }
+
+.brand, .toolbar {
+  position: absolute;
+  z-index: 10;
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+
+.brand { top: 16px; left: 16px; padding: 12px 16px; pointer-events: none; }
+.brand h1 { margin: 0; font-size: 18px; letter-spacing: 0.02em; }
+.brand p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+
+.toolbar {
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px;
+  max-width: calc(100vw - 32px);
+}
+
+.toolbar button, .toolbar select {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.toolbar button:hover, .toolbar select:hover { background: rgba(255, 255, 255, 0.08); }
+.toolbar button.active { border-color: rgba(56, 189, 248, 0.5); color: var(--accent); }
+.toolbar select { background: rgba(255, 255, 255, 0.06); }
+.toolbar select option { background: #0b1220; }
+.toolbar :focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.loader {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  grid-auto-flow: column;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 14px;
+  background: var(--bg);
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 640px) {
+  .brand { top: 12px; left: 12px; right: 12px; }
+  .toolbar { bottom: 12px; }
+}

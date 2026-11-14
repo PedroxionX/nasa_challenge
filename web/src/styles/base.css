@@ -1,0 +1,11 @@
+/* Reinicio y estilos de documento. Solo 002 edita este archivo. */
+:root {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }

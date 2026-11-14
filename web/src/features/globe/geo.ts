@@ -1,4 +1,6 @@
-// Tipos y utilidades geográficas compartidas por el globo y los paneles.
+import { asset } from '../../lib/assets'
+
+// Tipos y utilidades geográficas del globo.
 
 type Position = number[]
 type Ring = Position[]
@@ -72,8 +74,8 @@ interface FeatureCollection<P> {
 // Países con análisis por estado. Para agregar otro: su GeoJSON con propiedades {id, name}
 // (id ISO 3166-2) en /public/data, una entrada aquí y otra en CountryCode.
 const REGION_SOURCES: { country: CountryCode; iso3: string; url: string }[] = [
-  { country: 'MX', iso3: 'MEX', url: '/data/mx-states.geojson' },
-  { country: 'US', iso3: 'USA', url: '/data/us-states.geojson' },
+  { country: 'MX', iso3: 'MEX', url: asset('data/mx-states.geojson') },
+  { country: 'US', iso3: 'USA', url: asset('data/us-states.geojson') },
 ]
 
 const getJson = <T,>(url: string) =>
@@ -85,7 +87,7 @@ const getJson = <T,>(url: string) =>
 /** Carga los estados de los países analizados y el resto del mundo como fondo. */
 export async function loadGlobeFeatures(): Promise<GlobeFeature[]> {
   const [countries, ...regionSets] = await Promise.all([
-    getJson<FeatureCollection<CountryProps>>('/data/countries.geojson'),
+    getJson<FeatureCollection<CountryProps>>(asset('data/countries.geojson')),
     ...REGION_SOURCES.map(s => getJson<FeatureCollection<{ id: string; name: string }>>(s.url)),
   ])
   const analyzed = new Set(REGION_SOURCES.map(s => s.iso3))

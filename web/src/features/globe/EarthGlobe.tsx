@@ -1,7 +1,9 @@
 import { useEffect, useImperativeHandle, useMemo, useRef, useState, type Ref, type RefObject } from 'react'
 import Globe, { type GlobeMethods } from 'react-globe.gl'
 import * as THREE from 'three'
-import { COUNTRY_NAMES, viewForGeometry, type GlobeFeature, type View } from '../lib/geo'
+import { asset } from '../../lib/assets'
+import { COUNTRY_NAMES, viewForGeometry, type GlobeFeature, type View } from './geo'
+import './globe.css'
 
 export interface EarthGlobeHandle {
   flyTo: (view: View, ms?: number) => void
@@ -22,7 +24,7 @@ interface Props {
   onReady?: () => void
 }
 
-const TEXTURES = '/textures'
+const TEXTURES = asset('textures')
 const CLOUDS_ALT = 0.004
 const CLOUDS_SPEED = -0.006 // grados por cuadro
 
