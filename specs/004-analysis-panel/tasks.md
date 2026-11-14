@@ -10,16 +10,16 @@ Requiere la base 002 fusionada. Trabaja con el archivo de ejemplo hasta que 003 
 
 ## Phase 0: Base propia
 
-- [ ] T010 [P] Formateador único `es-MX` en web/src/features/analysis/format.ts con pruebas en format.test.ts — 1 h · Acepta: FR-A08 (punto decimal, signo explícito, menos U+2212, «p < 0.001», años sin separador); ningún otro archivo de 004 formatea cifras por su cuenta
+- [x] T010 [P] Formateador único `es-MX` en web/src/features/analysis/format.ts con pruebas en format.test.ts — 1 h · Acepta: FR-A08 (punto decimal, signo explícito, menos U+2212, «p < 0.001», años sin separador); ningún otro archivo de 004 formatea cifras por su cuenta
 
 ## Phase 1: User Story 1 - Elegir región y variable (P1)
 
-- [ ] T001 [P] [US1] Buscador accesible agrupado por país en web/src/features/query/RegionSearch.tsx — 2 h · Acepta: selección solo con teclado; texto de «sin coincidencias» de ux.md §7
-- [ ] T002 [P] [US1] Selector de variable con definición en web/src/features/query/VariablePicker.tsx; composición de ambos en web/src/features/query/QueryBar.tsx, que `index.ts` sigue exportando como `QueryBar` (lo importa el armazón de 002) — 1 h · Acepta: dos opciones; la definición se lee sin salir de la pantalla; `Shell` no se modifica
+- [x] T001 [P] [US1] Buscador accesible agrupado por país en web/src/features/query/RegionSearch.tsx — 2 h · Acepta: selección solo con teclado; texto de «sin coincidencias» de ux.md §7
+- [x] T002 [P] [US1] Selector de variable con definición en web/src/features/query/VariablePicker.tsx; composición de ambos en web/src/features/query/QueryBar.tsx, que `index.ts` sigue exportando como `QueryBar` (lo importa el armazón de 002) — 1 h · Acepta: dos opciones; la definición se lee sin salir de la pantalla; `Shell` no se modifica
 
 ## Phase 2: User Story 2 - Leer el resultado (P1) 🎯
 
-- [ ] T003 [US2] Gráfica anual con recta, banda, años excluidos, año parcial, tramo fuera de periodo atenuado y alternativa en tabla en web/src/features/analysis/TrendChart.tsx — 3,5 h · T010 · Acepta: los valores de la tabla coinciden con el archivo; legible a 360 px
+- [ ] T003 [US2] Gráfica anual con recta, banda, años excluidos, año parcial, tramo fuera de periodo atenuado y alternativa en tabla en web/src/features/analysis/TrendChart.tsx — 3,5 h · T010 · Acepta: los valores de la tabla coinciden con el archivo; legible a 360 px; recta y banda solo con `line_mid` (FR-A10), sin ella la leyenda lo indica; el año parcial (sin valor en el contrato) se marca y rotula, no se inventa un punto
 - [ ] T004 [US2] Tarjetas con los cinco estados, explicación, detalles técnicos y procedencia en web/src/features/analysis/ResultCards.tsx y AnalysisPanel.tsx — 3 h · T010 · Acepta: SC-A01; FR-A01; FR-A05 (evidencia sin calificativos; `insufficient` e `invalid` sin cifras de tendencia); si `provenance.is_synthetic`, aviso visible encima del resultado; cada `flag` presente y `diagnostics.step_year` aparecen en «Detalles técnicos» con una línea de texto
 - [ ] T005 [US2] Carga con esqueleto, error con reintento y región sin datos en web/src/features/analysis/AnalysisPanel.tsx — 1,5 h · T004 · Acepta: los tres estados se provocan y se recuperan sin recargar; una región con `n_cells: 0` en el catálogo muestra «sin datos» sin pedir su archivo (nunca como error de carga)
 - [ ] T006 [US2] Escape, devolución del foco y anuncio del resultado — 1 h · T004 · Acepta: FR-A02 (cerrar = `setRegion(null)` y foco al buscador)

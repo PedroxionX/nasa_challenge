@@ -1,90 +1,199 @@
 /**
- * ESBOZO de 002 (T007). Dueño tras la fusión: 004.
- * Solo muestra lo que viene en el archivo; no calcula estadística.
+ * Panel de análisis (004 T004–T006, T011). Lo coloca el armazón (002) sin props; lee useAppState().
+ * Orden (ux.md §6): veredicto y cambio → gráfica → cifras → «En palabras» → desplegables.
+ * Estados: cargando (esqueleto) · error con reintento · sin datos · resultado.
+ * No calcula estadística: elige la fila con pickWindow y presenta lo que trae el archivo.
  */
-import { useEffect, useState } from 'react'
-import { getLimits, useAppState } from '../../app/state'
-import {
-  isDataError, loadCatalog, loadSeries, pickWindow,
-  type Catalog, type DataError, type SeriesFile,
-} from '../../lib/data'
+import { useEffect } from 'react'
+import { useAppState } from '../../app/state'
+import { pickWindow, type Catalog, type SeriesFile, type CountryCode } from '../../lib/data'
 import { explainTrend, UI_COPY, VARIABLE_COPY } from '../../content'
+import { HAS_TREND, digitsFor, isFullPeriod, readExtras } from './analysisData'
+import { fmtSlope, fmtYears } from './format'
+import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
+import TrendChart from './TrendChart'
+import { useAnalysisData } from './useAnalysisData'
+import './analysis.css'
 
-type Load =
-  | { kind: 'loading' }
-  | { kind: 'ready'; series: SeriesFile; catalog: Catalog }
-  | { kind: 'error'; error: DataError | Error }
+/** Id del buscador de 004 (features/query/search.ts). Se usa por id: las carpetas de features no se importan entre sí. */
+const SEARCH_INPUT_ID = 'region-search'
+
+const COUNTRY: Record<CountryCode, string> = { MX: 'México', US: 'Estados Unidos' }
+
+function focusSearch() {
+  requestAnimationFrame(() => document.getElementById(SEARCH_INPUT_ID)?.focus())
+}
 
 export default function AnalysisPanel() {
   const { regionId, variableId, from, to, setRegion, resetPeriod } = useAppState()
-  const [attempt, setAttempt] = useState(0)
-  const key = `${variableId}/${regionId}/${attempt}`
-  const [result, setResult] = useState<{ key: string; load: Load } | null>(null)
-  // Mientras la respuesta no corresponda a la petición actual, se muestra «cargando».
-  const load: Load = result?.key === key ? result.load : { kind: 'loading' }
+  const { load, retry } = useAnalysisData(regionId, variableId)
 
+  // FR-A02: Escape cierra el panel (deselecciona la región) y devuelve el foco al buscador.
   useEffect(() => {
     if (!regionId) return
-    let live = true
-    Promise.all([loadSeries(variableId, regionId), loadCatalog()])
-      .then(([series, catalog]) => live && setResult({ key, load: { kind: 'ready', series, catalog } }))
-      .catch((error: unknown) => live && setResult({
-        key, load: { kind: 'error', error: error instanceof Error ? error : new Error(String(error)) },
-      }))
-    return () => { live = false }
-  }, [regionId, variableId, key])
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return
+      if (document.querySelector('dialog[open]')) return // el diálogo de métodos se cierra solo
+      setRegion(null)
+      focusSearch()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [regionId, setRegion])
 
   if (!regionId) return null
 
+  const catalog = load.kind === 'ready' || load.kind === 'no-data' ? load.catalog : null
+  const region = catalog?.regions.find(r => r.id === regionId)
+  const regionName = region?.name ?? regionId
+  const variable = VARIABLE_COPY[variableId]
+
+  const close = () => { setRegion(null); focusSearch() }
+
   return (
-    <div className="stub stub-analysis">
-      <div className="stub-row">
-        <span className="stub-tag">Esbozo · 004</span>
-        <button type="button" onClick={() => setRegion(null)}>Cerrar</button>
+    <article className="analysis" aria-busy={load.kind === 'loading'}>
+      <div className="analysis-header">
+        <div className="analysis-title">
+          <h2>{regionName}</h2>
+          <p className="analysis-meta">
+            {region && `${COUNTRY[region.country]} · `}{variable.label} · {fmtYears(from, to)}
+          </p>
+        </div>
+        <button type="button" className="analysis-close" onClick={close} aria-label="Cerrar análisis">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
+        </button>
       </div>
-      <h2>{regionId}</h2>
-      <p>{VARIABLE_COPY[variableId].label} · {from}–{to}</p>
-      <Body load={load} from={from} to={to} onRetry={() => setAttempt(a => a + 1)} onReset={resetPeriod} />
+
+      {load.kind === 'loading' && <Skeleton />}
+
+      {load.kind === 'error' && (
+        <div className="analysis-state" role="alert">
+          <p>{UI_COPY.loadError}</p>
+          <button type="button" onClick={retry}>{UI_COPY.retry}</button>
+        </div>
+      )}
+
+      {load.kind === 'no-data' && (
+        <div className="analysis-state">
+          <p>{UI_COPY.noData}</p>
+          <p className="analysis-muted">Puedes elegir otro estado en el buscador o en el globo.</p>
+        </div>
+      )}
+
+      {load.kind === 'ready' && (
+        <Result
+          series={load.series}
+          catalog={load.catalog}
+          regionName={regionName}
+          from={from}
+          to={to}
+          onReset={resetPeriod}
+        />
+      )}
+    </article>
+  )
+}
+
+function Skeleton() {
+  return (
+    <div className="analysis-skeleton">
+      <span className="analysis-vh">Cargando…</span>
+      <div className="sk sk-verdict" />
+      <div className="sk sk-chart" />
+      <div className="sk sk-line" />
+      <div className="sk sk-line sk-short" />
+      <div className="sk sk-line" />
     </div>
   )
 }
 
-function Body({ load, from, to, onRetry, onReset }: {
-  load: Load; from: number; to: number; onRetry: () => void; onReset: () => void
+function Result({ series, catalog, regionName, from, to, onReset }: {
+  series: SeriesFile
+  catalog: Catalog
+  regionName: string
+  from: number
+  to: number
+  onReset: () => void
 }) {
-  if (load.kind === 'loading') return <p aria-busy="true">Cargando…</p>
-  if (load.kind === 'error') {
-    if (isDataError(load.error) && load.error.kind === 'not_found') return <p>{UI_COPY.noData}</p>
-    return <p>{UI_COPY.loadError} <button type="button" onClick={onRetry}>{UI_COPY.retry}</button></p>
-  }
-  const { series, catalog } = load
+  const variableInfo = catalog.variables.find(v => v.id === series.variable)
   const region = catalog.regions.find(r => r.id === series.region)
+  const unit = variableInfo?.unit_annual ?? series.unit
+  const digits = digitsFor(unit)
   const row = pickWindow(series, from, to)
-  const limits = getLimits()
-  const text = explainTrend(row, {
-    regionName: region?.name ?? series.region,
+  const status = row?.status ?? 'insufficient'
+  const extras = readExtras(series, row, variableInfo)
+  const isSynthetic = series.provenance.is_synthetic
+
+  const explanation = explainTrend(row, {
+    regionName,
     variableId: series.variable,
-    unit: `${series.unit}/década`,
-    from, to,
+    unit: `${unit}/década`,
+    from,
+    to,
     alpha: catalog.alpha,
-    fullPeriod: from === limits.firstYear && to === limits.lastYear,
+    fullPeriod: isFullPeriod(catalog, from, to),
     smallRegion: region?.small_region ?? false,
-    isSynthetic: series.provenance.is_synthetic,
+    isSynthetic,
   })
+  // El aviso de datos sintéticos va arriba y destacado; no se repite entre los avisos.
+  const caveats = explanation.caveats.filter(c => c !== UI_COPY.synthetic)
+  const trend = row !== null && HAS_TREND.has(status)
+
+  const announcement = trend
+    ? `${regionName}, ${VARIABLE_COPY[series.variable].label.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}, ${fmtSlope(row.slope_decade, unit, digits)}.`
+    : `${regionName}, ${VARIABLE_COPY[series.variable].label.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}.`
+
   return (
-    <>
-      <p><strong>{text.verdict}</strong> — {text.sentence}</p>
-      {text.caveats.map(c => <p key={c} className="stub-muted">{c}</p>)}
-      {!row && <button type="button" onClick={onReset}>{UI_COPY.useFullPeriod}</button>}
-      {row && (
-        <dl className="stub-dl">
-          <dt>Método</dt><dd>{catalog.method.slope} · {catalog.method.test}</dd>
-          <dt>Años (n)</dt><dd>{row.n}</dd>
-          <dt>α</dt><dd>{catalog.alpha}</dd>
-          <dt>p</dt><dd>{row.p ?? '—'}</dd>
-          <dt>Fuente</dt><dd>{series.provenance.source}</dd>
-        </dl>
+    <div className="analysis-result">
+      <p className="analysis-vh" role="status" aria-live="polite">{announcement}</p>
+
+      {isSynthetic && (
+        <p className="analysis-synthetic">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 3 L18 17 H2 Z M10 8 V12 M10 14.5 V14.6" /></svg>
+          {UI_COPY.synthetic}
+        </p>
       )}
-    </>
+
+      <Verdict status={status} explanation={explanation} row={row} unit={unit} digits={digits} extras={extras} />
+
+      {!row && (
+        <div className="analysis-state analysis-state--inline">
+          <p>{UI_COPY.insufficientData}</p>
+          <button type="button" onClick={onReset}>{UI_COPY.useFullPeriod}</button>
+        </div>
+      )}
+
+      <TrendChart
+        series={series}
+        row={row}
+        from={from}
+        to={to}
+        unit={unit}
+        variableLabel={VARIABLE_COPY[series.variable].label}
+        regionName={regionName}
+        lineMid={extras.lineMid}
+      />
+
+      <ResultFacts
+        status={status}
+        row={row}
+        from={from}
+        to={to}
+        unit={unit}
+        digits={digits}
+        extras={extras}
+        catalog={catalog}
+        series={series}
+      />
+
+      <InWords
+        sentence={row ? explanation.sentence : null}
+        caveats={caveats}
+        notCause={trend ? UI_COPY.notCause : null}
+      />
+
+      <TechnicalDetails row={row} status={status} catalog={catalog} series={series} digits={digits} unit={unit} />
+      <ProvenanceDetails series={series} />
+    </div>
   )
 }

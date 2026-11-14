@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
-  MINUS, fmtAlpha, fmtInterval, fmtNumber, fmtP, fmtPercent, fmtSigned, fmtSlope, fmtYear, fmtYears,
+  MINUS, fmtAlpha, fmtInterval, fmtNumber, fmtP, fmtPercent, fmtSigned, fmtSlope, fmtTick, fmtValue,
+  fmtYear, fmtYears,
 } from './format'
 
 describe('format (FR-A08, es-MX)', () => {
@@ -53,6 +54,18 @@ describe('format (FR-A08, es-MX)', () => {
   it('formatea porcentajes sin calcularlos', () => {
     expect(fmtPercent(3.14)).toBe('+3.1 %')
     expect(fmtPercent(-0.04)).toBe('0.0 %')
+  })
+
+  it('muestra valores del archivo sin ceros de relleno', () => {
+    expect(fmtValue(300.5)).toBe('300.5')
+    expect(fmtValue(20.849)).toBe('20.849')
+    expect(fmtValue(-1.25)).toBe('−1.25')
+  })
+
+  it('ajusta los decimales de los ejes al paso entre marcas', () => {
+    expect(fmtTick(20.5, 0.5)).toBe('20.5')
+    expect(fmtTick(300, 50)).toBe('300')
+    expect(fmtTick(0.25, 0.05)).toBe('0.25')
   })
 
   it('devuelve un guion largo cuando el valor no existe, nunca «NaN»', () => {

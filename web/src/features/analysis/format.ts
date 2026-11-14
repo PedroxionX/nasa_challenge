@@ -37,6 +37,19 @@ export const fmtNumber = (x: number | null | undefined, digits = 2) => format(x,
 
 export const fmtSigned = (x: number | null | undefined, digits = 2) => format(x, digits, true)
 
+/** Valor tal como viene en el archivo (hasta `maxDigits` decimales, sin ceros de relleno): 300.5, 20.849. */
+export function fmtValue(x: number | null | undefined, maxDigits = 3): string {
+  if (!usable(x)) return MISSING
+  return new Intl.NumberFormat('es-MX', { maximumFractionDigits: maxDigits, useGrouping: false })
+    .format(x).replace('-', MINUS)
+}
+
+/** Etiquetas de eje: tantos decimales como pida el paso entre marcas (0.5 → 1 decimal). */
+export function fmtTick(x: number, step: number): string {
+  const digits = step > 0 ? Math.max(0, Math.min(3, -Math.floor(Math.log10(step) + 1e-9))) : 0
+  return fmtNumber(x, digits)
+}
+
 export const fmtYear = (year: number) => String(year)
 
 export const fmtYears = (from: number, to: number) => `${fmtYear(from)}–${fmtYear(to)}`
