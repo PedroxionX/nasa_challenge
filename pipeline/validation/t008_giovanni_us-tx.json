@@ -1,0 +1,96 @@
+{
+ "check": "T008: Texas T2M pipeline vs Giovanni",
+ "giovanni": {
+  "service": "Time Series, Area-Averaged (ArAvTs)",
+  "variable": "M2TMNXSLV_5_12_4_T2M",
+  "shape": "tl_2014_us_state/shp_25 (Texas)",
+  "period": "1981-01-01/2025-12-31",
+  "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=1981-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_25&data=M2TMNXSLV_5_12_4_T2M",
+  "retrieved": "2026-11-14",
+  "annual_method": "media ponderada por días de 12 meses, K - 273.15",
+  "annual_C": {
+   "1981": 18.5367,
+   "1982": 18.582,
+   "1983": 17.8737,
+   "1984": 18.5474,
+   "1985": 18.2423,
+   "1986": 18.6884,
+   "1987": 17.8668,
+   "1988": 18.483,
+   "1989": 18.3727,
+   "1990": 18.9222,
+   "1991": 18.2954,
+   "1992": 18.0212,
+   "1993": 18.1124,
+   "1994": 19.0806,
+   "1995": 18.8125,
+   "1996": 18.8283,
+   "1997": 18.0001,
+   "1998": 19.7019,
+   "1999": 19.6445,
+   "2000": 19.5201,
+   "2001": 19.0026,
+   "2002": 18.6853,
+   "2003": 19.0009,
+   "2004": 18.6524,
+   "2005": 19.2702,
+   "2006": 19.8105,
+   "2007": 18.181,
+   "2008": 18.9197,
+   "2009": 18.9721,
+   "2010": 18.4958,
+   "2011": 20.2304,
+   "2012": 20.0855,
+   "2013": 18.7065,
+   "2014": 18.5844,
+   "2015": 18.9738,
+   "2016": 19.5375,
+   "2017": 19.8274,
+   "2018": 19.2064,
+   "2019": 19.2487,
+   "2020": 19.7805,
+   "2021": 19.4011,
+   "2022": 19.7877,
+   "2023": 20.5519,
+   "2024": 20.69,
+   "2025": 20.3
+  }
+ },
+ "tolerance_C": 0.1,
+ "max_abs_diff_C": 0.1231,
+ "mean_diff_C": -0.0977,
+ "years_within": 27,
+ "n_years": 45,
+ "slope_decade": {
+  "giovanni": 0.3893,
+  "pipeline": 0.3888
+ },
+ "pass": false,
+ "diagnostic_single_cell": {
+  "giovanni_data_bbox": "-99.375,31,-99.375,31",
+  "user_bbox": "-99.45,30.95,-99.3,31.05",
+  "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=1981-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&bbox=-99.45,30.95,-99.3,31.05&data=M2TMNXSLV_5_12_4_T2M",
+  "power_minus_giovanni_mean_C": 0.0,
+  "sd_C": 0.0057,
+  "max_abs_C": 0.0161
+ },
+ "diagnostic_averaging_rule": {
+  "pipeline_cos_x_fraction": {
+   "mean_diff_C": -0.0977,
+   "sd_C": 0.011,
+   "max_abs_C": 0.1231,
+   "n_cells": 254
+  },
+  "center_inside_cos": {
+   "mean_diff_C": 0.0103,
+   "sd_C": 0.0161,
+   "max_abs_C": 0.0511,
+   "n_cells": 202
+  },
+  "fraction_without_cos": {
+   "mean_diff_C": -0.144
+  },
+  "conclusion": "Misma fuente (celda única: diferencia media 0,000 °C). El desfase de ~0,1 °C viene de la regla espacial: Giovanni se reproduce (≤ 0,051 °C) usando solo las celdas cuyo centro cae dentro de la forma, no la fracción cubierta. La pendiente coincide (0,389 frente a 0,389 °C/década)."
+ },
+ "status": "pendiente documentado: no cumple ≤ 0,1 °C con la regla de la spec (FR-D02); causa identificada"
+}

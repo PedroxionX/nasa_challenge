@@ -1,0 +1,7 @@
+# Respuestas crudas de NASA POWER (se regeneran; el manifiesto versionado en manifest/ registra URL, fecha y huella).
+cache/
+# Salidas de prueba fuera de web/public/data/trends/.
+out/
+.venv/
+__pycache__/
+.pytest_cache/
