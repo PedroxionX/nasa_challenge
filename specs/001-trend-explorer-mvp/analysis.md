@@ -2,6 +2,8 @@
 
 Fecha: 2026-11-14. Hecho a mano con los pasos de la definición de `/speckit-analyze` (inventario de requisitos, cobertura por tareas, alineación con la constitución). **No es la salida de la skill**: ejecútala para una comprobación independiente. El comando oficial es de solo lectura y no crea este archivo; se guarda para no perder los hallazgos.
 
+> Nota (2026-11-14): tras este análisis las tareas se repartieron en las especificaciones 002 a 006. Los identificadores T0xx de abajo son los de la lista única del commit `c1ebb61`. El reparto no se ha vuelto a analizar.
+
 ## Hallazgos y correcciones aplicadas
 
 | ID | Categoría | Severidad | Ubicación | Hallazgo | Corrección |

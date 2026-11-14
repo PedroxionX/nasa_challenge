@@ -140,7 +140,7 @@ Conexión: `pipeline/` produce `web/public/data/trends/*` según `contracts/data
 | [Weatherhead et al. 1998](https://doi.org/10.1029/98JD00995) | Editorial 403; resumen leído vía Crossref | Ver D7 | Texto completo no leído | Decisión D7 |
 | Santer 2000, Hamed y Rao 1998, Yue y Wang 2004, Sen 1968, Mann 1945, Wilks 2016, Benjamini y Hochberg 1995 | Registros comprobados en Crossref | Referencias exactas | Textos completos no leídos | Citas |
 | [react-globe.gl](https://github.com/vasturiano/react-globe.gl), three.js: [tamaño](https://threejs.org/manual/pages/responsive.html), [liberación](https://threejs.org/manual/pages/how-to-dispose-of-objects.html) | Leídos | `pauseAnimation`, `rendererConfig`, coste de la interacción de puntero; tope de píxeles; quién crea un recurso lo libera | — | `ux.md` §3 |
-| Reglas de Space Apps 2026 (spaceappschallenge.org) | **Error de certificado: no leídas** | Fechas 14–15 nov y cinco criterios, por fuentes secundarias | Regla sobre código previo sin confirmar | **[P]** bloquea T001 |
+| Reglas de Space Apps 2026 (spaceappschallenge.org) | **Error de certificado: no leídas** | Fechas 14–15 nov y cinco criterios, por fuentes secundarias | Regla sobre código previo no leída | Resuelto por decisión del equipo (2026-11-14): se reutiliza el laboratorio |
 
 ## 6. Limitaciones de esta investigación
 

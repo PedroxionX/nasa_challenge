@@ -19,7 +19,10 @@ Resueltas con el contexto del README y del encargo; ninguna fue respondida por u
 - Q: ¿Se conserva «años para ser significativo»? → A: No en el MVP (ver FR-014 y `research.md` D7).
 - Q: ¿Qué nivel de significancia? → A: α = 0,05 fijo y visible; intervalos del 95 %.
 - Q: ¿Idioma? → A: Español.
-- Provisional: reutilización del código del laboratorio (reglas del evento), cuentas Earthdata y formato de la demo. Ver Assumptions.
+- Q: ¿Se reutiliza el código del laboratorio como motor estadístico? → A: Sí (decisión del equipo, 2026-11-14).
+- Q: ¿Cómo se presenta la demo? → A: Sitio estático publicado (decisión del equipo, 2026-11-14).
+- Q: ¿Cómo se reparte el trabajo? → A: Una especificación por persona con rutas de archivos disjuntas (002 a 006).
+- Q: ¿Hay cuenta de Earthdata Login para validar con Giovanni? → A: Sí (2026-11-14).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -159,9 +162,9 @@ Los umbrales de SC-001 a SC-004 son objetivos por validar con usuarios, no resul
 
 ## Assumptions
 
-- Escenario ilustrativo, no confirmado: equipo de tres personas y hackatón de 48 horas. El README del laboratorio y fuentes secundarias sitúan el evento el 14 y 15 de noviembre de 2026.
+- Equipo de cinco personas, una por especificación 002 a 006 (confirmado el 2026-11-14). Duración de 48 horas: supuesto, no confirmado. El README del laboratorio y fuentes secundarias sitúan el evento el 14 y 15 de noviembre de 2026.
 - Las regiones son las 84 del prototipo; ampliar países es evolución posterior.
 - Datos mensuales agregados a años completos; el análisis diario, estacional o no lineal queda fuera.
-- Se permite reutilizar el código propio del laboratorio. **Provisional**: las reglas del evento no pudieron leerse; si no se permite, el motor se reimplementa a partir de su documentación.
+- Se reutiliza el código propio del laboratorio. **Decidido por el equipo el 2026-11-14**; las reglas del evento no pudieron leerse en la sesión de planificación, así que la conformidad con ellas es responsabilidad del equipo.
 - No hay IA generativa en el MVP; las explicaciones son plantillas deterministas.
 - Fuera de alcance: cuestionario de descubrimiento, todas las fuentes del README, mapa 2D, cuentas de usuario, exportación y comparación (US5).

@@ -99,6 +99,10 @@ web/
 
 **Structure Decision**: aplicación web existente en `web/` más un paquete de lotes `pipeline/` en la raíz. `practice-lab/` no se toca; su código se trae desde `practice/trendlens-lab` (T002).
 
+## Reparto por especificación
+
+Cada persona lleva una especificación con rutas propias; ver el índice en [tasks.md](tasks.md). La estructura de `web/src/` cambia respecto al árbol anterior: `app/`, `lib/`, `styles/`, `content/` y una carpeta por funcionalidad en `features/` (`query`, `globe`, `analysis`, `guide`). Las interfaces que las unen están en [../002-foundation/spec.md](../002-foundation/spec.md). Este documento sigue siendo la fuente de las decisiones comunes.
+
 ## Arquitectura
 
 ```mermaid
@@ -153,7 +157,7 @@ flowchart LR
 
 | Etapa | Contenido |
 |---|---|
-| **MVP (este incremento)** | US1 y US2 completas; US3 y US4 si el tiempo alcanza |
+| **MVP (este incremento)** | US1 a US4 (equipo de cuatro o más); US3 y US4 son lo primero que se recorta |
 | Siguiente | Comparación de dos regiones y exportación (US5); marcas de evidencia con control de falsos descubrimientos; detectabilidad como escenario |
 | Después | Segunda fuente con observaciones (AppEEARS: NDVI, temperatura de superficie; IMERG); servicio para regiones libres; mapa 2D si las pruebas lo piden; más países |
 
