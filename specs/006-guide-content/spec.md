@@ -27,7 +27,7 @@ Cada estado del análisis tiene una frase en lenguaje llano construida solo con 
 **Acceptance Scenarios**:
 
 1. **Given** un resultado con evidencia insuficiente, **When** se genera el texto, **Then** dice que eso no demuestra ausencia de cambio.
-2. **Given** una región pequeña o un periodo elegido, **When** se genera el texto, **Then** incluye el aviso correspondiente.
+2. **Given** una región pequeña o un periodo elegido, **When** se genera el texto, **Then** incluye el aviso correspondiente. El aviso de región pequeña aparece en todos los estados (increasing, decreasing, inconclusive, insufficient) siempre que `smallRegion` sea `true`.
 
 ### User Story 2 - Primera visita y ejemplos (Priority: P2)
 
@@ -52,15 +52,22 @@ Cubre de 001: FR-001 (definiciones), FR-009, FR-012 (texto de métodos), FR-013,
 - **FR-C01**: Las explicaciones distinguen significancia, magnitud, relevancia ambiental y causalidad.
 - **FR-C02**: La definición de precipitación dice que procede de un reanálisis y que su tendencia es menos fiable que la de temperatura.
 - **FR-C03**: Todo término técnico se define la primera vez que aparece.
-- **FR-C04**: La hoja de métodos declara el límite de la corrección por autocorrelación y la atribución que entregue 003.
-- **FR-C05**: Guion de demostración de menos de 3 minutos con los dos casos.
+- **FR-C04**: La hoja de métodos declara el límite de la corrección por autocorrelación y la atribución que entregue 003. El texto cualitativo (explicación del límite) es fijo y lo redacta 006; los valores numéricos (α, periodo, método de pendiente, prueba estadística) se leen del catálogo en tiempo de ejecución.
+- **FR-C05**: Guion de demostración de menos de 3 minutos con los dos casos. El guion incluye el texto exacto palabra por palabra para cada momento, con tiempo estimado por sección.
 
 ## Success Criteria *(mandatory)*
 
 - **SC-C01**: Objetivos por validar: 4 de 5 personas completan cada tarea y responden bien sobre dirección, magnitud, evidencia y causalidad.
-- **SC-C02**: 100 % de las variantes de explicación cubiertas por pruebas.
+- **SC-C02**: 100 % de las variantes de explicación cubiertas por pruebas. Las variantes son exactamente cuatro: `increasing`, `decreasing`, `inconclusive` (sin dirección estimada) e `insufficient`.
+
+## Clarifications
+
+### Session 2026-11-14
+
+- Q: ¿Qué variante de texto debe mostrarse cuando el análisis tiene evidencia insuficiente pero la pendiente estimada es positiva, versus cuando es negativa? → A: No mencionar dirección, solo decir «Sin evidencia suficiente. No demuestra ausencia de cambio». `explainTrend` tiene 4 variantes: increasing, decreasing, inconclusive (sin dirección), insufficient.
+- Q: ¿El guion de demo en `docs/demo.md` debe incluir el texto exacto que dirá la persona que presenta, o solo los pasos y puntos clave a cubrir? → A: Texto exacto palabra por palabra para cada momento de la demo.
 
 ## Assumptions
 
-- El segundo caso de demostración se elige cuando 003 publique datos reales.
+- El segundo caso de demostración se elige cuando 003 publique datos reales. Hasta entonces `WelcomeCard` lo deja como marcador declarado en el código (`TODO(003): segundo ejemplo`) y T004 se marca terminada con esa nota.
 - Las correcciones que la prueba pida en código ajeno se piden a su dueño; aquí solo se cambian textos.
