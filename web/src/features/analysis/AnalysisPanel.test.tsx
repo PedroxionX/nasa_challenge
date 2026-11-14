@@ -63,7 +63,8 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     expect(screen.getByText('+0.38 °C por década')).toBeTruthy()
     expect(panel().textContent).toMatch(/de \+0\.33 a \+0\.45 °C por década/)
     expect(screen.getByText(/Hay evidencia de tendencia/)).toBeTruthy()
-    expect(panel().textContent).toMatch(/p < 0\.001; α = 0\.05/)
+    expect(screen.getByText('p < 0.001', { selector: 'dfn' })).toBeTruthy()
+    expect(screen.getByText('α = 0.05', { selector: 'dfn' })).toBeTruthy()
     expect(within(panel().querySelector<HTMLElement>('.result-facts')!).getByText('46')).toBeTruthy()
     expectMandatory()
   })
@@ -79,7 +80,8 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     await renderPanel('?region=MX-SON&var=air_temperature')
     expect(await screen.findAllByText('Sin evidencia suficiente')).toHaveLength(2) // veredicto y fila «Evidencia»
     expect(panel().textContent).not.toMatch(/no hay cambio/i)
-    expect(panel().textContent).toMatch(/p = 0\.\d{3}; α = 0\.05/)
+    expect(screen.getByText(/^p = 0\.\d{3}$/, { selector: 'dfn' })).toBeTruthy()
+    expect(screen.getByText('α = 0.05', { selector: 'dfn' })).toBeTruthy()
     expectMandatory()
   })
 
@@ -104,6 +106,44 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     expect(document.querySelector('.trend-chart-notice')?.textContent).toMatch(/Sin recta de tendencia\. El análisis no es válido/)
     expect(document.querySelector('.trend-chart-sen')).toBeNull()
     expectMandatory()
+  })
+})
+
+describe('AnalysisPanel · términos y supuestos (T012, T014)', () => {
+  it('intervalo, p, α y recta de Sen tienen su definición desplegable, accesible con teclado', async () => {
+    await renderPanel('?region=MX-BCN&var=air_temperature')
+    await screen.findByText('Sube')
+    for (const name of ['Intervalo del 95 %', 'Valor p', 'α (alfa)', 'Recta de Sen']) {
+      const buttons = screen.getAllByRole('button', { name: `Qué significa «${name}»` })
+      expect(buttons.length).toBeGreaterThan(0)
+      const button = buttons[0]
+      const definition = document.getElementById(button.getAttribute('aria-controls')!)!
+      expect(definition.hidden).toBe(true)
+      fireEvent.click(button)
+      expect(button.getAttribute('aria-expanded')).toBe('true')
+      expect(definition.hidden).toBe(false)
+      expect(definition.textContent).toMatch(new RegExp(`^${name.replace(/[()]/g, '\\$&')}:`))
+    }
+  })
+
+  it('Escape cierra la definición sin cerrar el panel', async () => {
+    await renderPanel('?region=MX-BCN&var=air_temperature')
+    await screen.findByText('Sube')
+    const button = screen.getByRole('button', { name: 'Qué significa «Valor p»' })
+    fireEvent.click(button)
+    fireEvent.keyDown(button, { key: 'Escape' })
+    expect(button.getAttribute('aria-expanded')).toBe('false')
+    expect(params().get('region')).toBe('MX-BCN')
+    expect(screen.getByRole('article')).toBeTruthy()
+  })
+
+  it('«Detalles técnicos» declara los supuestos del método (FR-012)', async () => {
+    await renderPanel('?region=MX-BCN&var=air_temperature')
+    await screen.findByText('Sube')
+    const details = screen.getByText('Detalles técnicos').closest('details')!
+    expect(within(details).getByText('Supuestos')).toBeTruthy()
+    expect(details.textContent).toMatch(/cambio monótono/)
+    expect(details.textContent).toMatch(/α = 0\.05, fijado antes de mirar los datos/)
   })
 })
 

@@ -162,3 +162,22 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 .variable-picker-definition[hidden] { display: none; }
+
+.variable-picker-definition p { margin: 0; }
+.variable-picker-facts {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-1) var(--space-3);
+  margin: var(--space-2) 0 0;
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+.variable-picker-facts dt { color: var(--muted); }
+.variable-picker-facts dd { margin: 0; }
+
+/* En pantallas estrechas la definición usa todo el ancho de la barra: no se corta por la izquierda. */
+@media (max-width: 640px) {
+  .query-bar { position: relative; }
+  .variable-picker { position: static; }
+  .variable-picker-definition { left: 0; right: 0; width: auto; }
+}

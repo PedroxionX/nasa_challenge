@@ -7,6 +7,7 @@
 import type { Catalog, SeriesFile, TrendFlag, TrendRow, TrendStatus } from '../../lib/data'
 import type { Explanation } from '../../content'
 import { HAS_TREND, evidenceLabel, type Extras } from './analysisData'
+import Term from './Term'
 import {
   fmtAlpha, fmtInterval, fmtNumber, fmtP, fmtPercent, fmtSigned, fmtSlope, fmtYear, fmtYears,
 } from './format'
@@ -81,7 +82,7 @@ export function ResultFacts({ status, row, from, to, unit, digits, extras, catal
         <>
           <dt>Intervalo del 95 %</dt>
           <dd>
-            {fmtInterval(row.ci_low, row.ci_high, digits)} {unit} por década
+            <Term k="ci">{`${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} por década`}</Term>
             {extras.pct && extras.pct.low !== null && extras.pct.high !== null && (
               <span className="result-sub">{`(de ${fmtSigned(extras.pct.low, 1)} a ${fmtSigned(extras.pct.high, 1)} % por década)`}</span>
             )}
@@ -91,7 +92,13 @@ export function ResultFacts({ status, row, from, to, unit, digits, extras, catal
       {evidence && (
         <>
           <dt>Evidencia</dt>
-          <dd>{evidence} <span className="result-sub">{`${fmtP(row?.p)}; ${fmtAlpha(catalog.alpha)}`}</span></dd>
+          <dd>
+            {evidence}
+            <span className="result-sub result-sub--terms">
+              <Term k="p">{fmtP(row?.p)}</Term>
+              <Term k="alpha">{fmtAlpha(catalog.alpha)}</Term>
+            </span>
+          </dd>
         </>
       )}
       <dt>Periodo</dt>
@@ -175,10 +182,20 @@ export function TechnicalDetails({ row, status, catalog, series, digits, unit }:
           </>
         )}
       </dl>
+      <h4 className="analysis-details-sub">Supuestos</h4>
+      <ul className="analysis-notes">
+        <li>Un valor por año completo: los años incompletos se excluyen y nunca se rellenan. Al usar valores anuales, el ciclo de las estaciones no influye.</li>
+        <li>Se busca un cambio monótono (siempre en la misma dirección). La pendiente lo resume, pero no explica su causa ni predice el futuro.</li>
+        <li>Los años consecutivos pueden parecerse entre sí (autocorrelación de lag 1): la prueba y el intervalo lo corrigen.</li>
+        <li>{`${fmtAlpha(catalog.alpha)}, fijado antes de mirar los datos.`}</li>
+      </ul>
       {notes.length > 0 && (
-        <ul className="analysis-notes">
-          {notes.map(n => <li key={n}>{n}</li>)}
-        </ul>
+        <>
+          <h4 className="analysis-details-sub">Diagnósticos de esta serie</h4>
+          <ul className="analysis-notes">
+            {notes.map(n => <li key={n}>{n}</li>)}
+          </ul>
+        </>
       )}
     </details>
   )

@@ -228,6 +228,7 @@
 .result-facts dt { color: var(--muted); }
 .result-facts dd { margin: 0; overflow-wrap: anywhere; }
 .result-sub { display: block; color: var(--muted); }
+.result-sub--terms { display: flex; flex-wrap: wrap; align-items: center; column-gap: var(--space-3); }
 
 /* ---------- En palabras ---------- */
 .in-words { display: grid; gap: var(--space-2); }
@@ -267,3 +268,50 @@
   .result-facts dd { margin-bottom: var(--space-2); }
 }
 .result-facts a { color: var(--accent); }
+
+/* ---------- Términos con definición (T012) ---------- */
+/* La definición va en el flujo, debajo del término: no tapa lo que explica ni se sale del panel.
+   Al abrirse, el término (y su elemento de leyenda) ocupan todo el ancho disponible. */
+.term { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0; }
+.term:has(> .term-definition:not([hidden])) { display: flex; width: 100%; }
+.legend-item:has(.term-definition:not([hidden])) { flex-basis: 100%; flex-wrap: wrap; }
+.term-label { font-style: normal; }
+.term-button {
+  display: inline-grid;
+  place-items: center;
+  /* Objetivo táctil de 44 px con un círculo visible pequeño. */
+  min-height: var(--tap);
+  width: var(--tap);
+  margin: calc((var(--tap) - 1.4em) / -2) calc((var(--tap) - 1.4em) / -2 + 2px);
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+}
+.term-button > span {
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.term-button:hover > span, .term-button[aria-expanded='true'] > span { background: var(--accent); color: var(--on-accent); }
+.term-definition {
+  display: block;
+  flex-basis: 100%;
+  margin: var(--space-1) 0 var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--text);
+  white-space: normal;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.term-definition[hidden] { display: none; }

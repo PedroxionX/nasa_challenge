@@ -148,4 +148,19 @@ describe('VariablePicker (T002)', () => {
     fireEvent.keyDown(info, { key: 'Escape' })
     expect(definition.hidden).toBe(true)
   })
+
+  it('la definición incluye unidad, origen y años leídos del catálogo (FR-001, T013)', async () => {
+    const catalog = JSON.parse(FILES['../../../public/data/trends/catalog.json'])
+    const temp = catalog.variables.find((v: { id: string }) => v.id === 'air_temperature')
+    await renderQuery()
+    fireEvent.click(screen.getByRole('button', { name: /Qué es temperatura del aire/ }))
+    const definition = document.getElementById(
+      screen.getByRole('button', { name: /Qué es temperatura del aire/ }).getAttribute('aria-controls')!,
+    )!
+    const text = definition.textContent ?? ''
+    expect(text).toContain(`Unidad${temp.unit_annual} (promedio anual)`)
+    expect(text).toMatch(/Origenreanálisis/)
+    expect(text).toContain(temp.product_short_name)
+    expect(text).toContain(`Años${temp.first_year}–${temp.last_complete_year}`)
+  })
 })

@@ -11,6 +11,7 @@ import { area, line } from 'd3-shape'
 import type { SeriesFile, TrendRow } from '../../lib/data'
 import { HAS_TREND, yearPoints, type YearPoint } from './analysisData'
 import { fmtTick, fmtValue, fmtYear, fmtYears } from './format'
+import Term from './Term'
 
 interface Props {
   series: SeriesFile
@@ -242,8 +243,8 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         {drawLine
           ? (
             <>
-              <span className="legend-item"><i className="legend-swatch legend-sen" aria-hidden="true" />Recta de Sen</span>
-              {bandPath && <span className="legend-item"><i className="legend-swatch legend-band" aria-hidden="true" />Intervalo del 95 %</span>}
+              <span className="legend-item"><i className="legend-swatch legend-sen" aria-hidden="true" /><Term k="sen" /></span>
+              {bandPath && <span className="legend-item"><i className="legend-swatch legend-band" aria-hidden="true" /><Term k="ci" /></span>}
             </>
           )
           : noLine && !noLine.muted && (
