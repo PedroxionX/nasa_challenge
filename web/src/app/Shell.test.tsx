@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { clearDataCache } from '../lib/data'
 
@@ -43,9 +43,10 @@ describe('Shell', () => {
   it('elegir un ejemplo abre el panel con el archivo sintético rotulado', async () => {
     await renderShell()
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Baja California/ })) })
-    await screen.findByText(/^Sube/)
-    expect(screen.getByRole('complementary', { name: 'Análisis' })).toBeTruthy()
-    expect(screen.getByText(/Datos de ejemplo sintéticos/)).toBeTruthy()
+    // Acotado al panel: otras zonas (p. ej. la tabla del globo de 005) también pueden decir «Sube».
+    const panel = screen.getByRole('complementary', { name: 'Análisis' })
+    await within(panel).findByText(/^Sube/)
+    expect(within(panel).getByText(/Datos de ejemplo sintéticos/)).toBeTruthy()
     expect(screen.queryByRole('region', { name: 'Bienvenida' })).toBeNull()
     expect(window.location.search).toContain('region=MX-BCN')
   })

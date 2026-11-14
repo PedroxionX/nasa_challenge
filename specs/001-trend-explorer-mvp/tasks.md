@@ -13,12 +13,12 @@ Desde el 2026-11-14 las tareas viven en la especificación de cada persona. Este
 | Especificación | Rama | Rutas que solo ella edita | Esfuerzo | Cubre |
 |---|---|---|---|---|
 | [002 Base e integración](../002-foundation/tasks.md) | `002-foundation` | `web/src/App.tsx`, `web/src/app/`, `web/src/lib/`, `web/src/styles/`, `web/package.json`, `web/vite.config.ts`, `.github/`, `README.md`, `specs/001-*` | 21,5 h | FR-018, FR-020, parte de FR-015 |
-| [003 Pipeline de datos](../003-data-pipeline/tasks.md) | `003-data-pipeline` | `pipeline/`, `web/public/data/trends/` | 16,5 h | FR-003, FR-006 a FR-008, FR-010 |
+| [003 Pipeline de datos](../003-data-pipeline/tasks.md) | `003-data-pipeline` | `pipeline/`, `web/public/data/trends/` | 17,5 h | FR-003, FR-006 a FR-008, FR-010 |
 | [004 Búsqueda y panel](../004-analysis-panel/tasks.md) | `004-analysis-panel` | `web/src/features/query/`, `web/src/features/analysis/` | 18 h | US1 y US2 |
 | [005 Globo y mapa](../005-globe-map/tasks.md) | `005-globe-map` | `web/src/features/globe/`, `web/public/textures/`, `web/public/data/*.geojson` | 14,5 h | US3, FR-011, FR-017 |
 | [006 Textos y validación](../006-guide-content/tasks.md) | `006-guide-content` | `web/src/content/`, `web/src/features/guide/`, `docs/` | 13,5 h | US4, FR-009, SC-001 a SC-004 |
 
-Total: 84 h (13 h más que la lista única, por los esbozos y la integración). **Cinco personas, una por especificación** (confirmado el 2026-11-14); quien lleva 002 queda después como integrador.
+Total: 85 h (13 h más que la lista única, por los esbozos y la integración). **Cinco personas, una por especificación** (confirmado el 2026-11-14); quien lleva 002 queda después como integrador.
 
 ## Reglas para no pisarse
 
