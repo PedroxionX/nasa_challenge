@@ -3,23 +3,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { pickWindow, type Catalog, type SeriesFile } from '../../lib/data'
 import { periodOptions, windowsEndingAt } from './analysisData'
 import { fmtInterval, fmtSigned } from './format'
+import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 import { configureLikeShell } from './testData'
-import catalogJson from '../../../public/data/trends/catalog.json'
-import bcnJson from '../../../public/data/trends/series/air_temperature/MX-BCN.json'
 
-const catalog = catalogJson as unknown as Catalog
-const bcn = bcnJson as unknown as SeriesFile
+// Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
+const catalog = JSON.parse(TREND_FIXTURES['data/trends/catalog.json']) as Catalog
+const bcn = JSON.parse(TREND_FIXTURES['data/trends/series/air_temperature/MX-BCN.json']) as SeriesFile
 
-const FILES = import.meta.glob('../../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-function serve() {
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const path = decodeURIComponent(String(input).replace(/^\/+/, ''))
-    const body = FILES[`../../../public/${path}`]
-    return body === undefined
-      ? new Response('', { status: 404 })
-      : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
-  }))
-}
+const serve = () => vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 
 async function renderPanel(search: string) {
   window.history.replaceState(null, '', `/${search}`)
