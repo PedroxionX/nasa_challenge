@@ -1,11 +1,13 @@
 /**
  * Estado único de la aplicación (región, variable, periodo, WebGL), sincronizado con la URL:
- *   ?region=MX-BCN&var=T2M&from=1981&to=2025
+ *   ?region=MX-BCN&var=air_temperature&from=1980&to=2025
+ * El periodo se valida contra el de la variable activa (cada producto tiene el suyo).
+ * Los ids anteriores (?var=T2M, ?var=PRECTOTCORR) se traducen sin aviso.
  * Solo 002 edita este archivo. Los componentes no reciben props: leen y escriben con useAppState().
  * Valores inexistentes en la URL se sustituyen por los predeterminados y se avisa (useStateNotice).
  */
 import { useSyncExternalStore } from 'react'
-import { VARIABLE_IDS, type VariableId } from '../lib/data'
+import { LEGACY_VARIABLE_IDS, VARIABLE_IDS, type VariableId } from '../lib/data'
 import { detectWebGL } from './webgl'
 
 export type { VariableId }
@@ -25,16 +27,18 @@ export interface AppActions {
   resetPeriod(): void
 }
 
+export interface YearRange { firstYear: number; lastYear: number }
+
 /** Límites que fija el catálogo; hasta que se carga se usan los del contrato. */
-export interface StateLimits {
-  firstYear: number
-  lastYear: number
+export interface StateLimits extends YearRange {
   /** `null` mientras no se conoce el catálogo: entonces solo se comprueba el formato del id. */
   regionIds: ReadonlySet<string> | null
+  /** Periodo propio de cada variable; si falta, vale firstYear–lastYear. */
+  periods?: Partial<Record<VariableId, YearRange>>
 }
 
-export const DEFAULT_VARIABLE: VariableId = 'T2M'
-const CONTRACT_LIMITS: StateLimits = { firstYear: 1981, lastYear: 2025, regionIds: null }
+export const DEFAULT_VARIABLE: VariableId = 'air_temperature'
+const CONTRACT_LIMITS: StateLimits = { firstYear: 1980, lastYear: 2025, regionIds: null }
 const REGION_ID_FORMAT = /^[A-Z]{2}-[A-Z0-9]{1,3}$/ // ISO 3166-2
 
 type UrlState = Omit<AppState, 'webgl'>
@@ -43,11 +47,16 @@ type UrlState = Omit<AppState, 'webgl'>
 
 const isVariable = (v: string | null): v is VariableId => VARIABLE_IDS.includes(v as VariableId)
 
+/** Periodo válido para una variable. */
+export function periodFor(variableId: VariableId, l: StateLimits): YearRange {
+  return l.periods?.[variableId] ?? { firstYear: l.firstYear, lastYear: l.lastYear }
+}
+
 function regionOk(id: string, limits: StateLimits): boolean {
   return limits.regionIds ? limits.regionIds.has(id) : REGION_ID_FORMAT.test(id)
 }
 
-function yearsOk(from: number, to: number, l: StateLimits): boolean {
+function yearsOk(from: number, to: number, l: YearRange): boolean {
   return Number.isInteger(from) && Number.isInteger(to) && l.firstYear <= from && from <= to && to <= l.lastYear
 }
 
@@ -66,17 +75,19 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
   let variableId: VariableId = DEFAULT_VARIABLE
   if (rawVar !== null) {
     if (isVariable(rawVar)) variableId = rawVar
+    else if (rawVar in LEGACY_VARIABLE_IDS) variableId = LEGACY_VARIABLE_IDS[rawVar]
     else notices.push(`La variable «${rawVar}» no existe; se muestra la predeterminada.`)
   }
 
-  let from = limits.firstYear
-  let to = limits.lastYear
+  const period = periodFor(variableId, limits)
+  let from = period.firstYear
+  let to = period.lastYear
   const rawFrom = q.get('from')
   const rawTo = q.get('to')
   if (rawFrom !== null || rawTo !== null) {
     const f = rawFrom === null ? from : Number(rawFrom)
     const t = rawTo === null ? to : Number(rawTo)
-    if (yearsOk(f, t, limits)) { from = f; to = t }
+    if (yearsOk(f, t, period)) { from = f; to = t }
     else notices.push(`El periodo ${rawFrom ?? '…'}–${rawTo ?? '…'} no es válido; se muestra ${from}–${to}.`)
   }
 
@@ -134,7 +145,8 @@ function update(patch: Partial<AppState>) {
   emit()
 }
 
-const clampYear = (y: number) => Math.min(limits.lastYear, Math.max(limits.firstYear, Math.round(y)))
+const currentPeriod = () => periodFor(state.variableId, limits)
+const clampTo = (y: number, p: YearRange) => Math.min(p.lastYear, Math.max(p.firstYear, Math.round(y)))
 
 const actions: AppActions = {
   setRegion(id) {
@@ -149,16 +161,21 @@ const actions: AppActions = {
       console.warn(`setVariable: variable desconocida «${String(id)}»`)
       return
     }
-    update({ variableId: id })
+    const p = periodFor(id, limits)
+    // Sin periodo elegido: el completo de la nueva variable. Con periodo elegido: se recorta al de la variable.
+    if (!periodChosen) update({ variableId: id, from: p.firstYear, to: p.lastYear })
+    else update({ variableId: id, from: clampTo(state.from, p), to: clampTo(state.to, p) })
   },
   setPeriod(from, to) {
-    const [a, b] = [clampYear(from), clampYear(to)]
+    const p = currentPeriod()
+    const [a, b] = [clampTo(from, p), clampTo(to, p)]
     periodChosen = true
     update({ from: Math.min(a, b), to: Math.max(a, b) })
   },
   resetPeriod() {
     periodChosen = false
-    update({ from: limits.firstYear, to: limits.lastYear })
+    const p = currentPeriod()
+    update({ from: p.firstYear, to: p.lastYear })
   },
 }
 
@@ -197,15 +214,24 @@ export function dismissStateNotice(): void {
 }
 
 /**
- * Lo llama el armazón cuando carga el catálogo: fija años y regiones válidos
+ * Lo llama el armazón cuando carga el catálogo: fija años (globales y por variable) y regiones válidos
  * y vuelve a validar lo que vino en la URL.
  */
-export function configureState(next: { firstYear: number; lastYear: number; regionIds: Iterable<string> }): void {
-  limits = { firstYear: next.firstYear, lastYear: next.lastYear, regionIds: new Set(next.regionIds) }
-  const parsed = parseSearch(toSearch(state), limits)
+export function configureState(next: {
+  firstYear: number
+  lastYear: number
+  regionIds: Iterable<string>
+  periods?: Partial<Record<VariableId, YearRange>>
+}): void {
+  limits = { firstYear: next.firstYear, lastYear: next.lastYear, regionIds: new Set(next.regionIds), periods: next.periods }
+  // Si el periodo no lo eligió nadie, no se valida (era el predeterminado): se adopta el de la variable sin avisar.
+  const q = new URLSearchParams(toSearch(state))
+  if (!periodChosen) { q.delete('from'); q.delete('to') }
+  const parsed = parseSearch(`?${q.toString()}`, limits)
   notice = parsed.notices[0] ?? notice
   state = { ...parsed.state, webgl: state.webgl }
-  if (!periodChosen) state = { ...state, from: limits.firstYear, to: limits.lastYear }
+  const p = currentPeriod()
+  if (!periodChosen) state = { ...state, from: p.firstYear, to: p.lastYear }
   writeUrl()
   emit()
 }
@@ -215,7 +241,10 @@ export function markWebglUnavailable(): void {
   update({ webgl: false })
 }
 
-/** Periodo completo disponible (para «restablecer» y controles de rango). */
+/**
+ * Periodo completo de la variable activa (para «restablecer» y controles de rango) y regiones válidas.
+ * `firstYear`/`lastYear` ya son los de la variable activa.
+ */
 export function getLimits(): Readonly<StateLimits> {
-  return limits
+  return { ...limits, ...currentPeriod() }
 }

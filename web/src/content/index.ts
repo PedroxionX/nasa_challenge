@@ -36,22 +36,22 @@ export interface VariableCopy {
 }
 
 export const VARIABLE_COPY: Record<VariableId, VariableCopy> = {
-  T2M: {
+  air_temperature: {
     label: 'Temperatura del aire',
     short: 'Temperatura',
-    definition: '[Provisional · 006] La que mediría un termómetro a 2 m del suelo, según un reanálisis.',
+    definition: '[Provisional · 006] La que mediría un termómetro a 2 m del suelo, según el reanálisis MERRA-2 de la NASA.',
   },
-  PRECTOTCORR: {
+  precipitation: {
     label: 'Precipitación',
     short: 'Precipitación',
-    definition: '[Provisional · 006] Lluvia y nieve acumuladas en el año, según un reanálisis; su tendencia es menos fiable que la de temperatura.',
+    definition: '[Provisional · 006] Lluvia y nieve acumuladas en el año, medidas por satélites y pluviómetros (GPM IMERG de la NASA), desde 2001.',
   },
 }
 
 export const UI_COPY = {
   appName: 'Trend Detective',
   tagline: 'NASA Space Apps 2026 · Earth System Trend Detective',
-  welcome: 'Elige un estado para ver cómo ha cambiado su clima desde 1981.',
+  welcome: 'Elige un estado para ver cómo ha cambiado su clima en las últimas décadas.',
   searchPlaceholder: 'Buscar un estado…',
   noData: 'No hay datos para esta región.',
   insufficientData: 'Faltan años. Con menos de 10 años completos no calculamos tendencia.',

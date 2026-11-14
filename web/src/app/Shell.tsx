@@ -10,7 +10,7 @@ import { GlobeStage } from '../features/globe'
 import { MethodsSheet, WelcomeCard } from '../features/guide'
 import { QueryBar } from '../features/query'
 import { UI_COPY } from '../content'
-import { loadCatalog } from '../lib/data'
+import { loadCatalog, variablePeriod, VARIABLE_IDS } from '../lib/data'
 import ErrorBoundary from './ErrorBoundary'
 import { configureState, dismissStateNotice, markWebglUnavailable, useAppState, useStateNotice } from './state'
 import './shell.css'
@@ -52,6 +52,7 @@ export default function Shell() {
           firstYear: c.period.first_year,
           lastYear: c.period.last_complete_year,
           regionIds: c.regions.map(r => r.id),
+          periods: Object.fromEntries(VARIABLE_IDS.map(id => [id, variablePeriod(c, id)])),
         })
       })
       .catch(() => live && setCatalogFailed(true))

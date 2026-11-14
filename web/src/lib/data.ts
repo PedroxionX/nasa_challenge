@@ -10,8 +10,14 @@ import { asset } from './assets'
 // ---------- Tipos del contrato ----------
 
 export const SCHEMA_VERSION = 1
-export const VARIABLE_IDS = ['T2M', 'PRECTOTCORR'] as const
+/** Ids neutrales y estables (contrato, revisión 2026-11-14); el producto exacto va en el catálogo y en provenance. */
+export const VARIABLE_IDS = ['air_temperature', 'precipitation'] as const
 export type VariableId = (typeof VARIABLE_IDS)[number]
+/** Ids anteriores (nombres de NASA POWER) que pueden llegar en enlaces viejos: ?var=T2M. */
+export const LEGACY_VARIABLE_IDS: Readonly<Record<string, VariableId>> = {
+  T2M: 'air_temperature',
+  PRECTOTCORR: 'precipitation',
+}
 
 export type CountryCode = 'MX' | 'US'
 export type TrendStatus = 'increasing' | 'decreasing' | 'inconclusive' | 'insufficient' | 'invalid'
@@ -25,6 +31,12 @@ export interface VariableInfo {
   unit_annual: string
   aggregation: 'mean_day_weighted' | 'sum_from_rate'
   relative_change: boolean
+  /** Periodo propio de la variable (primer y último año completos). Si falta, vale `catalog.period`. */
+  first_year?: number
+  last_complete_year?: number
+  /** Producto de origen, p. ej. «M2TMNXSLV» / «5.12.4» o «GPM_3IMERGM» / «07». */
+  product_short_name?: string
+  product_version?: string
 }
 
 export interface RegionInfo {
@@ -39,6 +51,7 @@ export interface Catalog {
   schema_version: number
   built_at_utc: string
   alpha: number
+  /** Envolvente de los periodos de todas las variables (para lectores anteriores). Usar `variablePeriod`. */
   period: { first_year: number; last_complete_year: number; min_window_years: number }
   method: { slope: string; test: string; interval: string; contrast: string }
   variables: VariableInfo[]
@@ -58,12 +71,21 @@ export interface Provenance {
   requests: string
   transformations: string[]
   is_synthetic: boolean
+  /** Revisión 2026-11-14: los escribe siempre el pipeline con fuentes de GES DISC; ausentes en archivos anteriores. */
+  short_name?: string
+  version?: string
+  doi?: string | null
+  /** Número de gránulos leídos para esta serie. */
+  granules?: number
 }
 
 export const WINDOW_COLUMNS = [
   'start', 'end', 'n', 'slope_decade', 'ci_low', 'ci_high', 'p', 'p_uncorrected',
   'r1', 'ols_slope_decade', 'ols_p', 'status', 'flags',
 ] as const
+
+/** Columnas opcionales al final de `windows.columns` (pedido de 004, publicadas por 003): las cuatro o ninguna. */
+export const OPTIONAL_WINDOW_COLUMNS = ['line_mid', 'slope_decade_pct', 'ci_low_pct', 'ci_high_pct'] as const
 
 export interface SeriesFile {
   schema_version: number
@@ -94,6 +116,15 @@ export interface TrendRow {
   ols_p: number | null
   status: TrendStatus
   flags: TrendFlag[]
+  /**
+   * Opcionales: `undefined` si el archivo no publica la columna; `null` si no es evaluable.
+   * line_mid: recta de Theil-Sen en el año central, en la unidad de la serie.
+   * *_pct: % por década respecto a la media de la ventana (solo variables con relative_change).
+   */
+  line_mid?: number | null
+  slope_decade_pct?: number | null
+  ci_low_pct?: number | null
+  ci_high_pct?: number | null
 }
 
 export interface MapFile {
@@ -101,7 +132,10 @@ export interface MapFile {
   variable: VariableId
   unit: string
   regions: string[]
-  /** Clave `"desde-hasta"`; `windows[clave][i]` es la pendiente por década de `regions[i]` o `null`. */
+  /**
+   * Clave `"desde-hasta"`; `windows[clave][i]` es el cambio por década de `regions[i]` o `null`:
+   * `slope_decade` si la variable no tiene relative_change; `slope_decade_pct` (unit «%/década») si lo tiene.
+   */
   windows: Record<string, (number | null)[]>
   classes: { breaks: number[]; labels: string[] }
 }
@@ -142,8 +176,20 @@ async function fetchJson(url: string): Promise<unknown> {
   }
   if (res.status === 404) throw new DataError('not_found', url, `No existe ${url}`)
   if (!res.ok) throw new DataError('network', url, `${url} respondió ${res.status}`)
+  // Vite (dev y preview) y los alojamientos de SPA (Vercel, Netlify…) no dan 404 a un archivo ausente:
+  // responden 200 con index.html. Eso es «no existe», no un JSON roto (aviso de 004, 2026-11-14).
+  if ((res.headers.get('content-type') ?? '').includes('text/html')) {
+    throw new DataError('not_found', url, `No existe ${url} (el servidor devolvió una página HTML)`)
+  }
+  let text: string
   try {
-    return await res.json()
+    text = await res.text()
+  } catch {
+    throw new DataError('network', url, `No se pudo leer ${url}`)
+  }
+  if (/^\s*</.test(text)) throw new DataError('not_found', url, `No existe ${url} (el servidor devolvió una página HTML)`)
+  try {
+    return JSON.parse(text)
   } catch {
     throw new DataError('parse', url, `${url} no es JSON válido`)
   }
@@ -240,6 +286,19 @@ export function pickWindow(series: SeriesFile, from: number, to: number): TrendR
   if (!row) return null
   const out: Record<string, unknown> = {}
   for (const col of WINDOW_COLUMNS) out[col] = row[columns.indexOf(col)] ?? null
+  for (const col of OPTIONAL_WINDOW_COLUMNS) {
+    const i = columns.indexOf(col)
+    if (i >= 0) out[col] = row[i] ?? null
+  }
   if (!Array.isArray(out.flags)) out.flags = []
   return out as unknown as TrendRow
+}
+
+/** Periodo de una variable: el suyo si el catálogo lo declara; si no, el global. */
+export function variablePeriod(catalog: Catalog, variableId: VariableId): { firstYear: number; lastYear: number } {
+  const v = catalog.variables.find(x => x.id === variableId)
+  return {
+    firstYear: v?.first_year ?? catalog.period.first_year,
+    lastYear: v?.last_complete_year ?? catalog.period.last_complete_year,
+  }
 }

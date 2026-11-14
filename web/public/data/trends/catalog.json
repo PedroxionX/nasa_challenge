@@ -3,7 +3,7 @@
   "built_at_utc": "2026-11-14T00:00:00Z",
   "alpha": 0.05,
   "period": {
-    "first_year": 1981,
+    "first_year": 1980,
     "last_complete_year": 2025,
     "min_window_years": 10
   },
@@ -15,22 +15,30 @@
   },
   "variables": [
     {
-      "id": "T2M",
+      "id": "air_temperature",
       "label": "Temperatura del aire",
-      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
       "kind": "reanalysis",
       "unit_annual": "°C",
       "aggregation": "mean_day_weighted",
-      "relative_change": false
+      "relative_change": false,
+      "product_short_name": "M2TMNXSLV",
+      "product_version": "5.12.4",
+      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
+      "first_year": 1980,
+      "last_complete_year": 2025
     },
     {
-      "id": "PRECTOTCORR",
+      "id": "precipitation",
       "label": "Precipitación",
-      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
-      "kind": "reanalysis",
+      "kind": "observation",
       "unit_annual": "mm",
       "aggregation": "sum_from_rate",
-      "relative_change": true
+      "relative_change": true,
+      "product_short_name": "GPM_3IMERGM",
+      "product_version": "07",
+      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
+      "first_year": 2001,
+      "last_complete_year": 2025
     }
   ],
   "regions": [

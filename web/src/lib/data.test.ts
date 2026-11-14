@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  DataError, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, windowKey,
-  type SeriesFile,
+  DataError, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod, windowKey,
+  type Catalog, type SeriesFile,
 } from './data'
 
 const COLUMNS = ['start', 'end', 'n', 'slope_decade', 'ci_low', 'ci_high', 'p', 'p_uncorrected',
@@ -10,7 +10,7 @@ const COLUMNS = ['start', 'end', 'n', 'slope_decade', 'ci_low', 'ci_high', 'p', 
 const series = (over: Partial<SeriesFile> = {}): SeriesFile => ({
   schema_version: 1,
   region: 'MX-BCN',
-  variable: 'T2M',
+  variable: 'air_temperature',
   unit: '°C',
   years: [1981, 1982],
   values: [0, 0],
@@ -58,9 +58,18 @@ describe('carga', () => {
 
   it('archivo ausente → DataError not_found', async () => {
     fetchMock.mockReturnValueOnce(respond('', 404))
-    const err = await loadSeries('T2M', 'MX-XXX').catch(e => e)
+    const err = await loadSeries('air_temperature', 'MX-XXX').catch(e => e)
     expect(err).toBeInstanceOf(DataError)
     expect(err.kind).toBe('not_found')
+  })
+
+  it('archivo ausente servido como index.html con 200 (Vite, Vercel) → not_found, no parse', async () => {
+    const html = '<!doctype html><html><body><div id="root"></div></body></html>'
+    fetchMock.mockReturnValueOnce(Promise.resolve(new Response(html, { status: 200, headers: { 'Content-Type': 'text/html; charset=utf-8' } })))
+    await expect(loadSeries('air_temperature', 'MX-JAL')).rejects.toMatchObject({ name: 'DataError', kind: 'not_found' })
+    // Mismo HTML con otra cabecera (text/plain): también es «no existe».
+    fetchMock.mockReturnValueOnce(Promise.resolve(new Response(html, { status: 200, headers: { 'Content-Type': 'text/plain' } })))
+    await expect(loadSeries('air_temperature', 'MX-SIN')).rejects.toMatchObject({ kind: 'not_found' })
   })
 
   it('schema_version desconocido → DataError schema_version', async () => {
@@ -70,7 +79,7 @@ describe('carga', () => {
 
   it('fallo de red → DataError network', async () => {
     fetchMock.mockRejectedValueOnce(new TypeError('offline'))
-    await expect(loadMap('T2M')).rejects.toMatchObject({ kind: 'network' })
+    await expect(loadMap('air_temperature')).rejects.toMatchObject({ kind: 'network' })
   })
 
   it('JSON roto → DataError parse', async () => {
@@ -80,18 +89,18 @@ describe('carga', () => {
 
   it('serie sin procedencia o con columnas incompletas → DataError invalid', async () => {
     fetchMock.mockReturnValueOnce(respond({ ...series(), provenance: undefined }))
-    await expect(loadSeries('T2M', 'MX-BCN')).rejects.toMatchObject({ kind: 'invalid' })
+    await expect(loadSeries('air_temperature', 'MX-BCN')).rejects.toMatchObject({ kind: 'invalid' })
     clearDataCache()
     fetchMock.mockReturnValueOnce(respond(series({ windows: { columns: ['start', 'end'], rows: [] } })))
-    await expect(loadSeries('T2M', 'MX-BCN')).rejects.toMatchObject({ kind: 'invalid' })
+    await expect(loadSeries('air_temperature', 'MX-BCN')).rejects.toMatchObject({ kind: 'invalid' })
   })
 
   it('mapa con una ventana de longitud distinta a regions → invalid', async () => {
     fetchMock.mockReturnValueOnce(respond({
-      schema_version: 1, variable: 'T2M', unit: '°C/década', regions: ['A', 'B'],
+      schema_version: 1, variable: 'air_temperature', unit: '°C/década', regions: ['A', 'B'],
       windows: { '1981-2025': [0.1] }, classes: { breaks: [], labels: [] },
     }))
-    await expect(loadMap('T2M')).rejects.toMatchObject({ kind: 'invalid' })
+    await expect(loadMap('air_temperature')).rejects.toMatchObject({ kind: 'invalid' })
   })
 
   it('guarda en caché los aciertos y permite reintentar tras un fallo', async () => {
@@ -124,9 +133,38 @@ describe('pickWindow', () => {
     expect(pickWindow(series(), 1990, 1999)).toMatchObject({ slope_decade: null, p: null, status: 'invalid', flags: ['short'] })
   })
 
+  it('sin columnas opcionales no inventa campos', () => {
+    const row = pickWindow(series(), 1981, 2025)!
+    expect('line_mid' in row).toBe(false)
+    expect('slope_decade_pct' in row).toBe(false)
+  })
+
+  it('copia line_mid y las columnas de % cuando el archivo las publica (pedido de 004)', () => {
+    const s = series({ variable: 'precipitation' })
+    s.windows = {
+      columns: [...COLUMNS, 'line_mid', 'slope_decade_pct', 'ci_low_pct', 'ci_high_pct'],
+      rows: [
+        [2001, 2025, 25, -27.4, -34.4, -21.9, 0.0001, 0.00002, 0.1, -26, 0.0001, 'decreasing', [], 180.2, -15.2, -19.1, -12.2],
+        [2001, 2010, 10, null, null, null, null, null, null, null, null, 'insufficient', ['short'], null, null, null, null],
+      ],
+    }
+    expect(pickWindow(s, 2001, 2025)).toMatchObject({ line_mid: 180.2, slope_decade_pct: -15.2, ci_low_pct: -19.1, ci_high_pct: -12.2 })
+    expect(pickWindow(s, 2001, 2010)).toMatchObject({ line_mid: null, slope_decade_pct: null })
+  })
+
   it('periodo sin fila (p. ej. < 10 años) → null', () => {
     expect(pickWindow(series(), 2020, 2025)).toBeNull()
   })
+})
+
+it('variablePeriod usa el periodo de la variable y, si falta, el global', () => {
+  const c = {
+    ...catalog,
+    period: { first_year: 1980, last_complete_year: 2025, min_window_years: 10 },
+    variables: [{ id: 'precipitation', first_year: 2001, last_complete_year: 2025 }],
+  } as unknown as Catalog
+  expect(variablePeriod(c, 'precipitation')).toEqual({ firstYear: 2001, lastYear: 2025 })
+  expect(variablePeriod(c, 'air_temperature')).toEqual({ firstYear: 1980, lastYear: 2025 })
 })
 
 it('windowKey coincide con las claves de map/', () => {

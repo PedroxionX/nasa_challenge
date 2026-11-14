@@ -2,14 +2,16 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { clearDataCache } from '../lib/data'
 
-// Sirve web/public/data/trends/ como si fuera el servidor de Vite.
+// Sirve web/public/data/trends/ como el servidor de Vite (y Vercel): un archivo ausente NO da 404,
+// sino index.html con 200 y text/html. El 404 real lo cubre lib/data.test.ts.
 const FILES = import.meta.glob('../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
+const INDEX_HTML = '<!doctype html><html lang="es"><head><title>Trend Detective</title></head><body><div id="root"></div></body></html>'
 function serveFromPublic() {
   vi.stubGlobal('fetch', vi.fn(async (input: string) => {
     const path = decodeURIComponent(String(input).replace(/^\/+/, ''))
     const body = FILES[`../../public/${path}`]
     return body === undefined
-      ? new Response('', { status: 404 })
+      ? new Response(INDEX_HTML, { status: 200, headers: { 'Content-Type': 'text/html' } })
       : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
   }))
 }
@@ -49,6 +51,16 @@ describe('Shell', () => {
     expect(within(panel).getByText(/Datos de ejemplo sintéticos/)).toBeTruthy()
     expect(screen.queryByRole('region', { name: 'Bienvenida' })).toBeNull()
     expect(window.location.search).toContain('region=MX-BCN')
+  })
+
+  it('un enlace viejo (?var=PRECTOTCORR) abre la precipitación con su propio periodo', async () => {
+    await renderShell('?region=MX-BCN&var=PRECTOTCORR')
+    const panel = screen.getByRole('complementary', { name: 'Análisis' })
+    await within(panel).findByText(/^Baja/)
+    expect(within(panel).getAllByText(/2001–2025/).length).toBeGreaterThan(0)
+    expect(window.location.search).toContain('var=precipitation')
+    expect(window.location.search).toContain('from=2001')
+    expect(screen.queryByText(/no existe|no es válido/)).toBeNull()
   })
 
   it('la hoja inferior cambia de altura con su asa: media → completa → asomada', async () => {
