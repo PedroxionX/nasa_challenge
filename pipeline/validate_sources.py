@@ -9,7 +9,8 @@ Para cada región y variable:
    En T2M se compara en °C. En PRECTOTCORR POWER publica la tasa media anual (mm/día), así que se compara
    nuestro acumulado anual ÷ días del año, en mm/día.
 
-Uso: python validate_sources.py --out out/t005 [--regions MX-BCN,US-TX]
+Alternativa POWER (salida de build.py --source power).
+Uso: python validate_sources.py --out out/t005_power [--regions MX-BCN,US-TX]
 Escribe el informe en validation/t005.json.
 """
 
@@ -29,6 +30,7 @@ from trendlens.data.nasa_power import NasaPowerSource
 from weights import load_regions, region_weights
 
 TOL = 0.01
+POWER_TO_ID = {"T2M": "air_temperature", "PRECTOTCORR": "precipitation"}  # ids del contrato revisado
 
 
 def check(region_ids: list[str], codes: list[str], out_dir: Path, first_year: int, last_year: int) -> dict:
@@ -60,7 +62,7 @@ def check(region_ids: list[str], codes: list[str], out_dir: Path, first_year: in
             })
 
             # 2. Serie anual frente a la media ponderada de la clave anual de POWER
-            s = json.loads((out_dir / "series" / code / f"{r.id}.json").read_text(encoding="utf-8"))
+            s = json.loads((out_dir / "series" / POWER_TO_ID[code] / f"{r.id}.json").read_text(encoding="utf-8"))
             lookup = {(round(a, 4), round(o, 4)): j for j, (a, o) in enumerate(zip(grid.lats, grid.lons))}
             idx = np.array([lookup[(round(float(a), 4), round(float(o), 4))] for a, o in zip(cw.lats, cw.lons)])
             ann_diffs = []
@@ -111,7 +113,7 @@ def check_single_cell_regions(region_ids: list[str], codes: list[str], first_yea
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="Contraste de la T005")
-    ap.add_argument("--out", default=str(PIPELINE_DIR / "out" / "t005"))
+    ap.add_argument("--out", default=str(PIPELINE_DIR / "out" / "t005_power"))
     ap.add_argument("--regions", default="MX-BCN,US-TX")
     ap.add_argument("--variables", default="T2M,PRECTOTCORR")
     ap.add_argument("--single-cell", default="US-DC", help="regiones de una sola celda para el contraste literal de US1")

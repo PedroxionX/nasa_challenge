@@ -1,0 +1,5 @@
+{"region": "US-CA", "variable": "precipitation", "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "GPM_3IMERGM_07_precipitation", "shape": "tl_2014_us_state/shp_13 (California)", "units_giovanni": "mm/hr",
+ "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2001-01-01T00:00:00Z&endtime=2024-12-31T23:59:59Z&shape=tl_2014_us_state/shp_13&data=GPM_3IMERGM_07_precipitation",
+ "retrieved": "2026-11-14", "months": 288, "annual_method": "suma de 12 meses de tasa (mm/hr) × 24 × días del mes, mm",
+ "annual": {"2001":581.698,"2002":471.456,"2003":544.109,"2004":552.42,"2005":766.532,"2006":621.403,"2007":359.249,"2008":446.819,"2009":425.539,"2010":769.922,"2011":487.501,"2012":549.955,"2013":294.196,"2014":506.648,"2015":408.189,"2016":638.645,"2017":637.038,"2018":477.96,"2019":667.833,"2020":380.987,"2021":477.749,"2022":389.809,"2023":618.298,"2024":633.319}}
