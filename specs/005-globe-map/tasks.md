@@ -44,4 +44,4 @@ T008 sigue pendiente: hay que medir tiempo por cuadro en un teléfono y un port�
 - FR-G02 se aplicó al pie de la letra: con el mapa cargado no hay nubes ni rotación. Solo aparecen si el mapa de tendencias no carga.
 - La selección se marca con elevación, borde y una etiqueta con el nombre; el relleno queda para los datos.
 - «Sin datos» en el globo se distingue por color gris, por el tooltip y por la tabla; la trama solo está en la leyenda.
-- Una prueba de 002 (`web/src/app/Shell.test.tsx`, «elegir un ejemplo…») falla desde que el globo tiene contenido real: busca `/^Sube/` en toda la página y ahora también lo encuentra en la tabla de regiones. Corrige quien lleva 002, acotando la búsqueda al panel de análisis.
+- Tras fusionar `main` (2026-11-14) pasan 195 de 200 pruebas. Las 5 que fallan ya fallan en `main` sin esta rama: dos en `web/src/app/Shell.test.tsx` (002; encuentran duplicados la región «Bienvenida» y el texto `/^Sube/`) y tres en `web/src/features/analysis/AnalysisPanel.test.tsx` (004; la frase «En palabras» de 006 usa coma decimal, pendiente en 004 T015). Corrigen sus dueños; las pruebas del globo pasan.
