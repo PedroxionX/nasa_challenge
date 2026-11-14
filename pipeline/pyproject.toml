@@ -1,0 +1,27 @@
+[project]
+name = "trend-detective-pipeline"
+version = "0.1.0"
+description = "Pipeline de datos de Trend Detective: descarga NASA POWER, promedia por estado y calcula tendencias para todas las ventanas de al menos 10 años."
+requires-python = ">=3.11"
+# Versiones verificadas el 2026-11-14 con Python 3.13.7. Pendiente: visto bueno de quien lleva 002 (metodología §5).
+dependencies = [
+    "numpy==2.5.4",
+    "pandas==3.1.1",
+    "scipy==1.18.1",
+    "requests==2.34.2",
+    "shapely==2.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==9.2.0",
+    # Solo para pruebas: implementación independiente de Mann-Kendall usada como referencia cruzada.
+    "pymannkendall==1.4.3",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "live: pruebas que consultan la API real de NASA POWER (se omiten salvo que se use --run-live)",
+]
+addopts = "-ra"
