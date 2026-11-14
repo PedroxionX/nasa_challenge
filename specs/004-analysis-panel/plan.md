@@ -21,10 +21,14 @@ Hereda la comprobación de 001 (sin violaciones). Puerta propia: ningún archivo
 ## Project Structure
 
 ```text
-web/src/features/query/     index.ts, RegionSearch.tsx, VariablePicker.tsx, query.css
+web/src/features/query/     index.ts (exporta QueryBar), QueryBar.tsx, RegionSearch.tsx,
+                            VariablePicker.tsx, query.css, *.test.tsx
 web/src/features/analysis/  index.ts, AnalysisPanel.tsx, TrendChart.tsx, ResultCards.tsx,
-                            PeriodControl.tsx, analysis.css, *.test.ts
+                            PeriodControl.tsx, PeriodVariation.tsx, format.ts, analysis.css,
+                            fixtures/ (archivos de ejemplo propios), *.test.ts(x)
 ```
+
+`QueryBar` y `AnalysisPanel` conservan el nombre con que los importa el armazón (002).
 
 **Structure Decision**: Componentes sin props que leen el estado compartido; gráfica en SVG propio; el navegador no calcula estadística, solo consulta la tabla de ventanas.
 
