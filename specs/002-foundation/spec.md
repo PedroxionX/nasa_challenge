@@ -18,29 +18,37 @@ Excepción única: en su primer commit crea un esbozo en cada carpeta de funcion
 
 ## Interfaces que publica (congeladas tras la fusión)
 
+**Revisión 2026-11-14 (fuentes reales de GES DISC, decisión del equipo)**: ids neutrales de variable (`T2M` → `air_temperature`, `PRECTOTCORR` → `precipitation`), periodo por variable, procedencia ampliada y cuatro columnas opcionales en `TrendRow`. Todo lo demás es aditivo; detalle en el [contrato](../001-trend-explorer-mvp/contracts/data-files.md). Lo único que obliga a tocar código ajeno es usar un id viejo como literal en TypeScript (p. ej. una prueba de 005 con `variable: 'T2M'`).
+
 ```ts
 // web/src/app/state.ts
-type VariableId = 'T2M' | 'PRECTOTCORR'
+type VariableId = 'air_temperature' | 'precipitation'   // ?var=T2M / ?var=PRECTOTCORR se traducen sin aviso
 interface AppState { regionId: string | null; variableId: VariableId; from: number; to: number; webgl: boolean }
 function useAppState(): AppState & {
   setRegion(id: string | null): void; setVariable(id: VariableId): void
-  setPeriod(from: number, to: number): void; resetPeriod(): void
-}
+  setPeriod(from: number, to: number): void; resetPeriod(): void   // recortan al periodo de la variable activa
+}   // setVariable: sin periodo elegido adopta el completo de la nueva variable; con periodo elegido lo recorta
 
 // web/src/lib/data.ts  (tipos = contrato de 001)
 function loadCatalog(): Promise<Catalog>
 function loadSeries(variableId: VariableId, regionId: string): Promise<SeriesFile>
 function loadMap(variableId: VariableId): Promise<MapFile>
 function pickWindow(series: SeriesFile, from: number, to: number): TrendRow | null  // null ⇒ datos insuficientes
-function windowKey(from: number, to: number): string                       // clave de MapFile.windows: "1981-2025"
+// TrendRow: 13 columnas del contrato + opcionales line_mid?, slope_decade_pct?, ci_low_pct?, ci_high_pct?
+//   (undefined si el archivo no las publica; null si no son evaluables)
+function variablePeriod(catalog: Catalog, variableId: VariableId): { firstYear: number; lastYear: number }
+const LEGACY_VARIABLE_IDS: Record<string, VariableId>                       // { T2M: 'air_temperature', PRECTOTCORR: 'precipitation' }
+const OPTIONAL_WINDOW_COLUMNS: readonly ['line_mid', 'slope_decade_pct', 'ci_low_pct', 'ci_high_pct']
+function windowKey(from: number, to: number): string                       // clave de MapFile.windows: "1980-2025"
 class DataError extends Error { kind: 'not_found' | 'network' | 'parse' | 'schema_version' | 'invalid'; url: string }
 function isDataError(e: unknown): e is DataError
 
 // web/src/app/state.ts — además de useAppState (uso del armazón y del globo)
 function useStateNotice(): string | null; function dismissStateNotice(): void   // aviso por valor de URL inválido
-function configureState(l: { firstYear: number; lastYear: number; regionIds: Iterable<string> }): void  // lo llama el armazón al cargar el catálogo
+function configureState(l: { firstYear: number; lastYear: number; regionIds: Iterable<string>
+  periods?: Partial<Record<VariableId, { firstYear: number; lastYear: number }>> }): void  // lo llama el armazón al cargar el catálogo
 function markWebglUnavailable(): void                                       // el globo (005) lo llama si WebGL falla tras arrancar
-function getLimits(): { firstYear: number; lastYear: number; regionIds: ReadonlySet<string> | null }
+function getLimits(): { firstYear: number; lastYear: number; regionIds: ReadonlySet<string> | null }   // años = periodo de la variable activa
 
 // web/src/lib/assets.ts
 function asset(path: string): string   // URL de web/public/ válida bajo subruta; nunca usar '/data/...' directamente

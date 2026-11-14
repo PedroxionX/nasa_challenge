@@ -39,40 +39,60 @@ Fecha de toda la investigación: **2026-11-14**. Etiquetas: **[H]** hecho compro
 - **Evidencia que cambiaría la recomendación**: (a) tras T023, el globo no alcanza los objetivos de rendimiento en el teléfono de referencia → mapa 2D como vista principal en móvil; (b) en la prueba con usuarios, menos de 3 de 5 encuentran la región aun con el buscador → replantear la navegación; (c) nadie del equipo domina React → base Streamlit del laboratorio; (d) las reglas prohíben código previo → B se mantiene pero se reimplementa.
 - **Migración a React Three Fiber**: no. Ningún problema observado nace de `react-globe.gl`; todos se corrigen con sus props (`pauseAnimation`, `rendererConfig`, capas) y con menos polígonos.
 
-### D2. Fuente de datos del MVP: NASA POWER (MERRA-2), endpoint mensual regional
-- **Decision**: serie mensual por celda de la cuadrícula nativa vía `GET /api/temporal/monthly/regional`, promediada por polígono.
-- **Rationale** **[H]** (solicitudes reales de hoy): sin autenticación; API v2.10.0; `sources: ["MERRA2"]`; cuadrícula 0,5° lat × 0,625° lon; relleno −999; clave `YYYY13` = anual; datos desde 1981; último mes válido 2026-09. Límites observados: caja de **2° a 10°** por lado, **1 parámetro por solicitud**, inicio ≥ 1981 (HTTP 422 con mensaje claro). Una caja de 10°×10° y 45 años devolvió 336 celdas, 2,9 MB, en 4 s.
+### D2. Fuente de datos: productos de GES DISC vía earthaccess (revisado 2026-11-14)
+- **Decision** (equipo, 2026-11-14; no se reabre): el producto final usa datos **reales** de los mismos productos de la NASA que sirve Giovanni, más otras fuentes de la NASA. El pipeline descarga los productos mensuales desde **GES DISC** (y LP DAAC para MODIS) con **earthaccess**, que lee los gránulos directamente de **Earthdata Cloud**, y promedia cada estado con su polígono exacto (D4). **NASA POWER deja de ser la fuente principal** y queda como **alternativa** si GES DISC falla. **Giovanni no se automatiza**: su interfaz es manual y su API solo acepta puntos; queda para **validar** (D4, T008 de 003).
+- **Rationale**: (1) mismos productos y versiones que Giovanni, de modo que la validación compara datos idénticos y solo difiere la regla espacial (T008 de 003); (2) la precipitación pasa a una observación (IMERG), lo que resuelve el riesgo de «precipitación de reanálisis poco fiable» (D3); (3) con earthaccess no se depende del OPeNDAP ni del HTTPS locales de GES DISC, que se apagaron en 2026.
+- **Riesgo: migración de GES DISC a Earthdata Cloud** **[H]** (§5, aviso de migración): OPeNDAP local apagado del 20-08 al 30-09-2026, HTTPS local hasta el 30-09-2026 y redirección total tras noviembre de 2026. Por eso solo se usa el acceso en la nube (earthaccess + CMR); un cambio de rutas o de búsqueda en CMR se detecta en la primera ejecución porque el manifiesto registra gránulo, URL, fecha y huella. Si la nube falla, se usa la alternativa POWER para la temperatura (mismo MERRA-2) y la caché local ya descargada para la demo.
+- **Credenciales**: earthaccess exige Earthdata Login (ver D5).
 - **Alternatives considered**:
 
-| Fuente | Hallazgo **[H]** | Por qué no es la principal |
+| Fuente | Hallazgo **[H]** | Uso |
 |---|---|---|
-| Giovanni 4.40 | Promedia por área con peso cos(latitud) ajustado por cobertura de la forma; formas: países, **estados de EE. UU.**, cuencas; CSV; exige Earthdata Login (invitado: 4 instantes y sin descargas); sin API documentada | No tiene estados de México; no automatizable. **Uso: validación** |
-| AppEEARS | API con token de 48 h, tareas asíncronas (`pending → processing → done`), área por GeoJSON; catálogo público de 193 productos (p. ej. `MOD13A3.061` NDVI mensual 1 km desde 2000, `MOD11A2.061` LST 8 días) | Requiere credenciales y espera; ~25 años. **Uso: segunda fuente tras el MVP** |
-| Earthdata Cloud (MERRA-2, IMERG directos) | OPeNDAP local y HTTPS local de GES DISC apagados el 30-09-2026; hoy solo nube, CMR, Harmony | Credenciales y más procesamiento. **Evolución** |
-| NOAA CDO v2 | Token obligatorio; 5 solicitudes/s y 10 000/día; mensual limitado a 10 años por solicitud; datos de estaciones | Estación ≠ región. **Contexto** |
+| **GES DISC vía earthaccess** (MERRA-2, IMERG) | Productos mensuales en la nube; mismo origen que Giovanni; exige Earthdata Login | **Principal** |
+| NASA POWER, endpoint mensual regional | Sin autenticación; API v2.10.0; MERRA-2 en 0,5° × 0,625°; relleno −999; desde 1981; caja de 2° a 10°, 1 parámetro por solicitud | **Alternativa** si GES DISC falla (solo temperatura; su precipitación es de reanálisis y se rotularía) |
+| Giovanni 4.40 | Promedio por área de formas (países, estados de EE. UU., cuencas); CSV; exige Earthdata Login; sin API para áreas (solo puntos) | **Validación** manual (D4) |
+| AppEEARS / LP DAAC | API con token de 48 h y tareas asíncronas; MODIS (p. ej. NDVI) | Después del MVP: NDVI de MODIS `MOD13C2` por LP DAAC con earthaccess |
+| NOAA CDO v2 | Token obligatorio; 5 solicitudes/s y 10 000/día; estaciones | **Contexto** |
 
-- **Alternativa de acceso si falla el endpoint regional**: endpoint por punto (**[H]** funciona hoy) consultando el centro de cada celda; y como alternativa de demo, las respuestas ya descargadas con su manifiesto.
+### D3. Variables y productos (revisado 2026-11-14)
 
-### D3. Variables
-| | Temperatura | Precipitación |
+Productos de la primera entrega, **verificados en Giovanni** por el equipo (2026-11-14). Ids de variable neutrales en el contrato; el producto va en el catálogo y en `provenance` ([contracts/data-files.md](contracts/data-files.md)).
+
+| | Temperatura del aire | Precipitación |
 |---|---|---|
-| Parámetro exacto **[H]** | `T2M`, «Temperature at 2 Meters», unidad declarada `C` | `PRECTOTCORR`, «Precipitation Corrected», unidad declarada `mm/day` |
-| Naturaleza | Temperatura **del aire** a 2 m, de **reanálisis** (modelo + asimilación), no de estación ni de superficie (`TS`, «Earth Skin Temperature», existe y es otra variable) | **Tasa** media diaria del mes; se convierte a acumulado mensual con los días reales y a mm/año |
-| Agregación anual | Media ponderada por días | Suma de 12 meses |
-| Cobertura / resolución | 1981–presente; 0,5° × 0,625° | Igual |
-| Calidad | Sin banderas por celda; relleno −999; rango físico comprobado | Igual; muchos ceros en zonas áridas restan potencia |
-| **[P]** | Versión del producto MERRA-2 subyacente (colección) no la declara la API: citar como «MERRA-2 vía NASA POWER v2.10.0» | La idoneidad de la precipitación de reanálisis para tendencias es limitada: se comunica y se contrasta tras el MVP con IMERG o estaciones |
+| `id` en el contrato | `air_temperature` | `precipitation` |
+| Producto (short name) | MERRA-2 `M2TMNXSLV` (tavgM_2d_slv_Nx) | GPM IMERG Final Run mensual `GPM_3IMERGM` |
+| Versión | 5.12.4 | 07 (V07) |
+| Variable en el archivo | `T2M` | `Grid/precipitation` (dimensiones `time, lon, lat`: transponer) |
+| ID en Giovanni | `M2TMNXSLV_5_12_4_T2M` | `GPM_3IMERGM_07_precipitation` |
+| Malla | 0,5° × 0,625° | 0,1° × 0,1° |
+| Unidad original | K | mm/h (tasa media del mes) |
+| Unidad anual (`unit_annual`) | °C | mm (acumulado del año) |
+| Conversión | K − 273,15 | tasa × horas del mes → mm/mes |
+| Agregación anual | Media ponderada por días (`mean_day_weighted`) | Suma de 12 meses (`sum_from_rate`) |
+| Relleno | según atributos del archivo | −9999,9 → faltante |
+| Primer dato | 1980-01 | 2000-06 |
+| Periodo del contrato | **1980–2025** (703 ventanas) | **2001–2025** (136 ventanas; 2000 está incompleto) |
+| Naturaleza (`kind`) | **reanálisis** (modelo + asimilación); temperatura del aire a 2 m, no de superficie | **observación** de satélite calibrada con pluviómetros |
+| `relative_change` | no | sí: el mapa usa %/década |
+| DOI **[P]** | 10.5067/AP1B0BA5PD2K (comprobar en CMR) | 10.5067/GPM/IMERG/3B-MONTH/07 (comprobar en CMR) |
+
+- **Riesgo resuelto**: la precipitación ya no es de reanálisis, así que desaparece el riesgo «precipitación de reanálisis poco fiable para tendencias» del plan. Queda un límite nuevo: **25 años** de precipitación frente a 46 de temperatura, con menos potencia; la interfaz muestra siempre el periodo propio.
+- **Después del MVP**: GLDAS `GLDAS_NOAH025_M` v2.1 (humedad del suelo, temperatura de superficie), MERRA-2 `M2TMNXAER` `TOTEXTTAU` (espesor óptico de aerosoles) y NDVI de MODIS `MOD13C2` por LP DAAC (no está en Giovanni).
 
 ### D4. Valor regional: promedio de área, no centroide
-- **Decision**: media ponderada de las celdas que tocan el polígono, peso = cos(latitud) × fracción de la celda cubierta por el polígono (el mismo criterio que documenta Giovanni para formas).
-- **Efecto y comunicación**: regiones menores que una celda (~3 000 km²) quedan representadas por 1–4 celdas compartidas con vecinos; la interfaz muestra «Promedio de N celdas de ~50 km» y lo advierte cuando N ≤ 2. Un centroide daría el valor de una sola celda y se llamaría así.
+- **Decision**: media ponderada de las celdas que tocan el polígono, peso = cos(latitud) × fracción de la celda cubierta por el polígono. **Se mantiene** aunque Giovanni usa otra regla (ver abajo), porque es la única que da valor a regiones menores que una celda, como `US-DC`.
+- **Corrección (verificado en la T008 de 003, 2026-11-14)**: la versión anterior de esta decisión decía que era «el mismo criterio que documenta Giovanni para formas». **No lo es**: Giovanni, con formas, usa **solo las celdas cuyo centro cae dentro de la forma** (ponderadas por cos(latitud)), no la fracción cubierta. En Texas (T2M de MERRA-2, 1981–2025), la regla «centro dentro» reproduce Giovanni con una diferencia máxima de 0,051 °C; la nuestra difiere en −0,098 °C de media (máx. 0,123 °C), con la **misma pendiente** (0,389 °C/década). Evidencia: `pipeline/validation/t008_giovanni_us-tx.json` en `origin/003-data-pipeline`.
+- **Efecto y comunicación**: regiones menores que una celda (~3 000 km² en MERRA-2) quedan representadas por 1–4 celdas compartidas con vecinos; la interfaz muestra «Promedio de N celdas» y lo advierte cuando N ≤ 2. Con IMERG (0,1°) casi ninguna región es pequeña. Un centroide daría el valor de una sola celda y se llamaría así.
 
 ### D5. Arquitectura: pipeline previo y archivos estáticos, sin backend
-- **Decision**: un pipeline en Python descarga, promedia, analiza y escribe JSON; el frontend solo lee. Se precalcula el resultado de **todas las ventanas de al menos 10 años** (666 por serie entre 1981 y 2025).
-- **Rationale**: un único motor produce todos los números (constitución I); cambiar el periodo no requiere estadística en el navegador ni servidor; la demo funciona sin red; no hay credenciales. Tamaño **[S]**: ~50 KB por serie, ~8 MB en total sin comprimir; medir en T007.
-- **Alternatives considered**: backend FastAPI con el motor (flexible, pero añade despliegue y un punto de fallo en la demo; es la evolución natural para regiones libres) · portar el motor a TypeScript (dos motores que mantener coherentes) · acceso en vivo desde el navegador (depende de la red y de CORS; sin promedio de área).
+- **Decision**: un pipeline en Python descarga, promedia, analiza y escribe JSON; el frontend solo lee. Se precalcula el resultado de **todas las ventanas de al menos 10 años dentro del periodo de cada variable** (703 por serie de temperatura, 1980–2025; 136 por serie de precipitación, 2001–2025).
+- **Rationale**: un único motor produce todos los números (constitución I); cambiar el periodo no requiere estadística en el navegador ni servidor; la demo funciona sin red; el navegador no ve credenciales. Tamaño **[S]**: ~50 KB por serie de temperatura; medir en la T006 de 003.
+- **Credenciales (revisado 2026-11-14)**: el pipeline ahora necesita **Earthdata Login** para earthaccess. Las credenciales viven **solo en la máquina que ejecuta el pipeline**: `~/.netrc` (`machine urs.earthdata.nasa.gov login … password …`) o las variables de entorno `EARTHDATA_USERNAME` y `EARTHDATA_PASSWORD`. **Nunca en el repositorio ni en el navegador** (constitución, «Restricciones adicionales»); el `.gitignore` raíz excluye `.netrc`, `_netrc` y `.env*`. Los archivos publicados en `web/public/data/trends/` no contienen nada que requiera credenciales, y las pruebas del pipeline corren sin ellas, con fixtures (las pruebas en vivo van marcadas).
+- **Alternatives considered**: backend FastAPI con el motor (flexible, pero añade despliegue y un punto de fallo en la demo; es la evolución natural para regiones libres) · portar el motor a TypeScript (dos motores que mantener coherentes) · acceso en vivo desde el navegador (exigiría credenciales en el navegador: prohibido).
 
 ### D6. Método estadístico principal
+- **Sin cambios con las fuentes reales (2026-11-14)**: se aplica igual a ambas variables, cada una sobre su propio periodo.
 - **Decision**: sobre la serie **anual de años completos**: pendiente de **Theil-Sen** e intervalo de Sen; **Mann-Kendall con corrección de varianza por autocorrelación de lag 1** como prueba; MCO con ajuste de Santer et al. (2000) como contraste en los detalles técnicos.
 - **Rationale**: el laboratorio ya lo implementa y prueba (contra `pymannkendall`, `scipy.stats.theilslopes` y valores a mano) y lo eligió con un Monte Carlo propio. Agregar a años completos elimina el ciclo estacional sin suponer un modelo. MK no exige normalidad y Sen resiste atípicos. `linregress` documenta que su valor p es una prueba de Wald con distribución t sobre «pendiente = 0» y solo menciona normalidad de residuos, no independencia.
 - **Limitación declarada** **[H]** (experimento del laboratorio): con φ = 0,75 y n = 30–45, la prueba corregida rechaza ~9–11 % en vez de 5 %. Se advierte cuando r₁ es significativo.
@@ -81,7 +101,7 @@ Fecha de toda la investigación: **2026-11-14**. Etiquetas: **[H]** hecho compro
 
 ### D7. «Años para ser significativo»: fuera del MVP
 - Weatherhead et al. (1998) estiman los años necesarios para detectar una tendencia **de magnitud supuesta** dado el ruido y su autocorrelación, y advierten que los saltos de nivel alteran ese número. El laboratorio lo adapta a datos anuales y sustituye la tendencia supuesta por la **estimada**: eso es una potencia calculada a posteriori, muy sensible al ruido (118 años en su ejemplo de Ushuaia), y el título del panel lo convierte en promesa.
-- **Decision**: no mostrarlo. Si se recupera (US5 o posterior): nombre «detectabilidad», tendencia hipotética elegida por la persona, supuestos visibles (lineal, AR(1), 90 % de potencia, α = 0,05), sin fechas.
+- **Decision**: no mostrarlo. **Prohibido** en el contrato, en la interfaz y en el pipeline (`yearsToDetect`, `detectability_years` o similares); el cambio de fuentes no lo reabre. Solo una **enmienda explícita de la constitución** lo permitiría. Si se recupera así (US5 o posterior): nombre «detectabilidad», tendencia hipotética elegida por la persona, supuestos visibles (lineal, AR(1), 90 % de potencia, α = 0,05), sin fechas.
 
 ### D8. Comparaciones múltiples y selección oportunista
 - **Decision MVP**: el mapa colorea la **pendiente estimada**, no la significancia, y lo dice. La evidencia solo se afirma para la región abierta. Aviso fijo junto a la leyenda y aviso cuando el periodo no es el completo, con la variación de la pendiente según el año inicial.
@@ -121,7 +141,7 @@ Conexión: `pipeline/` produce `web/public/data/trends/*` según `contracts/data
 
 | Recurso | Acceso | Hallazgo útil | Limitación | Uso |
 |---|---|---|---|---|
-| [Giovanni](https://giovanni.gsfc.nasa.gov/giovanni/) y [manual](https://giovanni.gsfc.nasa.gov/giovanni/doc/UsersManualworkingdocument.docx.html) | App: solo cabecera (v4.40). Manual: leído casi completo | Ver D2; MODIS NDVI/EVI/LST retirados de Giovanni desde 2024-06-26 | Sin estados de México; requiere cuenta | Validación |
+| [Giovanni](https://giovanni.gsfc.nasa.gov/giovanni/) y [manual](https://giovanni.gsfc.nasa.gov/giovanni/doc/UsersManualworkingdocument.docx.html) | App: solo cabecera (v4.40). Manual: leído casi completo. **Usado con cuenta por 003 (T008, 2026-11-14)** | Ver D2; MODIS NDVI/EVI/LST retirados de Giovanni desde 2024-06-26; con formas promedia solo las celdas con centro dentro (D4) | Sin estados de México; requiere cuenta; API solo para puntos | Validación |
 | [Migración GES DISC](https://github.com/nasa/gesdisc-tutorials/blob/main/user-guidance/GES_DISC_Migration_to_Earthdata_Website_and_Earthdata_Cloud.md) | Leído | OPeNDAP local apagado 20-08 a 30-09-2026; HTTPS local hasta 30-09-2026; redirección total tras noviembre de 2026; Giovanni «hasta nuevo aviso» | — | Riesgo |
 | [Hydrology Time Series](https://disc.gsfc.nasa.gov/information/tools?title=Hydrology%20Time%20Series) | HTTP 200, página vacía sin JavaScript: **no leída** | El aviso de migración da Data Rods por retirado (no antes de 2025-10-31) | Servicio en transición | Fuera del MVP |
 | [AppEEARS](https://appeears.earthdatacloud.nasa.gov/) y [API](https://appeears.earthdatacloud.nasa.gov/api/) | Portada: requiere JavaScript. API y catálogo: leídos | Ver D2; enlaces de descarga válidos 48 h | Límites de área no documentados | Evolución |
@@ -144,4 +164,4 @@ Conexión: `pipeline/` produce `web/public/data/trends/*` según `contracts/data
 
 ## 6. Limitaciones de esta investigación
 
-No se ejecutó ninguna descarga autenticada. No se probó en teléfonos reales ni con personas. Las cifras de tiempo por cuadro son de un portátil con GPU integrada en modo headless y solo orientan. No se compiló la versión de producción (`npm run build`).
+No se ejecutó ninguna descarga autenticada en esta investigación (la T008 de 003 sí usó Giovanni con cuenta; las descargas por earthaccess quedan para 003). No se probó en teléfonos reales ni con personas. Las cifras de tiempo por cuadro son de un portátil con GPU integrada en modo headless y solo orientan. No se compiló la versión de producción (`npm run build`).

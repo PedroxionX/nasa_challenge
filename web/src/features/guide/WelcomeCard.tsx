@@ -4,7 +4,7 @@ import { UI_COPY } from '../../content'
 
 export default function WelcomeCard() {
   const { setRegion, setVariable, resetPeriod } = useAppState()
-  const open = (id: string) => { setVariable('T2M'); resetPeriod(); setRegion(id) }
+  const open = (id: string) => { setVariable('air_temperature'); resetPeriod(); setRegion(id) }
   return (
     <div className="stub stub-welcome">
       <span className="stub-tag">Esbozo · 006</span>

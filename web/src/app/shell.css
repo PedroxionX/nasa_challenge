@@ -27,17 +27,17 @@
   gap: var(--space-2) var(--space-4);
   padding: var(--space-2) var(--space-4);
   padding-top: max(var(--space-2), env(safe-area-inset-top));
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-line);
 }
 .shell-brand { flex: 0 0 auto; min-width: 0; }
-.shell-brand h1 { margin: 0; font-size: var(--text-lg); letter-spacing: 0.01em; }
-.shell-brand p { margin: 0; font-size: var(--text-xs); color: var(--muted); }
+.shell-brand h1 { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: 0.01em; }
+.shell-brand p { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
 .shell-query { flex: 1 1 22rem; min-width: 0; }
 .shell-help { flex: 0 0 auto; margin-left: auto; }
 
 /* ---------- Avisos (en flujo: no tapan nada) ---------- */
-.shell-notices { grid-area: notices; z-index: 3; display: grid; gap: 1px; background: var(--border); }
+.shell-notices { grid-area: notices; z-index: 3; display: grid; gap: 1px; background: var(--color-line); }
 .shell-notice {
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@
   margin: 0;
   padding: var(--space-1) var(--space-4);
   font-size: var(--text-sm);
-  background: var(--surface-2);
+  background: var(--color-panel-raised);
 }
 
 /* ---------- Escenario ---------- */
@@ -55,7 +55,7 @@
   position: relative;
   min-height: 0;
   overflow: hidden;
-  background: var(--bg);
+  background: var(--color-bg);
 }
 .shell-welcome {
   position: absolute;
@@ -72,8 +72,8 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  background: var(--color-panel);
+  border-top: 1px solid var(--color-line);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   align-self: end;
   height: var(--sheet-h);
@@ -94,7 +94,7 @@
   border: 0;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
-.shell-sheet-handle span { width: 2.5rem; height: 4px; border-radius: 2px; background: var(--muted); }
+.shell-sheet-handle span { width: 2.5rem; height: 4px; border-radius: 2px; background: var(--color-text-muted); }
 .shell-panel-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-4) var(--space-4); }
 
 @media (min-width: 900px) {
@@ -104,7 +104,7 @@
     width: var(--panel-w);
     height: auto;
     border-top: 0;
-    border-left: 1px solid var(--border);
+    border-left: 1px solid var(--color-line);
     border-radius: 0;
     transition: none;
   }
@@ -117,12 +117,12 @@
   width: min(40rem, calc(100vw - 2 * var(--space-4)));
   max-height: calc(100dvh - 2 * var(--space-6));
   padding: var(--space-5);
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
 }
-.shell-methods::backdrop { background: var(--overlay); }
+.shell-methods::backdrop { background: var(--color-overlay); }
 .shell-methods-close { float: right; }
 
 /* ---------- Errores de zona ---------- */
@@ -131,8 +131,8 @@
   gap: var(--space-2);
   justify-items: start;
   padding: var(--space-4);
-  color: var(--text);
-  background: var(--surface);
+  color: var(--color-text);
+  background: var(--color-panel);
 }
 .shell-stage > .zone-error { position: absolute; inset: 0; place-content: center; justify-items: center; }
 

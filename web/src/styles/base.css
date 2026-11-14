@@ -1,32 +1,32 @@
 /* Reinicio y estilos de documento. Solo 002 edita este archivo. */
 :root {
   font-family: var(--font-sans);
-  color: var(--text);
-  background: var(--bg);
+  color: var(--color-text);
+  background: var(--color-bg);
   -webkit-font-smoothing: antialiased;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 
-html, body, #root { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+html, body, #root { margin: 0; height: 100%; overflow: hidden; background: var(--color-bg); }
 
 button, select, input { font: inherit; color: inherit; }
 
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 
 /* Controles base: objetivos táctiles de 44 px */
 button, select {
   min-height: var(--tap);
   padding: 0 var(--space-3);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius);
   cursor: pointer;
   transition: background var(--dur-fast), border-color var(--dur-fast);
 }
-button:hover, select:hover { border-color: var(--accent); }
-select option, select optgroup { background: var(--surface); }
+button:hover, select:hover { border-color: var(--color-accent); }
+select option, select optgroup { background: var(--color-panel); }
 
 /* Rótulo de esbozo (lo quitan 004–006 al sustituir su esbozo) */
 .stub-tag {
@@ -34,8 +34,8 @@ select option, select optgroup { background: var(--surface); }
   padding: 0 var(--space-2);
   font-size: var(--text-xs);
   line-height: 1.6;
-  color: var(--on-accent);
-  background: var(--accent);
+  color: var(--color-on-accent);
+  background: var(--color-accent);
   border-radius: 999px;
   white-space: nowrap;
 }
@@ -44,23 +44,23 @@ select option, select optgroup { background: var(--surface); }
 .stub { display: grid; gap: var(--space-2); }
 .stub > .stub-tag { justify-self: start; }
 .stub-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
-.stub-muted { color: var(--muted); font-size: var(--text-sm); margin: 0; }
+.stub-muted { color: var(--color-text-muted); font-size: var(--text-sm); margin: 0; }
 .stub-query { display: flex; flex-wrap: wrap; align-items: center; }
 .stub-query select { flex: 1 1 12rem; min-width: 0; }
 .stub-segmented { display: flex; }
 .stub-segmented button { border-radius: 0; }
 .stub-segmented button:first-child { border-radius: var(--radius) 0 0 var(--radius); }
 .stub-segmented button:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
-.stub-segmented [aria-checked="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.stub-segmented [aria-checked="true"] { background: var(--color-accent); color: var(--color-on-accent); border-color: var(--color-accent); }
 .stub-analysis h2 { margin: 0; font-size: var(--text-xl); }
 .stub-analysis p { margin: 0; }
 .stub-dl { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-3); margin: 0; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
-.stub-dl dt { color: var(--muted); }
+.stub-dl dt { color: var(--color-text-muted); }
 .stub-dl dd { margin: 0; overflow-wrap: anywhere; }
 .stub-welcome, .stub-globe-tools {
   padding: var(--space-4);
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
   border-radius: var(--radius-lg);
 }
 .stub-welcome p { margin: 0; }
@@ -79,6 +79,6 @@ select option, select optgroup { background: var(--surface); }
   display: grid;
   place-items: center;
   margin: 0;
-  color: var(--muted);
+  color: var(--color-text-muted);
 }
 .stub-globe-fallback { position: absolute; inset: 0; place-content: center; justify-items: center; padding: var(--space-5); text-align: center; }
