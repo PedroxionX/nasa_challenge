@@ -6,11 +6,13 @@
  */
 import { useEffect } from 'react'
 import { useAppState } from '../../app/state'
-import { pickWindow, type Catalog, type SeriesFile, type CountryCode } from '../../lib/data'
+import { pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
 import { explainTrend, UI_COPY, VARIABLE_COPY } from '../../content'
 import { HAS_TREND, digitsFor, isFullPeriod, readExtras } from './analysisData'
 import { fmtSlope, fmtYears } from './format'
 import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
+import PeriodControl from './PeriodControl'
+import PeriodVariation from './PeriodVariation'
 import TrendChart from './TrendChart'
 import { useAnalysisData } from './useAnalysisData'
 import './analysis.css'
@@ -123,6 +125,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const status = row?.status ?? 'insufficient'
   const extras = readExtras(series, row, variableInfo)
   const isSynthetic = series.provenance.is_synthetic
+  const fullPeriod = isFullPeriod(catalog, from, to)
 
   const explanation = explainTrend(row, {
     regionName,
@@ -131,12 +134,23 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
     from,
     to,
     alpha: catalog.alpha,
-    fullPeriod: isFullPeriod(catalog, from, to),
+    fullPeriod,
     smallRegion: region?.small_region ?? false,
     isSynthetic,
   })
-  // El aviso de datos sintéticos va arriba y destacado; no se repite entre los avisos.
-  const caveats = explanation.caveats.filter(c => c !== UI_COPY.synthetic)
+  // El aviso de datos sintéticos va arriba y el de periodo junto al control (PeriodVariation): no se repiten.
+  const caveats = explanation.caveats.filter(c => c !== UI_COPY.synthetic && !c.startsWith('Estás viendo'))
+  const verdictOf = (r: TrendRow) => explainTrend(r, {
+    regionName,
+    variableId: series.variable,
+    unit: `${unit}/década`,
+    from: r.start,
+    to: r.end,
+    alpha: catalog.alpha,
+    fullPeriod: false,
+    smallRegion: region?.small_region ?? false,
+    isSynthetic,
+  }).verdict
   const trend = row !== null && HAS_TREND.has(status)
 
   const announcement = trend
@@ -173,6 +187,11 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
         regionName={regionName}
         lineMid={extras.lineMid}
       />
+
+      <PeriodControl catalog={catalog} showReset={row !== null} />
+      {!fullPeriod && (
+        <PeriodVariation series={series} from={from} to={to} unit={unit} digits={digits} verdictOf={verdictOf} />
+      )}
 
       <ResultFacts
         status={status}

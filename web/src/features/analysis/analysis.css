@@ -178,6 +178,45 @@
 .analysis-table td:nth-child(2) { text-align: right; }
 .analysis-table tr.is-noted td:last-child { color: var(--muted); }
 
+/* ---------- Periodo (T007) ---------- */
+.period-control {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.period-control legend { padding: 0 var(--space-1); font-weight: 600; }
+.period-control-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.period-control-row label { color: var(--muted); font-size: var(--text-sm); }
+.period-control-row select { min-width: 5.5rem; }
+.period-control-row button:disabled { opacity: 0.5; cursor: default; border-color: var(--border); }
+.period-control-hint { margin: 0; font-size: var(--text-xs); color: var(--muted); }
+
+/* ---------- Variación según el año inicial (T008) ---------- */
+.period-variation {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+}
+.period-variation-notice { margin: 0; font-size: var(--text-sm); line-height: 1.45; }
+.period-variation-view { display: grid; gap: var(--space-2); min-width: 0; }
+.period-variation-view[hidden] { display: none; }
+.period-variation-caption { margin: 0; font-size: var(--text-xs); color: var(--muted); line-height: 1.4; }
+.variation-chart { display: block; max-width: 100%; height: auto; overflow: visible; }
+.variation-zero { stroke: var(--muted); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.variation-line { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+.variation-point { fill: var(--accent); }
+.variation-current line { stroke: var(--text); stroke-width: 1; stroke-dasharray: 2 3; }
+.variation-current circle { fill: none; stroke: var(--text); stroke-width: 2; }
+.variation-current text { fill: var(--text); font-size: 11px; font-weight: 600; }
+.analysis-table tr.is-current th, .analysis-table tr.is-current td { background: var(--surface); font-weight: 600; }
+
 /* ---------- Cifras ---------- */
 .result-facts {
   display: grid;

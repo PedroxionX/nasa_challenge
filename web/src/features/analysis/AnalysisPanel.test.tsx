@@ -41,8 +41,9 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 /** Reglas que todo resultado debe cumplir (SC-A01, FR-A01, FR-A05, constitución II). */
 function expectMandatory() {
   const text = panel().textContent ?? ''
+  const facts = panel().querySelector<HTMLElement>('.result-facts')!
   for (const label of ['Periodo', 'Años completos (n)', 'Unidades', 'Método', 'Procedencia']) {
-    expect(within(panel()).getByText(label)).toBeTruthy()
+    expect(within(facts).getByText(label)).toBeTruthy()
   }
   expect(text).toMatch(/α = 0\.05/)
   expect(text).not.toMatch(/años para ser significativo/i)
@@ -59,7 +60,7 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     expect(panel().textContent).toMatch(/de \+0\.31 a \+0\.44 °C por década/)
     expect(screen.getByText(/Hay evidencia de tendencia/)).toBeTruthy()
     expect(panel().textContent).toMatch(/p < 0\.001; α = 0\.05/)
-    expect(within(panel()).getByText('45')).toBeTruthy()
+    expect(within(panel().querySelector<HTMLElement>('.result-facts')!).getByText('45')).toBeTruthy()
     expectMandatory()
   })
 
