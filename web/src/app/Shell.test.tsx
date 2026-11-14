@@ -2,19 +2,12 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { UI_COPY } from '../content'
 import { clearDataCache } from '../lib/data'
+import { fixtureFetch } from '../lib/testing/fixtures'
 
-// Sirve web/public/data/trends/ como el servidor de Vite (y Vercel): un archivo ausente NO da 404,
-// sino index.html con 200 y text/html. El 404 real lo cubre lib/data.test.ts.
-const FILES = import.meta.glob('../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-const INDEX_HTML = '<!doctype html><html lang="es"><head><title>Trend Detective</title></head><body><div id="root"></div></body></html>'
+// Fixtures sintéticos de lib/__fixtures__ (no web/public/data/trends/, que es de 003 y tiene datos reales).
+// Un archivo ausente se responde como Vite: 200 con index.html. El 404 real lo cubre lib/data.test.ts.
 function serveFromPublic() {
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const path = decodeURIComponent(String(input).replace(/^\/+/, ''))
-    const body = FILES[`../../public/${path}`]
-    return body === undefined
-      ? new Response(INDEX_HTML, { status: 200, headers: { 'Content-Type': 'text/html' } })
-      : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
-  }))
+  vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 }
 
 async function renderShell(search = '') {
