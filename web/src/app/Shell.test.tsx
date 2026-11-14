@@ -56,7 +56,8 @@ describe('Shell', () => {
   it('un enlace viejo (?var=PRECTOTCORR) abre la precipitación con su propio periodo', async () => {
     await renderShell('?region=MX-BCN&var=PRECTOTCORR')
     const panel = screen.getByRole('complementary', { name: 'Análisis' })
-    await within(panel).findByText(/^Baja/)
+    // Texto exacto: con el panel real, /^Baja/ también encaja con el título «Baja California» (aviso de 004).
+    await within(panel).findByText('Baja')
     expect(within(panel).getAllByText(/2001–2025/).length).toBeGreaterThan(0)
     expect(window.location.search).toContain('var=precipitation')
     expect(window.location.search).toContain('from=2001')
