@@ -11,10 +11,10 @@ import { fmtYear } from './format'
 
 /** `showReset = false` cuando el panel ya ofrece «Usar todo el periodo» en su aviso de datos insuficientes. */
 export default function PeriodControl({ catalog, showReset = true }: { catalog: Catalog; showReset?: boolean }) {
-  const { from, to, setPeriod, resetPeriod } = useAppState()
+  const { variableId, from, to, setPeriod, resetPeriod } = useAppState()
   const uid = useId()
-  const { starts, ends } = periodOptions(catalog, from, to)
-  const full = isFullPeriod(catalog, from, to)
+  const { starts, ends } = periodOptions(catalog, variableId, from, to)
+  const full = isFullPeriod(catalog, variableId, from, to)
   const min = catalog.period.min_window_years
 
   return (

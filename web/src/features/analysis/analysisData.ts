@@ -2,39 +2,26 @@
  * Lectura de lo que ya trae el archivo (004). Aquí NO se calcula estadística (constitución, principio I):
  * solo se buscan filas y columnas, y se emparejan años con valores.
  */
-import { pickWindow, type Catalog, type SeriesFile, type TrendRow, type TrendStatus, type VariableInfo } from '../../lib/data'
+import {
+  pickWindow, variablePeriod,
+  type Catalog, type SeriesFile, type TrendRow, type TrendStatus, type VariableId, type VariableInfo,
+} from '../../lib/data'
 
-/** Columnas opcionales que 004 pidió añadir al contrato (FR-A09, FR-A10). Pueden no existir. */
-export type ExtraColumn = 'line_mid' | 'slope_decade_pct' | 'ci_low_pct' | 'ci_high_pct'
-
-/** Lee una columna opcional de la fila `start`–`end`; `null` si la columna o la fila no existen. */
-export function extraColumn(series: SeriesFile, start: number, end: number, name: ExtraColumn): number | null {
-  const { columns, rows } = series.windows
-  const col = columns.indexOf(name)
-  if (col < 0) return null
-  const iStart = columns.indexOf('start')
-  const iEnd = columns.indexOf('end')
-  const row = rows.find(r => r[iStart] === start && r[iEnd] === end)
-  const value = row?.[col]
-  return typeof value === 'number' && Number.isFinite(value) ? value : null
-}
-
+/** Columnas opcionales del contrato (pedidas por 004: FR-A09, FR-A10), ya convertidas en números o `null`. */
 export interface Extras {
   lineMid: number | null
   pct: { slope: number; low: number | null; high: number | null } | null
 }
 
-export function readExtras(series: SeriesFile, row: TrendRow | null, variable: VariableInfo | undefined): Extras {
+const num = (x: number | null | undefined) => (typeof x === 'number' && Number.isFinite(x) ? x : null)
+
+/** Lee `line_mid` y el % (solo con `relative_change`) de la fila; ausentes o nulos → `null`. */
+export function readExtras(row: TrendRow | null, variable: VariableInfo | undefined): Extras {
   if (!row) return { lineMid: null, pct: null }
-  const lineMid = extraColumn(series, row.start, row.end, 'line_mid')
-  const slopePct = variable?.relative_change ? extraColumn(series, row.start, row.end, 'slope_decade_pct') : null
+  const slopePct = variable?.relative_change ? num(row.slope_decade_pct) : null
   return {
-    lineMid,
-    pct: slopePct === null ? null : {
-      slope: slopePct,
-      low: extraColumn(series, row.start, row.end, 'ci_low_pct'),
-      high: extraColumn(series, row.start, row.end, 'ci_high_pct'),
-    },
+    lineMid: num(row.line_mid),
+    pct: slopePct === null ? null : { slope: slopePct, low: num(row.ci_low_pct), high: num(row.ci_high_pct) },
   }
 }
 
@@ -54,16 +41,22 @@ export function evidenceLabel(status: TrendStatus): string | null {
   return null
 }
 
-export const isFullPeriod = (catalog: Catalog, from: number, to: number) =>
-  from === catalog.period.first_year && to === catalog.period.last_complete_year
+/** ¿Es el periodo completo de esta variable? (cada variable tiene el suyo: contrato revisado 2026-11-14). */
+export function isFullPeriod(catalog: Catalog, variableId: VariableId, from: number, to: number): boolean {
+  const { firstYear, lastYear } = variablePeriod(catalog, variableId)
+  return from === firstYear && to === lastYear
+}
 
 /**
- * Años que ofrece cada lista del control de periodo (FR-A06): solo combinaciones de al menos
- * `min_window_years`. Si el periodo actual vino de la URL y es más corto, su año se incluye para que
- * la lista refleje el estado; cualquier cambio desde el control ya produce un periodo válido.
+ * Años que ofrece cada lista del control de periodo (FR-A06), dentro del periodo de la variable:
+ * solo combinaciones de al menos `min_window_years`. Si el periodo actual vino de la URL y es más corto,
+ * su año se incluye para que la lista refleje el estado; cualquier cambio desde el control ya es válido.
  */
-export function periodOptions(catalog: Catalog, from: number, to: number): { starts: number[]; ends: number[] } {
-  const { first_year: first, last_complete_year: last, min_window_years: min } = catalog.period
+export function periodOptions(
+  catalog: Catalog, variableId: VariableId, from: number, to: number,
+): { starts: number[]; ends: number[] } {
+  const { firstYear: first, lastYear: last } = variablePeriod(catalog, variableId)
+  const min = catalog.period.min_window_years
   const range = (a: number, b: number) => (a > b ? [] : Array.from({ length: b - a + 1 }, (_, i) => a + i))
   const starts = range(first, Math.max(to - (min - 1), Math.min(from, last)))
   const ends = range(Math.min(from + (min - 1), Math.max(to, first)), last)

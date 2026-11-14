@@ -266,3 +266,4 @@
   .result-facts { grid-template-columns: 1fr; gap: 0; }
   .result-facts dd { margin-bottom: var(--space-2); }
 }
+.result-facts a { color: var(--accent); }

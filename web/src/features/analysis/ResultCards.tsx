@@ -193,11 +193,22 @@ export function ProvenanceDetails({ series }: { series: SeriesFile }) {
       <summary>De dónde salen estos datos</summary>
       <dl className="result-facts">
         <dt>Fuente</dt><dd>{p.source}</dd>
-        <dt>Producto</dt><dd>{`${p.product} (versión de la API: ${p.api_version})`}</dd>
+        <dt>Producto</dt>
+        <dd>
+          {p.short_name ? `${p.product} · ${p.short_name}${p.version ? ` versión ${p.version}` : ''}` : p.product}
+          {p.api_version && p.api_version !== 'n/a' && <span className="result-sub">{`Versión de la API: ${p.api_version}`}</span>}
+        </dd>
+        <dt>Cita (DOI)</dt>
+        <dd>
+          {p.doi
+            ? <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noreferrer">{p.doi}</a>
+            : 'Sin DOI registrado en el archivo'}
+        </dd>
         <dt>Variable de origen</dt><dd>{`${p.parameter} (${p.unit_declared})`}</dd>
         <dt>Malla</dt><dd>{p.grid}</dd>
         <dt>Promedio regional</dt><dd>{p.spatial_method}</dd>
         <dt>Celdas usadas</dt><dd>{p.n_cells}</dd>
+        {typeof p.granules === 'number' && <><dt>Archivos leídos</dt><dd>{`${p.granules} gránulos`}</dd></>}
         <dt>Consultado</dt><dd>{p.retrieved_at_utc}</dd>
         <dt>Solicitudes</dt><dd>{p.requests}</dd>
       </dl>

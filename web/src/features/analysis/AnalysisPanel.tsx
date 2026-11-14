@@ -127,9 +127,9 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const digits = digitsFor(unit)
   const row = pickWindow(series, from, to)
   const status = row?.status ?? 'insufficient'
-  const extras = readExtras(series, row, variableInfo)
+  const extras = readExtras(row, variableInfo)
   const isSynthetic = series.provenance.is_synthetic
-  const fullPeriod = isFullPeriod(catalog, from, to)
+  const fullPeriod = isFullPeriod(catalog, series.variable, from, to)
 
   const explanation = explainTrend(row, {
     regionName,

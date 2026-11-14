@@ -132,7 +132,7 @@ describe('VariablePicker (T002)', () => {
     expect(temp.checked).toBe(true)
     fireEvent.click(prec) // los radios nativos convierten ← → en «click» en el navegador
     expect(prec.checked).toBe(true)
-    expect(varInUrl()).toBe('PRECTOTCORR')
+    expect(varInUrl()).toBe('precipitation')
   })
 
   it('la definición se abre y se cierra sin salir de la pantalla', async () => {

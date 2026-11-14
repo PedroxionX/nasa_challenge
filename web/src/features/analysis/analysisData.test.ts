@@ -1,56 +1,51 @@
 import { describe, expect, it } from 'vitest'
-import { pickWindow, type SeriesFile, type VariableInfo } from '../../lib/data'
-import { digitsFor, evidenceLabel, extraColumn, readExtras, yearPoints } from './analysisData'
-import extras from './fixtures/extras.json'
-import bcn from '../../../public/data/trends/series/T2M/MX-BCN.json'
+import { pickWindow, type Catalog, type SeriesFile } from '../../lib/data'
+import { digitsFor, evidenceLabel, isFullPeriod, readExtras, yearPoints } from './analysisData'
+import { withoutOptionalColumns } from './testData'
+import catalogJson from '../../../public/data/trends/catalog.json'
+import tempJson from '../../../public/data/trends/series/air_temperature/MX-BCN.json'
+import precipJson from '../../../public/data/trends/series/precipitation/MX-BCN.json'
 
-const withExtras = extras as unknown as SeriesFile
-const withoutExtras = bcn as unknown as SeriesFile
-const precip: VariableInfo = {
-  id: 'PRECTOTCORR', label: 'Precipitación', definition: '', kind: 'reanalysis',
-  unit_annual: 'mm', aggregation: 'sum_from_rate', relative_change: true,
-}
-const temp: VariableInfo = { ...precip, id: 'T2M', unit_annual: '°C', relative_change: false }
+const catalog = catalogJson as unknown as Catalog
+const temp = tempJson as unknown as SeriesFile
+const precip = precipJson as unknown as SeriesFile
+const precipInfo = catalog.variables.find(v => v.id === 'precipitation')!
+const tempInfo = catalog.variables.find(v => v.id === 'air_temperature')!
 
-describe('extraColumn (columnas opcionales del contrato)', () => {
-  it('lee la columna de la fila pedida tal cual viene', () => {
-    expect(extraColumn(withExtras, 2000, 2012, 'line_mid')).toBe(327.5)
-    expect(extraColumn(withExtras, 2000, 2012, 'slope_decade_pct')).toBe(14.8)
-  })
-
-  it('devuelve null si la columna, la fila o el valor no existen', () => {
-    expect(extraColumn(withoutExtras, 1981, 2025, 'line_mid')).toBeNull()
-    expect(extraColumn(withExtras, 1990, 2012, 'line_mid')).toBeNull()
-    expect(extraColumn(withExtras, 2003, 2012, 'line_mid')).toBeNull()
-  })
-})
-
-describe('readExtras', () => {
-  it('con relative_change lee el % y su intervalo (FR-A09)', () => {
-    const row = pickWindow(withExtras, 2000, 2012)
-    expect(readExtras(withExtras, row, precip)).toEqual({
-      lineMid: 327.5, pct: { slope: 14.8, low: 9.2, high: 20.1 },
+describe('readExtras (FR-A09, FR-A10)', () => {
+  it('con relative_change lee el % y su intervalo tal cual vienen', () => {
+    const row = pickWindow(precip, 2001, 2025)!
+    expect(readExtras(row, precipInfo)).toEqual({
+      lineMid: row.line_mid,
+      pct: { slope: row.slope_decade_pct, low: row.ci_low_pct, high: row.ci_high_pct },
     })
   })
 
-  it('sin relative_change no muestra % aunque la columna exista', () => {
-    const row = pickWindow(withExtras, 2000, 2012)
-    expect(readExtras(withExtras, row, temp).pct).toBeNull()
+  it('sin relative_change no hay %, pero sí la posición de la recta', () => {
+    const row = pickWindow(temp, 1980, 2025)!
+    expect(readExtras(row, tempInfo)).toEqual({ lineMid: row.line_mid, pct: null })
   })
 
-  it('sin las columnas nuevas no falla: solo no hay recta ni %', () => {
-    const row = pickWindow(withoutExtras, 1981, 2025)
-    expect(readExtras(withoutExtras, row, precip)).toEqual({ lineMid: null, pct: null })
-    expect(readExtras(withoutExtras, null, precip)).toEqual({ lineMid: null, pct: null })
+  it('un archivo sin las columnas opcionales no falla: ni recta ni %', () => {
+    const old = withoutOptionalColumns(precip)
+    expect(readExtras(pickWindow(old, 2001, 2025), precipInfo)).toEqual({ lineMid: null, pct: null })
+    expect(readExtras(null, precipInfo)).toEqual({ lineMid: null, pct: null })
   })
 })
 
 describe('yearPoints', () => {
-  it('empareja años y valores del archivo sin rellenar los excluidos', () => {
-    const points = yearPoints(withExtras)
-    expect(points).toHaveLength(12)
-    expect(points.find(p => p.year === 2008)).toBeUndefined()
-    expect(points[0]).toEqual({ year: 2000, value: 300.5 })
+  it('empareja años y valores del archivo', () => {
+    const points = yearPoints(temp)
+    expect(points).toHaveLength(temp.years.length)
+    expect(points[0]).toEqual({ year: temp.years[0], value: temp.values[0] })
+  })
+})
+
+describe('isFullPeriod (periodo por variable)', () => {
+  it('cada variable tiene su propio periodo completo', () => {
+    expect(isFullPeriod(catalog, 'air_temperature', 1980, 2025)).toBe(true)
+    expect(isFullPeriod(catalog, 'precipitation', 2001, 2025)).toBe(true)
+    expect(isFullPeriod(catalog, 'precipitation', 1980, 2025)).toBe(false)
   })
 })
 
