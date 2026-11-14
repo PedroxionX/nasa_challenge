@@ -1,11 +1,12 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { SeriesFile } from '../../lib/data'
+import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 import { configureLikeShell, withoutOptionalColumns } from './testData'
 
-// Sirve web/public/data/trends/ como el servidor de Vite; `overrides` sustituye o rompe archivos concretos.
-const FILES = import.meta.glob('../../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-type Override = string | number // cuerpo JSON o código de estado HTTP
+// Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
+// `overrides`: cuerpo que sustituye un archivo, o un código HTTP para simular un fallo del servidor.
+type Override = string | number
 let overrides: Record<string, Override> = {}
 let requested: string[] = []
 
@@ -15,10 +16,8 @@ function serve() {
     requested.push(path)
     const o = overrides[path]
     if (typeof o === 'number') return new Response('', { status: o })
-    const body = o ?? FILES[`../../../public/${path}`]
-    return body === undefined
-      ? new Response('', { status: 404 })
-      : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
+    const bodies = Object.fromEntries(Object.entries(overrides).filter(([, v]) => typeof v === 'string')) as Record<string, string>
+    return fixtureFetch({ overrides: bodies })(input)
   }))
 }
 
@@ -27,7 +26,7 @@ async function renderPanel(search: string, withQuery = false) {
   vi.resetModules()
   const data = await import('../../lib/data')
   data.clearDataCache()
-  const catalogBody = overrides['data/trends/catalog.json'] ?? FILES['../../../public/data/trends/catalog.json']
+  const catalogBody = overrides['data/trends/catalog.json'] ?? TREND_FIXTURES['data/trends/catalog.json']
   configureLikeShell(await import('../../app/state'), data, JSON.parse(String(catalogBody)))
   const { default: AnalysisPanel } = await import('./AnalysisPanel')
   const QueryBar = withQuery ? (await import('../query/QueryBar')).default : null
@@ -149,7 +148,7 @@ describe('AnalysisPanel · términos y supuestos (T012, T014)', () => {
 
 describe('AnalysisPanel · carga, error y sin datos (T005)', () => {
   it('región con n_cells 0 en el catálogo: «sin datos» sin pedir su archivo', async () => {
-    const catalog = JSON.parse(FILES['../../../public/data/trends/catalog.json'])
+    const catalog = JSON.parse(TREND_FIXTURES['data/trends/catalog.json'])
     catalog.regions.find((r: { id: string }) => r.id === 'MX-JAL').n_cells = 0
     overrides['data/trends/catalog.json'] = JSON.stringify(catalog)
     await renderPanel('?region=MX-JAL&var=air_temperature')
@@ -158,7 +157,7 @@ describe('AnalysisPanel · carga, error y sin datos (T005)', () => {
     expect(screen.queryByRole('alert')).toBeNull()
   })
 
-  it('archivo inexistente (404): «sin datos», no error', async () => {
+  it('archivo inexistente (el servidor responde index.html): «sin datos», no error', async () => {
     await renderPanel('?region=MX-JAL&var=air_temperature')
     expect(await screen.findByText('No hay datos para esta región.')).toBeTruthy()
     expect(screen.queryByRole('alert')).toBeNull()
@@ -223,7 +222,7 @@ describe('AnalysisPanel · teclado y anuncio (T006)', () => {
 
 describe('AnalysisPanel · gráfica (T003) y % (T011)', () => {
   it('la tabla alternativa coincide con el archivo y anota el año parcial', async () => {
-    const file = JSON.parse(FILES['../../../public/data/trends/series/air_temperature/MX-BCN.json']) as SeriesFile
+    const file = JSON.parse(TREND_FIXTURES['data/trends/series/air_temperature/MX-BCN.json']) as SeriesFile
     await renderPanel('?region=MX-BCN&var=air_temperature')
     await screen.findByText('Sube')
     fireEvent.click(screen.getByRole('button', { name: 'Ver como tabla' }))
@@ -254,7 +253,7 @@ describe('AnalysisPanel · gráfica (T003) y % (T011)', () => {
   })
 
   it('un archivo sin las columnas opcionales: solo mm por década, sin recta y sin error', async () => {
-    const file = JSON.parse(FILES['../../../public/data/trends/series/precipitation/MX-BCN.json']) as SeriesFile
+    const file = JSON.parse(TREND_FIXTURES['data/trends/series/precipitation/MX-BCN.json']) as SeriesFile
     overrides['data/trends/series/precipitation/MX-BCN.json'] = JSON.stringify(withoutOptionalColumns(file))
     await renderPanel('?region=MX-BCN&var=precipitation')
     await screen.findByText('Baja')
