@@ -142,14 +142,14 @@ const NBSP = '\u00a0'
 
 /** Formatea un número con signo y dos decimales: «+1,23» o «−0,45». */
 function fmt(n: number): string {
-  const abs = Math.abs(n).toFixed(2).replace('.', ',')
+  const abs = Math.abs(n).toFixed(2)
   return n >= 0 ? `+${abs}` : `\u2212${abs}` // − es U+2212, no guion
 }
 
-/** «p = 0,012»; los valores menores que 0,001 se muestran como «p < 0,001», nunca como «0,000». */
+/** «p = 0.012»; los valores menores que 0,001 se muestran como «p < 0.001», nunca como «0.000». */
 function fmtP(p: number): string {
-  if (p < 0.001) return `p${NBSP}<${NBSP}0,001`
-  return `p${NBSP}=${NBSP}${p.toFixed(3).replace('.', ',')}`
+  if (p < 0.001) return `p${NBSP}<${NBSP}0.001`
+  return `p${NBSP}=${NBSP}${p.toFixed(3)}`
 }
 
 // ---------- explainTrend — cuatro variantes (SC-C02) ----------
@@ -217,11 +217,10 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
       : ''
   const pStr = p !== null ? `; ${fmtP(p)}` : ''
 
-  const dirLabel = status === 'increasing' ? 'Sube' : 'Baja'
   const sentence =
-    `${dirLabel}. ${slopeStr}${ciStr}` +
+    `${slopeStr}${ciStr}` +
     ` entre ${ctx.from} y ${ctx.to} (${n}${NBSP}años)${pStr}. ` +
-    `Hay evidencia de tendencia: un patrón así sería muy raro si no hubiera tendencia.`
+    `Un patrón así sería muy raro si no hubiera tendencia.`
 
   return {
     verdict: VERDICT_LABEL[status],

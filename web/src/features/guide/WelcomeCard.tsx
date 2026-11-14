@@ -18,7 +18,8 @@ export default function WelcomeCard() {
   }
 
   return (
-    <section className="welcome-card" aria-label="Bienvenida">
+    <div className="welcome-card">
+      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="welcome-title">Trend Detective</h2>
       <p className="welcome-lead">{UI_COPY.welcome}</p>
 
@@ -56,6 +57,6 @@ export default function WelcomeCard() {
       </div>
 
       <p className="welcome-note">{UI_COPY.notCause}</p>
-    </section>
+    </div>
   )
 }
