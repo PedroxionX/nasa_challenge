@@ -26,4 +26,10 @@ description: "Tareas de la base compartida e integración"
 - [ ] T011 Recorrido completo de quickstart, con y sin red, en móvil y portátil; actualizar README.md — 1,5 h · Acepta: SC-F03
 - [ ] T012 Margen de integración — 4 h · no se asigna a funciones nuevas
 
-Esfuerzo: 12 h de base + 9,5 h de integración.
+## Cambio a fuentes reales (decisión del equipo, 2026-11-14)
+
+- [x] T013 Encaminar el proyecto a los productos de GES DISC sin romper lo que funciona: decisiones D2–D7 en research.md, plan.md y data-model.md; contrato revisado (ids neutrales, periodo por variable, procedencia ampliada, columnas opcionales); data.ts y state.ts; archivos de ejemplo; .gitignore de credenciales; quickstart con la T008 de 003; pedido a 003 en [handoff-003-fuentes-reales.md](handoff-003-fuentes-reales.md) — 4 h · Acepta: `npm run test` en verde; la web carga los archivos de ejemplo nuevos; un enlace `?var=T2M` sigue funcionando
+- [x] T015 Archivo ausente servido como index.html con 200 (Vite dev/preview y Vercel) → `DataError` `not_found`, no `parse`, en web/src/lib/data.ts; el simulador de Shell.test.tsx responde como Vite (aviso de 004) — 0,5 h · Acepta: `?region=MX-JAL` muestra «No hay datos para esta región» en `npm run dev`; la prueba falla sin el arreglo
+- [ ] T014 Visto bueno a las dependencias de pipeline/pyproject.toml en la petición de fusión de 003 (ver el pedido) — 0,25 h · Acepta: versiones exactas anotadas con fecha
+
+Esfuerzo: 12 h de base + 9,5 h de integración + 4,25 h del cambio a fuentes reales.

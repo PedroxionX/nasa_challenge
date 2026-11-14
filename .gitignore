@@ -14,3 +14,10 @@ __pycache__/
 .pytest_cache/
 .cache/
 practice-lab/exports/
+
+# Credenciales de Earthdata y otras: solo en la máquina que ejecuta el pipeline (research D5).
+.netrc
+_netrc
+.env
+.env.*
+!.env.example
