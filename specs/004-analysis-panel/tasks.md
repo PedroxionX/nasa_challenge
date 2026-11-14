@@ -32,6 +32,6 @@ Requiere la base 002 fusionada. Trabaja con el archivo de ejemplo hasta que 003 
 
 ## Phase 4: Polish
 
-- [ ] T009 Ajuste a móvil y objetivos táctiles de todo lo propio; pruebas de los cinco estados en web/src/features/analysis/ — 2 h · Acepta: SC-A02; con `prefers-reduced-motion` las gráficas cambian sin transición
+- [x] T009 Ajuste a móvil y objetivos táctiles de todo lo propio; pruebas de los cinco estados en web/src/features/analysis/ — 2 h · Acepta: SC-A02; con `prefers-reduced-motion` las gráficas cambian sin transición
 
 Esfuerzo: 20 h (18 h originales + T010 y T011).
