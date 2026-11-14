@@ -22,8 +22,11 @@ WINDOW_COLUMNS = ["start", "end", "n", "slope_decade", "ci_low", "ci_high", "p",
 PCT_COLUMNS = ["slope_decade_pct", "ci_low_pct", "ci_high_pct"]
 EXTRA_COLUMNS = ["line_mid"] + PCT_COLUMNS
 WINDOW_COLUMNS_EXT = WINDOW_COLUMNS + EXTRA_COLUMNS
-PROVENANCE_FIELDS = ["source", "product", "api_version", "parameter", "unit_declared", "grid", "spatial_method",
-                     "n_cells", "retrieved_at_utc", "requests", "transformations", "is_synthetic"]
+PROVENANCE_FIELDS = ["source", "product", "short_name", "version", "doi", "api_version", "parameter", "unit_declared",
+                     "grid", "spatial_method", "n_cells", "granules", "retrieved_at_utc", "requests", "transformations",
+                     "is_synthetic"]
+CATALOG_VARIABLE_FIELDS = {"id", "label", "definition", "kind", "unit_annual", "aggregation", "relative_change",
+                           "first_year", "last_complete_year", "product_short_name", "product_version"}
 FORBIDDEN_KEY_FRAGMENTS = ("detect",)  # «años para detectar» no se publica (constitución, metodología §7)
 
 
@@ -194,8 +197,11 @@ def validate_catalog(doc: Any) -> list[str]:
         if not {"id", "name", "country", "n_cells", "small_region"} <= set(r):
             errs.append(f"región incompleta: {r.get('id')}")
     for v in doc.get("variables", []):
-        if not {"id", "label", "definition", "kind", "unit_annual", "aggregation", "relative_change"} <= set(v):
-            errs.append(f"variable incompleta: {v.get('id')}")
+        if not CATALOG_VARIABLE_FIELDS <= set(v):
+            errs.append(f"variable incompleta: {v.get('id')} (faltan {sorted(CATALOG_VARIABLE_FIELDS - set(v))})")
+        elif not (isinstance(v["first_year"], int) and isinstance(v["last_complete_year"], int)
+                  and v["first_year"] <= v["last_complete_year"]):
+            errs.append(f"variable {v.get('id')}: first_year y last_complete_year deben ser años y estar en orden")
     return errs
 
 

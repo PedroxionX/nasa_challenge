@@ -3,13 +3,19 @@ name = "trend-detective-pipeline"
 version = "0.1.0"
 description = "Pipeline de datos de Trend Detective: descarga NASA POWER, promedia por estado y calcula tendencias para todas las ventanas de al menos 10 años."
 requires-python = ">=3.11"
-# Versiones verificadas el 2026-11-14 con Python 3.13.7. Pendiente: visto bueno de quien lleva 002 (metodología §5).
+# Versiones verificadas el 2026-11-14 con Python 3.13.7; aprobadas por 002 (handoff-003-fuentes-reales.md §6).
+# earthaccess, xarray, h5netcdf y h5py: última estable con al menos dos semanas el 2026-11-14.
+# h5py se declara aparte porque h5netcdf 1.8 ya no lo instala.
 dependencies = [
     "numpy==2.5.4",
     "pandas==3.1.1",
     "scipy==1.18.1",
-    "requests==2.34.2",
+    "requests==2.34.2",  # alternativa NASA POWER
     "shapely==2.2.0",
+    "earthaccess==0.19.0",
+    "xarray==2026.9.0",
+    "h5netcdf==1.8.2",
+    "h5py==3.16.0",
 ]
 
 [project.optional-dependencies]

@@ -1,23 +1,22 @@
-# Datos de ejemplo — SINTÉTICOS
+# Datos reales — versión PROVISIONAL (NASA POWER)
 
-Estos archivos los generó 002 para que 004, 005 y 006 trabajen antes de que 003 publique los datos reales. **No son observaciones ni productos de la NASA.** Cada serie lleva `provenance.is_synthetic: true` y la interfaz debe rotularla como ejemplo. Los nombres de producto (MERRA-2 `M2TMNXSLV`, GPM IMERG `GPM_3IMERGM`) solo imitan la forma de la procedencia real; los valores son inventados.
+Publicado por 003 el 2026-11-14 con `python pipeline/build.py --source power --out web/public/data/trends`.
+**Son datos reales** (`provenance.is_synthetic: false`) de las 84 regiones y las dos variables, con las tendencias de
+todas las ventanas de al menos 10 años, según el [contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md)
+revisado el 2026-11-14.
 
-Siguen el [contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md) revisado el 2026-11-14 (`schema_version: 1`): ids neutrales de variable, periodo por variable, procedencia ampliada (`short_name`, `version`, `doi`, `granules`) y las columnas opcionales `line_mid`, `slope_decade_pct`, `ci_low_pct` y `ci_high_pct`. Las cifras salen de una tendencia lineal más ruido con semilla fija; no anticipan ningún resultado real.
+**Por qué es provisional:** la fuente acordada por el equipo son los productos de GES DISC (MERRA-2 `M2TMNXSLV` e
+IMERG `GPM_3IMERGM`), cuya lectura completa tarda más de una hora. Mientras termina se publica la alternativa
+NASA POWER, elegida a mano y declarada en cada archivo. Esta carpeta se sustituirá entera por la salida de GES DISC.
 
-| Variable | Periodo | Ventanas | Mapa |
-|---|---|---|---|
-| `air_temperature` | 1980–2025 | 703 | `°C/década` |
-| `precipitation` | 2001–2025 | 136 | `%/década` (relative_change) |
+| Variable | Fuente en esta versión | Periodo | Ventanas | Mapa |
+|---|---|---|---|---|
+| `air_temperature` | NASA POWER `T2M` = el mismo MERRA-2 (`kind: reanalysis`) | 1981–2025 | 666 | `°C/década` |
+| `precipitation` | NASA POWER `PRECTOTCORR`, reanálisis MERRA-2 (`kind: reanalysis`) | 1981–2025 | 666 | `%/década` |
 
-| Archivo | Caso que ilustra en el periodo completo |
-|---|---|
-| `series/air_temperature/MX-BCN.json` | `increasing` |
-| `series/air_temperature/MX-SON.json` | `inconclusive` |
-| `series/air_temperature/MX-CMX.json` | `insufficient` (años excluidos, región pequeña) |
-| `series/air_temperature/US-TX.json` | `invalid` (escalón en 2001) |
-| `series/precipitation/MX-BCN.json` | `decreasing` (con columnas de %) |
-| `series/precipitation/MX-SON.json` | `inconclusive` |
-| cualquier otra región | sin archivo → `DataError` `not_found` («sin datos») |
-| `map/{variable}.json` | cambio por década de las 84 regiones para todas las ventanas de su periodo |
+Al pasar a GES DISC cambian: temperatura 1980–2025 (703 ventanas, mismo producto) y precipitación de IMERG, que es
+observación (`kind: observation`), 2001–2024 (120 ventanas). La interfaz debe tomar el periodo y el `kind` del catálogo.
 
-003 sustituye esta carpeta entera cuando publique (su T006).
+Validación: `pipeline/validation/power_sanity.json` (84 regiones con valores físicos plausibles) y
+`pipeline/validation/t005.json` (celdas y región de una sola celda iguales a la fuente).
+Cómo citar: `pipeline/ATTRIBUTION.md`, sección 2.

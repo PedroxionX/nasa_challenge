@@ -1,0 +1,5 @@
+{"region": "US-TX", "variable": "precipitation", "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "GPM_3IMERGM_07_precipitation", "shape": "tl_2014_us_state/shp_25 (Texas)", "units_giovanni": "mm/hr",
+ "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2001-01-01T00:00:00Z&endtime=2024-12-31T23:59:59Z&shape=tl_2014_us_state/shp_25&data=GPM_3IMERGM_07_precipitation",
+ "retrieved": "2026-11-14", "months": 288, "annual_method": "suma de 12 meses de tasa (mm/hr) × 24 × días del mes, mm",
+ "annual": {"2001":820.794,"2002":864.527,"2003":680.877,"2004":1120.72,"2005":629.248,"2006":715.372,"2007":1029.978,"2008":664.419,"2009":790.259,"2010":775.487,"2011":423.346,"2012":673.198,"2013":693.703,"2014":629.411,"2015":1102.158,"2016":900.81,"2017":823.531,"2018":893.768,"2019":733.826,"2020":737.028,"2021":805.288,"2022":611.294,"2023":673.623,"2024":808.216}}
