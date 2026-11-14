@@ -10,7 +10,7 @@ import type { TrendRow } from '../lib/data'
 
 const baseCtx: ExplainContext = {
   regionName: 'Baja California',
-  variableId: 'T2M',
+  variableId: 'air_temperature',
   unit: '°C/década',
   from: 1981,
   to: 2025,
@@ -135,7 +135,7 @@ describe('decreasing', () => {
   })
 
   it('con precipitación relativa, la unidad que pasa quien llama se respeta', () => {
-    const r = explainTrend(row, { ...baseCtx, variableId: 'PRECTOTCORR', unit: '%/década' })
+    const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/década' })
     expect(r.sentence).toContain('\u22120,15\u00a0%/década')
     expect(r.sentence).not.toContain('°C')
   })
