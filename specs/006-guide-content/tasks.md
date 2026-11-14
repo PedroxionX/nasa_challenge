@@ -10,20 +10,20 @@ T001 no necesita la base. El resto requiere la base 002 fusionada.
 
 ## Phase 1: Setup
 
-- [ ] T001 Proponer paleta (escala divergente apta para daltonismo, sin datos, selección) y tipografía, y entregarla a quien lleva 002 — 1 h · Acepta: valores concretos entregados antes de que 002 cierre `tokens.css`
+- [x] T001 Proponer paleta (escala divergente apta para daltonismo, sin datos, selección) y tipografía, y entregarla a quien lleva 002 — 1 h · Acepta: valores concretos entregados antes de que 002 cierre `tokens.css`
 
 ## Phase 2: User Story 1 - Explicaciones veraces (P1) 🎯
 
-- [ ] T002 [US1] `VARIABLE_COPY` y `UI_COPY` en web/src/content/copy.ts — 1 h · Acepta: FR-C02, FR-C03
-- [ ] T003 [US1] `explainTrend` con las cinco variantes y avisos, y sus pruebas, en web/src/content/explain.ts y explain.test.ts — 2 h · Acepta: SC-C02
+- [x] T002 [US1] `VARIABLE_COPY` y `UI_COPY` en web/src/content/copy.ts — 1 h · Acepta: FR-C02, FR-C03
+- [x] T003 [US1] `explainTrend` con las cinco variantes y avisos, y sus pruebas, en web/src/content/explain.ts y explain.test.ts — 2 h · Acepta: SC-C02
 
 ## Phase 3: User Story 2 - Primera visita y ejemplos (P2)
 
-- [ ] T004 [P] [US2] `WelcomeCard` con acción inicial y dos ejemplos en web/src/features/guide/WelcomeCard.tsx — 2 h · Acepta: cada ejemplo abre un análisis completo con un toque
+- [x] T004 [P] [US2] `WelcomeCard` con acción inicial y dos ejemplos en web/src/features/guide/WelcomeCard.tsx — 2 h · Acepta: cada ejemplo abre un análisis completo con un toque
 
 ## Phase 4: User Story 3 - Métodos y fuentes (P2)
 
-- [ ] T005 [P] [US3] `MethodsSheet` en web/src/features/guide/MethodsSheet.tsx — 2 h · Acepta: FR-C04
+- [x] T005 [P] [US3] `MethodsSheet` en web/src/features/guide/MethodsSheet.tsx — 2 h · Acepta: FR-C04
 
 ## Phase 5: User Story 4 - Validación con personas (P1)
 
