@@ -40,11 +40,19 @@ function useWidth(fallback = 320) {
   return { ref, width }
 }
 
-/** Por qué la gráfica no lleva recta: los puntos son los valores del archivo, no una tendencia. */
-function noLineReason(row: TrendRow | null): string {
-  if (!row || row.status === 'insufficient') return 'Sin recta de tendencia: hay menos de 10 años completos en este periodo.'
-  if (row.status === 'invalid') return 'Sin recta de tendencia: el análisis no es válido para estos datos (ver «Detalles técnicos»).'
-  return 'Recta de tendencia pendiente: el archivo aún no trae su posición.'
+/**
+ * Por qué la gráfica no lleva recta. `muted` = no hay tendencia que mostrar (insuficiente o no válido):
+ * la gráfica se atenúa y el aviso va destacado encima. Si la tendencia existe pero falta `line_mid`,
+ * basta una nota en la leyenda.
+ */
+function noLineReason(row: TrendRow | null): { title: string; reason: string; muted: boolean } {
+  if (!row || row.status === 'insufficient') {
+    return { title: 'Sin recta de tendencia', reason: 'Hay menos de 10 años completos en este periodo. Los puntos son solo los valores anuales.', muted: true }
+  }
+  if (row.status === 'invalid') {
+    return { title: 'Sin recta de tendencia', reason: 'El análisis no es válido para estos datos (ver «Detalles técnicos»). Los puntos son solo los valores anuales.', muted: true }
+  }
+  return { title: 'Recta de tendencia pendiente', reason: 'El archivo aún no trae su posición.', muted: false }
 }
 
 /** Inserta un hueco (`null`) entre años no consecutivos para que la línea no los una. */
@@ -67,6 +75,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
 
   const slope = row && HAS_TREND.has(row.status) ? row.slope_decade : null
   const drawLine = lineMid !== null && slope !== null && row !== null
+  const noLine = drawLine ? null : noLineReason(row)
   const center = row ? (row.start + row.end) / 2 : 0
   // Trazo de una recta que pasa por (centro, line_mid) con pendiente por década dada.
   const lineAt = (perDecade: number, year: number) => (lineMid ?? 0) + (perDecade / 10) * (year - center)
@@ -137,7 +146,15 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
     })
 
   return (
-    <figure className="trend-chart" ref={ref}>
+    <figure className={noLine?.muted ? 'trend-chart is-muted' : 'trend-chart'} ref={ref}>
+      {noLine?.muted && (
+        <p className="trend-chart-notice">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" /><path d="M6.5 17.5 L17.5 6.5" />
+          </svg>
+          <span><strong>{noLine.title}.</strong> {noLine.reason}</span>
+        </p>
+      )}
       <svg
         className="trend-chart-svg"
         width={width}
@@ -229,7 +246,9 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
               {bandPath && <span className="legend-item"><i className="legend-swatch legend-band" aria-hidden="true" />Intervalo del 95 %</span>}
             </>
           )
-          : <span className="legend-item legend-note">{noLineReason(row)}</span>}
+          : noLine && !noLine.muted && (
+            <span className="legend-item legend-note">{`${noLine.title}: ${noLine.reason.toLowerCase()}`}</span>
+          )}
         {excludedText && <span className="legend-item"><i className="legend-swatch legend-excluded" aria-hidden="true" />{excludedText}</span>}
         {partial && (
           <span className="legend-item"><i className="legend-swatch legend-partial" aria-hidden="true" />

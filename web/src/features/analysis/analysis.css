@@ -123,6 +123,27 @@
 .trend-chart-sen { fill: none; stroke: var(--text); stroke-width: 2.25; }
 .trend-chart-band { fill: var(--text); opacity: 0.14; }
 
+/* Sin tendencia que mostrar (insuficiente o no válido): aviso destacado y gráfica atenuada. */
+.trend-chart-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  background: var(--surface-2);
+  border: 1px solid var(--no-data);
+  border-left: 4px solid var(--muted);
+  border-radius: var(--radius);
+}
+.trend-chart-notice svg { flex: 0 0 auto; margin-top: 1px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; }
+.trend-chart-notice strong { font-size: var(--text-md); }
+.trend-chart.is-muted .trend-chart-point { fill: var(--muted); opacity: 0.55; }
+.trend-chart.is-muted .trend-chart-line { opacity: 0.3; }
+.trend-chart.is-muted .trend-chart-grid { opacity: 0.6; }
+.trend-chart.is-muted .legend-point { background: var(--muted); opacity: 0.7; }
+
 .trend-chart-legend {
   display: flex;
   flex-wrap: wrap;
