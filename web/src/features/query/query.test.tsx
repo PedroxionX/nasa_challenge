@@ -2,18 +2,10 @@ import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { filterRegions, NO_MATCH, normalize } from './search'
 import type { RegionInfo } from '../../lib/data'
+import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 
-// Sirve web/public/data/trends/ como el servidor de Vite (mismo patrón que app/Shell.test.tsx).
-const FILES = import.meta.glob('../../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-function serveFromPublic() {
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const path = decodeURIComponent(String(input).replace(/^\/+/, ''))
-    const body = FILES[`../../../public/${path}`]
-    return body === undefined
-      ? new Response('', { status: 404 })
-      : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
-  }))
-}
+// Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
+const serveFixtures = () => vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 
 /** Monta QueryBar con un estado nuevo leído de la URL y devuelve ese mismo módulo de estado. */
 async function renderQuery(search = '') {
@@ -29,7 +21,7 @@ async function renderQuery(search = '') {
 const regionInUrl = () => new URLSearchParams(window.location.search).get('region')
 const varInUrl = () => new URLSearchParams(window.location.search).get('var')
 
-beforeEach(() => serveFromPublic())
+beforeEach(() => serveFixtures())
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
 describe('filterRegions', () => {
@@ -150,7 +142,7 @@ describe('VariablePicker (T002)', () => {
   })
 
   it('la definición incluye unidad, origen y años leídos del catálogo (FR-001, T013)', async () => {
-    const catalog = JSON.parse(FILES['../../../public/data/trends/catalog.json'])
+    const catalog = JSON.parse(TREND_FIXTURES['data/trends/catalog.json'])
     const temp = catalog.variables.find((v: { id: string }) => v.id === 'air_temperature')
     await renderQuery()
     fireEvent.click(screen.getByRole('button', { name: /Qué es temperatura del aire/ }))

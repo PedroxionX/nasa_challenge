@@ -1,19 +1,13 @@
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { UI_COPY } from '../content'
 import { clearDataCache } from '../lib/data'
+import { fixtureFetch } from '../lib/testing/fixtures'
 
-// Sirve web/public/data/trends/ como el servidor de Vite (y Vercel): un archivo ausente NO da 404,
-// sino index.html con 200 y text/html. El 404 real lo cubre lib/data.test.ts.
-const FILES = import.meta.glob('../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-const INDEX_HTML = '<!doctype html><html lang="es"><head><title>Trend Detective</title></head><body><div id="root"></div></body></html>'
+// Fixtures sintéticos de lib/__fixtures__ (no web/public/data/trends/, que es de 003 y tiene datos reales).
+// Un archivo ausente se responde como Vite: 200 con index.html. El 404 real lo cubre lib/data.test.ts.
 function serveFromPublic() {
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const path = decodeURIComponent(String(input).replace(/^\/+/, ''))
-    const body = FILES[`../../public/${path}`]
-    return body === undefined
-      ? new Response(INDEX_HTML, { status: 200, headers: { 'Content-Type': 'text/html' } })
-      : new Response(body, { status: 200, headers: { 'Content-Type': 'application/json' } })
-  }))
+  vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 }
 
 async function renderShell(search = '') {
@@ -31,24 +25,25 @@ beforeEach(() => { clearDataCache(); serveFromPublic() })
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
 describe('Shell', () => {
-  it('sin WebGL (jsdom) el armazón sigue en pie con sus cinco zonas rotuladas', async () => {
+  it('sin WebGL (jsdom) el armazón sigue en pie con sus zonas', async () => {
     await renderShell()
     expect(screen.getByRole('banner')).toBeTruthy()
-    expect(screen.getByRole('main', { name: 'Globo' })).toBeTruthy()
+    const main = screen.getByRole('main', { name: 'Globo' })
+    // Un solo landmark «Bienvenida»: lo pone el armazón; la tarjeta de 006 no debe repetirlo.
     expect(screen.getByRole('region', { name: 'Bienvenida' })).toBeTruthy()
-    expect(screen.getByText(/no puede mostrar el globo/)).toBeTruthy()
+    // El texto del aviso es de 006 (UI_COPY); el armazón solo garantiza que la zona del globo lo muestra.
+    expect(within(main).getAllByText(UI_COPY.noWebgl).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Métodos' })).toBeTruthy()
-    // Buscador, globo y bienvenida visibles con rótulo de esbozo; análisis aparece al elegir región.
-    expect(screen.getAllByText(/^Esbozo · /).length).toBeGreaterThanOrEqual(3)
   })
 
   it('elegir un ejemplo abre el panel con el archivo sintético rotulado', async () => {
     await renderShell()
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: /Baja California/ })) })
-    // Acotado al panel: otras zonas (p. ej. la tabla del globo de 005) también pueden decir «Sube».
+    // Acotado al panel (la tabla del globo de 005 también dice «Sube») y texto exacto
+    // (la frase explicativa de 006 también empieza por «Sube»).
     const panel = screen.getByRole('complementary', { name: 'Análisis' })
-    await within(panel).findByText(/^Sube/)
-    expect(within(panel).getByText(/Datos de ejemplo sintéticos/)).toBeTruthy()
+    await within(panel).findByText('Sube')
+    expect(within(panel).getAllByText(UI_COPY.synthetic).length).toBeGreaterThan(0)
     expect(screen.queryByRole('region', { name: 'Bienvenida' })).toBeNull()
     expect(window.location.search).toContain('region=MX-BCN')
   })

@@ -1,23 +1,21 @@
-// Los archivos de web/public/data/trends/ cargan con los lectores reales y cumplen las reglas del contrato
-// (revisión 2026-11-14): periodo por variable, ventanas ≥ 10 años, mapa coherente con las series.
+// Los fixtures sintéticos (lib/__fixtures__/trends/) cargan con los lectores reales y cumplen las reglas del
+// contrato (revisión 2026-11-14): periodo por variable, ventanas ≥ 10 años, mapa coherente con las series.
+// No se lee web/public/data/trends/: es de 003 y tiene datos reales.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   OPTIONAL_WINDOW_COLUMNS, VARIABLE_IDS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
   windowKey,
 } from './data'
+import { TREND_FIXTURES, fixtureFetch } from './testing/fixtures'
 
-const FILES = import.meta.glob('../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-const seriesFiles = Object.keys(FILES)
+const seriesFiles = Object.keys(TREND_FIXTURES)
   .map(k => k.match(/series\/([^/]+)\/([^/]+)\.json$/))
   .filter((m): m is RegExpMatchArray => m !== null)
   .map(m => ({ variable: m[1], region: m[2] }))
 
 beforeEach(() => {
   clearDataCache()
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const body = FILES[`../../public/${String(input).replace(/^\/+/, '')}`]
-    return body === undefined ? new Response('', { status: 404 }) : new Response(body, { status: 200 })
-  }))
+  vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 })
 afterEach(() => vi.unstubAllGlobals())
 
@@ -26,7 +24,7 @@ const windowsBetween = (first: number, last: number) => {
   return n > 0 ? (n * (n + 1)) / 2 : 0
 }
 
-describe('datos de ejemplo', () => {
+describe('fixtures sintéticos', () => {
   it('el catálogo declara las dos variables con su periodo y producto', async () => {
     const c = await loadCatalog()
     expect(c.variables.map(v => v.id).sort()).toEqual([...VARIABLE_IDS].sort())
@@ -71,7 +69,11 @@ describe('datos de ejemplo', () => {
     }
   })
 
-  it('ningún archivo publica «años para detectar»', () => {
-    for (const [name, body] of Object.entries(FILES)) expect(body, name).not.toMatch(/detect/i)
+  it('una región sin archivo responde como Vite y da not_found', async () => {
+    await expect(loadSeries('air_temperature', 'MX-JAL')).rejects.toMatchObject({ kind: 'not_found' })
+  })
+
+  it('ningún fixture publica «años para detectar»', () => {
+    for (const [name, body] of Object.entries(TREND_FIXTURES)) expect(body, name).not.toMatch(/detect/i)
   })
 })

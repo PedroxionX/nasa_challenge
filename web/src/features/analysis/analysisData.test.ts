@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest'
 import { pickWindow, type Catalog, type SeriesFile } from '../../lib/data'
 import { digitsFor, evidenceLabel, isFullPeriod, readExtras, yearPoints } from './analysisData'
+import { TREND_FIXTURES } from '../../lib/testing/fixtures'
 import { withoutOptionalColumns } from './testData'
-import catalogJson from '../../../public/data/trends/catalog.json'
-import tempJson from '../../../public/data/trends/series/air_temperature/MX-BCN.json'
-import precipJson from '../../../public/data/trends/series/precipitation/MX-BCN.json'
 
-const catalog = catalogJson as unknown as Catalog
-const temp = tempJson as unknown as SeriesFile
-const precip = precipJson as unknown as SeriesFile
+// Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
+const fixture = <T,>(path: string) => JSON.parse(TREND_FIXTURES[`data/trends/${path}`]) as T
+const catalog = fixture<Catalog>('catalog.json')
+const temp = fixture<SeriesFile>('series/air_temperature/MX-BCN.json')
+const precip = fixture<SeriesFile>('series/precipitation/MX-BCN.json')
 const precipInfo = catalog.variables.find(v => v.id === 'precipitation')!
 const tempInfo = catalog.variables.find(v => v.id === 'air_temperature')!
 

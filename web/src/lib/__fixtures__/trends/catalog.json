@@ -1,0 +1,634 @@
+{
+  "schema_version": 1,
+  "built_at_utc": "2026-11-14T00:00:00Z",
+  "alpha": 0.05,
+  "period": {
+    "first_year": 1980,
+    "last_complete_year": 2025,
+    "min_window_years": 10
+  },
+  "method": {
+    "slope": "theil-sen",
+    "test": "mann-kendall-ar1-corrected",
+    "interval": "sen-1968-95",
+    "contrast": "ols-santer-2000"
+  },
+  "variables": [
+    {
+      "id": "air_temperature",
+      "label": "Temperatura del aire",
+      "kind": "reanalysis",
+      "unit_annual": "°C",
+      "aggregation": "mean_day_weighted",
+      "relative_change": false,
+      "product_short_name": "M2TMNXSLV",
+      "product_version": "5.12.4",
+      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
+      "first_year": 1980,
+      "last_complete_year": 2025
+    },
+    {
+      "id": "precipitation",
+      "label": "Precipitación",
+      "kind": "observation",
+      "unit_annual": "mm",
+      "aggregation": "sum_from_rate",
+      "relative_change": true,
+      "product_short_name": "GPM_3IMERGM",
+      "product_version": "07",
+      "definition": "EJEMPLO SINTÉTICO — definición provisional; la escribe 006.",
+      "first_year": 2001,
+      "last_complete_year": 2025
+    }
+  ],
+  "regions": [
+    {
+      "id": "MX-AGU",
+      "name": "Aguascalientes",
+      "country": "MX",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "MX-BCN",
+      "name": "Baja California",
+      "country": "MX",
+      "n_cells": 7,
+      "small_region": false
+    },
+    {
+      "id": "MX-BCS",
+      "name": "Baja California Sur",
+      "country": "MX",
+      "n_cells": 15,
+      "small_region": false
+    },
+    {
+      "id": "MX-CAM",
+      "name": "Campeche",
+      "country": "MX",
+      "n_cells": 26,
+      "small_region": false
+    },
+    {
+      "id": "MX-CHH",
+      "name": "Chihuahua",
+      "country": "MX",
+      "n_cells": 9,
+      "small_region": false
+    },
+    {
+      "id": "MX-CHP",
+      "name": "Chiapas",
+      "country": "MX",
+      "n_cells": 11,
+      "small_region": false
+    },
+    {
+      "id": "MX-CMX",
+      "name": "Ciudad de México",
+      "country": "MX",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "MX-COA",
+      "name": "Coahuila",
+      "country": "MX",
+      "n_cells": 10,
+      "small_region": false
+    },
+    {
+      "id": "MX-COL",
+      "name": "Colima",
+      "country": "MX",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "MX-DUR",
+      "name": "Durango",
+      "country": "MX",
+      "n_cells": 26,
+      "small_region": false
+    },
+    {
+      "id": "MX-GRO",
+      "name": "Guerrero",
+      "country": "MX",
+      "n_cells": 16,
+      "small_region": false
+    },
+    {
+      "id": "MX-GUA",
+      "name": "Guanajuato",
+      "country": "MX",
+      "n_cells": 26,
+      "small_region": false
+    },
+    {
+      "id": "MX-HID",
+      "name": "Hidalgo",
+      "country": "MX",
+      "n_cells": 8,
+      "small_region": false
+    },
+    {
+      "id": "MX-JAL",
+      "name": "Jalisco",
+      "country": "MX",
+      "n_cells": 4,
+      "small_region": false
+    },
+    {
+      "id": "MX-MEX",
+      "name": "México",
+      "country": "MX",
+      "n_cells": 6,
+      "small_region": false
+    },
+    {
+      "id": "MX-MIC",
+      "name": "Michoacán",
+      "country": "MX",
+      "n_cells": 5,
+      "small_region": false
+    },
+    {
+      "id": "MX-MOR",
+      "name": "Morelos",
+      "country": "MX",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "MX-NAY",
+      "name": "Nayarit",
+      "country": "MX",
+      "n_cells": 17,
+      "small_region": false
+    },
+    {
+      "id": "MX-NLE",
+      "name": "Nuevo León",
+      "country": "MX",
+      "n_cells": 21,
+      "small_region": false
+    },
+    {
+      "id": "MX-OAX",
+      "name": "Oaxaca",
+      "country": "MX",
+      "n_cells": 28,
+      "small_region": false
+    },
+    {
+      "id": "MX-PUE",
+      "name": "Puebla",
+      "country": "MX",
+      "n_cells": 22,
+      "small_region": false
+    },
+    {
+      "id": "MX-QUE",
+      "name": "Querétaro",
+      "country": "MX",
+      "n_cells": 26,
+      "small_region": false
+    },
+    {
+      "id": "MX-ROO",
+      "name": "Quintana Roo",
+      "country": "MX",
+      "n_cells": 10,
+      "small_region": false
+    },
+    {
+      "id": "MX-SIN",
+      "name": "Sinaloa",
+      "country": "MX",
+      "n_cells": 10,
+      "small_region": false
+    },
+    {
+      "id": "MX-SLP",
+      "name": "San Luis Potosí",
+      "country": "MX",
+      "n_cells": 25,
+      "small_region": false
+    },
+    {
+      "id": "MX-SON",
+      "name": "Sonora",
+      "country": "MX",
+      "n_cells": 19,
+      "small_region": false
+    },
+    {
+      "id": "MX-TAB",
+      "name": "Tabasco",
+      "country": "MX",
+      "n_cells": 22,
+      "small_region": false
+    },
+    {
+      "id": "MX-TAM",
+      "name": "Tamaulipas",
+      "country": "MX",
+      "n_cells": 19,
+      "small_region": false
+    },
+    {
+      "id": "MX-TLA",
+      "name": "Tlaxcala",
+      "country": "MX",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "MX-VER",
+      "name": "Veracruz",
+      "country": "MX",
+      "n_cells": 13,
+      "small_region": false
+    },
+    {
+      "id": "MX-YUC",
+      "name": "Yucatán",
+      "country": "MX",
+      "n_cells": 17,
+      "small_region": false
+    },
+    {
+      "id": "MX-ZAC",
+      "name": "Zacatecas",
+      "country": "MX",
+      "n_cells": 7,
+      "small_region": false
+    },
+    {
+      "id": "US-AK",
+      "name": "Alaska",
+      "country": "US",
+      "n_cells": 9,
+      "small_region": false
+    },
+    {
+      "id": "US-AL",
+      "name": "Alabama",
+      "country": "US",
+      "n_cells": 28,
+      "small_region": false
+    },
+    {
+      "id": "US-AR",
+      "name": "Arkansas",
+      "country": "US",
+      "n_cells": 13,
+      "small_region": false
+    },
+    {
+      "id": "US-AZ",
+      "name": "Arizona",
+      "country": "US",
+      "n_cells": 9,
+      "small_region": false
+    },
+    {
+      "id": "US-CA",
+      "name": "California",
+      "country": "US",
+      "n_cells": 28,
+      "small_region": false
+    },
+    {
+      "id": "US-CO",
+      "name": "Colorado",
+      "country": "US",
+      "n_cells": 29,
+      "small_region": false
+    },
+    {
+      "id": "US-CT",
+      "name": "Connecticut",
+      "country": "US",
+      "n_cells": 6,
+      "small_region": false
+    },
+    {
+      "id": "US-DC",
+      "name": "Distrito de Columbia",
+      "country": "US",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "US-DE",
+      "name": "Delaware",
+      "country": "US",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "US-FL",
+      "name": "Florida",
+      "country": "US",
+      "n_cells": 12,
+      "small_region": false
+    },
+    {
+      "id": "US-GA",
+      "name": "Georgia",
+      "country": "US",
+      "n_cells": 30,
+      "small_region": false
+    },
+    {
+      "id": "US-HI",
+      "name": "Hawái",
+      "country": "US",
+      "n_cells": 32,
+      "small_region": false
+    },
+    {
+      "id": "US-IA",
+      "name": "Iowa",
+      "country": "US",
+      "n_cells": 30,
+      "small_region": false
+    },
+    {
+      "id": "US-ID",
+      "name": "Idaho",
+      "country": "US",
+      "n_cells": 28,
+      "small_region": false
+    },
+    {
+      "id": "US-IL",
+      "name": "Illinois",
+      "country": "US",
+      "n_cells": 4,
+      "small_region": false
+    },
+    {
+      "id": "US-IN",
+      "name": "Indiana",
+      "country": "US",
+      "n_cells": 11,
+      "small_region": false
+    },
+    {
+      "id": "US-KS",
+      "name": "Kansas",
+      "country": "US",
+      "n_cells": 4,
+      "small_region": false
+    },
+    {
+      "id": "US-KY",
+      "name": "Kentucky",
+      "country": "US",
+      "n_cells": 7,
+      "small_region": false
+    },
+    {
+      "id": "US-LA",
+      "name": "Luisiana",
+      "country": "US",
+      "n_cells": 25,
+      "small_region": false
+    },
+    {
+      "id": "US-MA",
+      "name": "Massachusetts",
+      "country": "US",
+      "n_cells": 19,
+      "small_region": false
+    },
+    {
+      "id": "US-MD",
+      "name": "Maryland",
+      "country": "US",
+      "n_cells": 10,
+      "small_region": false
+    },
+    {
+      "id": "US-ME",
+      "name": "Maine",
+      "country": "US",
+      "n_cells": 22,
+      "small_region": false
+    },
+    {
+      "id": "US-MI",
+      "name": "Míchigan",
+      "country": "US",
+      "n_cells": 13,
+      "small_region": false
+    },
+    {
+      "id": "US-MN",
+      "name": "Minnesota",
+      "country": "US",
+      "n_cells": 31,
+      "small_region": false
+    },
+    {
+      "id": "US-MO",
+      "name": "Misuri",
+      "country": "US",
+      "n_cells": 22,
+      "small_region": false
+    },
+    {
+      "id": "US-MS",
+      "name": "Misisipi",
+      "country": "US",
+      "n_cells": 15,
+      "small_region": false
+    },
+    {
+      "id": "US-MT",
+      "name": "Montana",
+      "country": "US",
+      "n_cells": 32,
+      "small_region": false
+    },
+    {
+      "id": "US-NC",
+      "name": "Carolina del Norte",
+      "country": "US",
+      "n_cells": 12,
+      "small_region": false
+    },
+    {
+      "id": "US-ND",
+      "name": "Dakota del Norte",
+      "country": "US",
+      "n_cells": 25,
+      "small_region": false
+    },
+    {
+      "id": "US-NE",
+      "name": "Nebraska",
+      "country": "US",
+      "n_cells": 6,
+      "small_region": false
+    },
+    {
+      "id": "US-NH",
+      "name": "Nuevo Hampshire",
+      "country": "US",
+      "n_cells": 29,
+      "small_region": false
+    },
+    {
+      "id": "US-NJ",
+      "name": "Nueva Jersey",
+      "country": "US",
+      "n_cells": 17,
+      "small_region": false
+    },
+    {
+      "id": "US-NM",
+      "name": "Nuevo México",
+      "country": "US",
+      "n_cells": 19,
+      "small_region": false
+    },
+    {
+      "id": "US-NV",
+      "name": "Nevada",
+      "country": "US",
+      "n_cells": 7,
+      "small_region": false
+    },
+    {
+      "id": "US-NY",
+      "name": "Nueva York",
+      "country": "US",
+      "n_cells": 23,
+      "small_region": false
+    },
+    {
+      "id": "US-OH",
+      "name": "Ohio",
+      "country": "US",
+      "n_cells": 17,
+      "small_region": false
+    },
+    {
+      "id": "US-OK",
+      "name": "Oklahoma",
+      "country": "US",
+      "n_cells": 8,
+      "small_region": false
+    },
+    {
+      "id": "US-OR",
+      "name": "Oregón",
+      "country": "US",
+      "n_cells": 17,
+      "small_region": false
+    },
+    {
+      "id": "US-PA",
+      "name": "Pensilvania",
+      "country": "US",
+      "n_cells": 28,
+      "small_region": false
+    },
+    {
+      "id": "US-PR",
+      "name": "Puerto Rico",
+      "country": "US",
+      "n_cells": 23,
+      "small_region": false
+    },
+    {
+      "id": "US-RI",
+      "name": "Rhode Island",
+      "country": "US",
+      "n_cells": 1,
+      "small_region": true
+    },
+    {
+      "id": "US-SC",
+      "name": "Carolina del Sur",
+      "country": "US",
+      "n_cells": 16,
+      "small_region": false
+    },
+    {
+      "id": "US-SD",
+      "name": "Dakota del Sur",
+      "country": "US",
+      "n_cells": 24,
+      "small_region": false
+    },
+    {
+      "id": "US-TN",
+      "name": "Tennessee",
+      "country": "US",
+      "n_cells": 4,
+      "small_region": false
+    },
+    {
+      "id": "US-TX",
+      "name": "Texas",
+      "country": "US",
+      "n_cells": 21,
+      "small_region": false
+    },
+    {
+      "id": "US-UT",
+      "name": "Utah",
+      "country": "US",
+      "n_cells": 6,
+      "small_region": false
+    },
+    {
+      "id": "US-VA",
+      "name": "Virginia",
+      "country": "US",
+      "n_cells": 20,
+      "small_region": false
+    },
+    {
+      "id": "US-VT",
+      "name": "Vermont",
+      "country": "US",
+      "n_cells": 31,
+      "small_region": false
+    },
+    {
+      "id": "US-WA",
+      "name": "Washington",
+      "country": "US",
+      "n_cells": 27,
+      "small_region": false
+    },
+    {
+      "id": "US-WI",
+      "name": "Wisconsin",
+      "country": "US",
+      "n_cells": 32,
+      "small_region": false
+    },
+    {
+      "id": "US-WV",
+      "name": "Virginia Occidental",
+      "country": "US",
+      "n_cells": 4,
+      "small_region": false
+    },
+    {
+      "id": "US-WY",
+      "name": "Wyoming",
+      "country": "US",
+      "n_cells": 21,
+      "small_region": false
+    }
+  ]
+}
