@@ -1,5 +1,5 @@
-"""Construcción de archivos (T004). La rejilla de entrada es SINTÉTICA y solo existe en estas pruebas (FR-D06):
-sirve para comprobar el armado, no describe ningún lugar real.
+"""Construcción de archivos (T004, T020). La rejilla de entrada es SINTÉTICA y solo existe en estas pruebas
+(FR-D06): sirve para comprobar el armado, no describe ningún lugar real.
 """
 
 import ast
@@ -12,58 +12,57 @@ import pytest
 
 import build
 import contract
-from power_regional import CellGrid, DownloadFailed, Tile
+from sources.base import GridData, ReadFailed, SourceInfo
 from weights import CellWeights
 
 REGIONS = ["US-DC", "US-RI"]
 TODAY = dt.date(2026, 11, 14)
+# Como los productos reales: MERRA-2 1980-01…2026-09; IMERG 2001-01…2025-09 (2025 incompleto).
+MONTHS = {"air_temperature": [(y, m) for y in range(1980, 2027) for m in range(1, 13) if (y, m) <= (2026, 9)],
+          "precipitation": [(y, m) for y in range(2001, 2026) for m in range(1, 13) if (y, m) <= (2025, 9)]}
 
 
-def synthetic_tile_grid(code: str, tile: Tile) -> CellGrid:
-    lats = np.arange(tile.south, tile.north + 1e-9, 0.5)
-    j0, j1 = int(np.ceil(tile.west / 0.625 - 1e-9)), int(np.floor(tile.east / 0.625 + 1e-9))
-    lons = np.arange(j0, j1 + 1) * 0.625
-    la, lo = (a.ravel() for a in np.meshgrid(lats, lons, indexing="ij"))
-    months = [(y, m) for y in range(1981, 2027) for m in range(1, 13)]
+def synthetic_values(var_id, lats, months):
     t = np.array([y + (m - 0.5) / 12 for y, m in months])
     rng = np.random.default_rng(7)
-    if code == "T2M":
+    if var_id == "air_temperature":
         base = 12 + 0.03 * (t - 1981) + 8 * np.sin(2 * np.pi * (t % 1))
-        vals = base[None, :] + 0.1 * la[:, None] / 40 + rng.normal(0, 0.3, (len(la), len(t)))
-        unit = "C"
-    else:
-        base = 3 + 0.01 * (t - 1981) + np.sin(2 * np.pi * (t % 1))
-        vals = np.clip(base[None, :] + rng.normal(0, 0.2, (len(la), len(t))), 0, None)
-        unit = "mm/day"
-    vals[:, -3:] = np.nan  # oct–dic 2026 aún sin procesar
-    return CellGrid(code, unit, la, lo, months, vals, {}, ["MERRA2"], "v2.10.0", -999.0)
+        return base[None, :] + 0.1 * lats[:, None] / 40 + rng.normal(0, 0.3, (len(lats), len(t)))
+    base = 3 + 0.01 * (t - 1981) + np.sin(2 * np.pi * (t % 1))  # mm/día
+    return np.clip(base[None, :] + rng.normal(0, 0.2, (len(lats), len(t))), 0, None)
 
 
-class FakeDownloader:
-    def __init__(self, fail_tiles=(), times=None):
-        self.manifest, self.fail_tiles, self.written = [], set(fail_tiles), []
-        self.times = times or {}
+class FakeSource:
+    """Fuente de prueba con la interfaz común; id «gesdisc» para usar las definiciones de producción."""
 
-    def fetch_many(self, variable, tiles, start, end):
-        bad = [t for t in tiles if t in self.fail_tiles]
-        for t in tiles:
-            self.manifest.append({"variable": variable.code, "tile": t.label, "status": "error" if t in bad else "ok",
-                                  "retrieved_at_utc": self.times.get(t, "2026-11-14T17:00:00Z"), "url": "u",
-                                  "sha256": None, "from_cache": False})
-        if bad:
-            raise DownloadFailed([{"variable": variable.code, "tile": t.label, "error": "sin red"} for t in bad])
-        return {t: synthetic_tile_grid(variable.code, t) for t in tiles}
+    id = "gesdisc"
 
-    def write_manifest(self, path):
-        self.written.append(Path(path).name)
+    def __init__(self, fail=False, times=None):
+        self.manifest, self.fail, self.times = [], fail, times or {}
+
+    def read(self, var, regions, weights, union_lats, union_lons, first_year, end_year):
+        self.manifest.append({"variable": var.id, "granule": "sintetico", "status": "error" if self.fail else "ok"})
+        if self.fail:
+            raise ReadFailed([{"variable": var.id, "item": "sintetico", "error": "sin red"}], ["US-RI"])
+        months = MONTHS[var.id]
+        vals = synthetic_values(var.id, union_lats, months)
+        info = SourceInfo("PRUEBA", "producto de prueba", "TEST", "1", None, "test 0", var.parameter, "x",
+                          var.grid.text)
+        return GridData(union_lats, union_lons, months, vals, info,
+                        {r.id: self.times.get(r.id, "2026-11-14T17:00:00Z") for r in regions},
+                        {r.id: len(months) for r in regions})
+
+
+def run(out, var_ids=("air_temperature", "precipitation"), source=None, manifest_dir=None):
+    src = source or FakeSource()
+    return build.build(REGIONS, list(var_ids), out, {v: src for v in var_ids},
+                       manifest_dir=manifest_dir or out.parent / "manifest", today=TODAY)
 
 
 @pytest.fixture(scope="module")
 def built(tmp_path_factory):
     out = tmp_path_factory.mktemp("o") / "trends"
-    files = build.build(REGIONS, ["T2M", "PRECTOTCORR"], out, FakeDownloader(), last_year=2025,
-                        manifest_dir=out.parent / "manifest", today=TODAY)
-    return out, files
+    return out, run(out)
 
 
 def read(out, rel):
@@ -73,67 +72,75 @@ def read(out, rel):
 def test_writes_contract_files(built):
     out, files = built
     assert {p.relative_to(out).as_posix() for p in out.rglob("*.json")} == set(files) == {
-        "catalog.json", "map/T2M.json", "map/PRECTOTCORR.json",
-        *(f"series/{c}/{r}.json" for c in ("T2M", "PRECTOTCORR") for r in REGIONS)}
-    for c in ("T2M", "PRECTOTCORR"):
-        for r in REGIONS:
-            assert contract.validate_series(read(out, f"series/{c}/{r}.json"), 1981, 2025) == []
+        "catalog.json", "map/air_temperature.json", "map/precipitation.json",
+        *(f"series/{c}/{r}.json" for c in ("air_temperature", "precipitation") for r in REGIONS)}
+    for r in REGIONS:
+        assert contract.validate_series(read(out, f"series/air_temperature/{r}.json"), 1980, 2025) == []
+        assert contract.validate_series(read(out, f"series/precipitation/{r}.json"), 2001, 2024) == []
 
 
 def test_series_content(built):
     out, _ = built
-    s = read(out, "series/T2M/US-RI.json")
-    assert s["years"] == list(range(1981, 2026)) and s["excluded_years"] == []
+    s = read(out, "series/air_temperature/US-RI.json")
+    assert s["variable"] == "air_temperature" and s["unit"] == "°C"
+    assert s["years"] == list(range(1980, 2026)) and s["excluded_years"] == []
     assert s["partial_year"] == {"year": 2026, "months_valid": 9}
-    assert len(s["windows"]["rows"]) == 666
+    assert len(s["windows"]["rows"]) == 703
     rows = [dict(zip(contract.WINDOW_COLUMNS, r)) for r in s["windows"]["rows"]]
-    full = next(r for r in rows if (r["start"], r["end"]) == (1981, 2025))
-    assert full["n"] == 45
+    full = next(r for r in rows if (r["start"], r["end"]) == (1980, 2025))
+    assert full["n"] == 46
     assert full["status"] == "increasing" and full["slope_decade"] == pytest.approx(0.3, abs=0.05)
     assert s["provenance"]["is_synthetic"] is False and s["provenance"]["requests"] == "manifest/2026-11-14.json"
     assert s["provenance"]["n_cells"] == 4
-    dc = read(out, "series/T2M/US-DC.json")
+    assert {"short_name", "version", "doi", "granules"} <= set(s["provenance"])
+    assert s["provenance"]["granules"] == len(MONTHS["air_temperature"])
+    pr = read(out, "series/precipitation/US-RI.json")
+    assert len(pr["windows"]["rows"]) == 120 and pr["years"] == list(range(2001, 2025))
+    assert pr["partial_year"] == {"year": 2025, "months_valid": 9}
+    assert pr["provenance"]["grid"] == "0.1° × 0.1°" and pr["provenance"]["n_cells"] > 4
+    dc = read(out, "series/air_temperature/US-DC.json")
     assert "small_region" in dc["windows"]["rows"][0][contract.WINDOW_COLUMNS.index("flags")]
 
 
 def test_precipitation_annual_is_a_sum(built):
     out, _ = built
-    s = read(out, "series/PRECTOTCORR/US-DC.json")
-    assert s["unit"] == "mm/año"
+    s = read(out, "series/precipitation/US-DC.json")
+    assert s["unit"] == "mm"
     assert 900 < s["values"][0] < 1400  # ~3 mm/día × 365 días
-    assert any("mm/año" in t for t in s["provenance"]["transformations"])
+    assert any("horas del mes" in t for t in s["provenance"]["transformations"])
 
 
 def test_map_keys_match_windows_and_values(built):
     out, _ = built
-    for code in ("T2M", "PRECTOTCORR"):
+    for code, n_keys in (("air_temperature", 703), ("precipitation", 120)):
         mp = read(out, f"map/{code}.json")
-        assert len(mp["windows"]) == 666 and mp["regions"] == REGIONS
+        assert len(mp["windows"]) == n_keys and mp["regions"] == REGIONS
         for i, r in enumerate(REGIONS):
             s = read(out, f"series/{code}/{r}.json")
             years, values = np.array(s["years"]), np.array(s["values"])
             for row in s["windows"]["rows"][::37]:
                 d = dict(zip(contract.WINDOW_COLUMNS, row))
                 got = mp["windows"][f"{d['start']}-{d['end']}"][i]
-                if code == "T2M":
-                    assert got == pytest.approx(d["slope_decade"], abs=1e-4)
+                if code == "air_temperature":
+                    assert got == d["slope_decade"]  # exactamente el mismo número (contrato)
                 else:
+                    assert got == dict(zip(contract.WINDOW_COLUMNS_EXT, row))["slope_decade_pct"]
                     mean = values[(years >= d["start"]) & (years <= d["end"])].mean()
                     assert got == pytest.approx(d["slope_decade"] / mean * 100, abs=2e-3)
-    assert read(out, "map/T2M.json")["unit"] == "°C/década"
-    assert read(out, "map/PRECTOTCORR.json")["unit"] == "%/década"
+    assert read(out, "map/air_temperature.json")["unit"] == "°C/década"
+    assert read(out, "map/precipitation.json")["unit"] == "%/década"
 
 
 def test_percent_columns(built):
-    """slope_decade_pct, ci_low_pct, ci_high_pct: % de la media de la ventana en precipitación; null en T2M."""
+    """slope_decade_pct, ci_low_pct, ci_high_pct: % de la media de la ventana en precipitación; null en temperatura."""
     out, _ = built
-    t2m = read(out, "series/T2M/US-RI.json")
+    t2m = read(out, "series/air_temperature/US-RI.json")
     assert t2m["windows"]["columns"] == contract.WINDOW_COLUMNS_EXT
     assert all(r[-3:] == [None, None, None] for r in t2m["windows"]["rows"])
     assert all(r[-4] is not None for r in t2m["windows"]["rows"] if r[3] is not None)
-    pr = read(out, "series/PRECTOTCORR/US-RI.json")
+    pr = read(out, "series/precipitation/US-RI.json")
     years, values = np.array(pr["years"]), np.array(pr["values"])
-    mp = read(out, "map/PRECTOTCORR.json")
+    mp = read(out, "map/precipitation.json")
     i = mp["regions"].index("US-RI")
     for row in pr["windows"]["rows"][::29]:
         d = dict(zip(contract.WINDOW_COLUMNS_EXT, row))
@@ -191,9 +198,14 @@ def test_catalog(built):
     out, _ = built
     cat = read(out, "catalog.json")
     assert [r["id"] for r in cat["regions"]] == REGIONS
-    assert cat["period"] == {"first_year": 1981, "last_complete_year": 2025, "min_window_years": 10}
+    assert cat["period"] == {"first_year": 1980, "last_complete_year": 2025, "min_window_years": 10}
     assert cat["regions"][0]["small_region"] is True and cat["regions"][1]["small_region"] is False
-    assert {v["id"]: v["relative_change"] for v in cat["variables"]} == {"T2M": False, "PRECTOTCORR": True}
+    v = {x["id"]: x for x in cat["variables"]}
+    assert (v["air_temperature"]["first_year"], v["air_temperature"]["last_complete_year"]) == (1980, 2025)
+    assert (v["precipitation"]["first_year"], v["precipitation"]["last_complete_year"]) == (2001, 2024)
+    assert v["precipitation"]["relative_change"] is True and v["precipitation"]["kind"] == "observation"
+    assert v["precipitation"]["unit_annual"] == "mm" and v["air_temperature"]["relative_change"] is False
+    assert contract.validate_catalog(cat) == []
 
 
 def test_invalid_output_writes_nothing(tmp_path, monkeypatch):
@@ -210,37 +222,53 @@ def test_invalid_output_writes_nothing(tmp_path, monkeypatch):
 
     monkeypatch.setattr(build, "build_series", broken)
     with pytest.raises(contract.ContractError):
-        build.build(REGIONS, ["T2M"], out, FakeDownloader(), last_year=2025, manifest_dir=tmp_path / "m", today=TODAY)
+        run(out, ["air_temperature"], manifest_dir=tmp_path / "m")
     assert [p.name for p in out.iterdir()] == ["previo.json"]  # lo anterior queda intacto
     assert not list(tmp_path.glob(".trends-tmp-*"))
 
 
-def test_download_failure_writes_nothing_and_lists_regions(tmp_path):
+def test_read_failure_writes_nothing_and_lists_regions(tmp_path):
     out = tmp_path / "trends"
-    fake = FakeDownloader(fail_tiles={Tile(40.0, -80.0, 50.0, -70.0)})  # tesela de Rhode Island
-    with pytest.raises(DownloadFailed) as exc:
-        build.build(REGIONS, ["T2M"], out, fake, last_year=2025, manifest_dir=tmp_path / "m", today=TODAY)
+    with pytest.raises(ReadFailed) as exc:
+        run(out, ["air_temperature"], source=FakeSource(fail=True), manifest_dir=tmp_path / "m")
     assert exc.value.affected_regions == ["US-RI"]
     assert not out.exists()
-    assert fake.written == ["2026-11-14.json"]  # el manifiesto se escribe aunque falle
+    assert (tmp_path / "m" / "2026-11-14.json").exists()  # el manifiesto se escribe aunque falle
 
 
-def test_retrieved_at_uses_only_the_region_tiles(tmp_path):
-    ri_tile = Tile(40.0, -80.0, 50.0, -70.0)
-    fake = FakeDownloader(times={ri_tile: "2026-11-14T23:59:59Z"})
-    files = build.build(REGIONS, ["T2M"], tmp_path / "trends", fake, last_year=2025, manifest_dir=tmp_path / "m",
-                        today=TODAY)
-    assert files["series/T2M/US-RI.json"]["provenance"]["retrieved_at_utc"] == "2026-11-14T23:59:59Z"
-    assert files["series/T2M/US-DC.json"]["provenance"]["retrieved_at_utc"] == "2026-11-14T17:00:00Z"
+def test_retrieved_at_is_per_region(tmp_path):
+    src = FakeSource(times={"US-RI": "2026-11-14T23:59:59Z"})
+    files = run(tmp_path / "trends", ["air_temperature"], source=src, manifest_dir=tmp_path / "m")
+    assert files["series/air_temperature/US-RI.json"]["provenance"]["retrieved_at_utc"] == "2026-11-14T23:59:59Z"
+    assert files["series/air_temperature/US-DC.json"]["provenance"]["retrieved_at_utc"] == "2026-11-14T17:00:00Z"
+
+
+def test_complete_period_uses_only_full_years():
+    months = [(y, m) for y in range(2000, 2026) for m in range(1, 13) if (2000, 6) <= (y, m) <= (2025, 9)]
+    assert build.complete_period(months, 2000, 2025) == (2001, 2024)
+    assert build.complete_period(months, 2000, 2010) == (2001, 2010)
 
 
 def test_regional_monthly_weighted_mean_and_all_cells_rule():
-    grid = CellGrid("T2M", "C", np.array([30.0, 30.0]), np.array([-115.0, -114.375]), [(2000, 1), (2000, 2)],
-                    np.array([[10.0, 10.0], [20.0, np.nan]]), {}, ["MERRA2"], "v", -999.0)
+    info = SourceInfo("s", "p", "sn", "v", None, "a", "T2M", "C", "g")
+    grid = GridData(np.array([30.0, 30.0]), np.array([-115.0, -114.375]), [(2000, 1), (2000, 2)],
+                    np.array([[10.0, 10.0], [20.0, np.nan]]), info)
     cw = CellWeights(np.array([30.0, 30.0]), np.array([-115.0, -114.375]), np.array([1.0, 0.5]), np.array([3.0, 1.0]))
     out = build.regional_monthly(grid, cw)
     assert out[0] == pytest.approx((3 * 10 + 1 * 20) / 4)
     assert np.isnan(out[1])
+
+
+def test_power_is_never_chosen_automatically():
+    """Constitución II: la fuente por omisión es GES DISC; POWER solo con --source power."""
+    import inspect
+
+    assert inspect.signature(build.main).parameters  # main existe
+    src = Path(build.__file__).read_text(encoding="utf-8")
+    assert 'default="gesdisc"' in src
+    gs = build.default_sources("gesdisc")
+    assert {type(s).__name__ for s in gs.values()} == {"GesDiscSource"}
+    assert {type(s).__name__ for s in build.default_sources("power").values()} == {"PowerSource"}
 
 
 def test_build_does_not_import_synthetic_data():

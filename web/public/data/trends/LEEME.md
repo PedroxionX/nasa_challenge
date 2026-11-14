@@ -1,23 +1,22 @@
-# Datos de ejemplo — SINTÉTICOS
+# Datos reales — fuentes de GES DISC
 
-Estos archivos los generó 002 para que 004, 005 y 006 trabajen antes de que 003 publique los datos reales. **No son observaciones ni productos de la NASA.** Cada serie lleva `provenance.is_synthetic: true` y la interfaz debe rotularla como ejemplo. Los nombres de producto (MERRA-2 `M2TMNXSLV`, GPM IMERG `GPM_3IMERGM`) solo imitan la forma de la procedencia real; los valores son inventados.
+Publicado por 003 el 2026-11-14 con `python pipeline/build.py --out pipeline/out/gesdisc_all` (y `pipeline/fix_maps.py`),
+copiado a esta carpeta tras validarlo. **Son datos reales** (`provenance.is_synthetic: false`) de las 84 regiones y las
+dos variables, con las tendencias de todas las ventanas de al menos 10 años de cada variable, según el
+[contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md) revisado el 2026-11-14.
+Sustituye a la versión provisional con NASA POWER.
 
-Siguen el [contrato](../../../../specs/001-trend-explorer-mvp/contracts/data-files.md) revisado el 2026-11-14 (`schema_version: 1`): ids neutrales de variable, periodo por variable, procedencia ampliada (`short_name`, `version`, `doi`, `granules`) y las columnas opcionales `line_mid`, `slope_decade_pct`, `ci_low_pct` y `ci_high_pct`. Las cifras salen de una tendencia lineal más ruido con semilla fija; no anticipan ningún resultado real.
+| Variable | Producto | Tipo | Periodo | Ventanas | Mapa |
+|---|---|---|---|---|---|
+| `air_temperature` | MERRA-2 `M2TMNXSLV` v5.12.4, `T2M` (K → °C), 0,5° × 0,625° | `reanalysis` | 1980–2025 (2026 parcial) | 703 | `°C/década` |
+| `precipitation` | GPM IMERG Final `GPM_3IMERGM` v07, mm/h → mm, 0,1° | `observation` | 2001–2024 (2025 parcial: la colección v07 termina en 2025-09) | 120 | `%/década` |
 
-| Variable | Periodo | Ventanas | Mapa |
-|---|---|---|---|
-| `air_temperature` | 1980–2025 | 703 | `°C/década` |
-| `precipitation` | 2001–2025 | 136 | `%/década` (relative_change) |
+Cada serie es el promedio de área del estado (cos(latitud) × fracción de la celda dentro del polígono).
 
-| Archivo | Caso que ilustra en el periodo completo |
-|---|---|
-| `series/air_temperature/MX-BCN.json` | `increasing` |
-| `series/air_temperature/MX-SON.json` | `inconclusive` |
-| `series/air_temperature/MX-CMX.json` | `insufficient` (años excluidos, región pequeña) |
-| `series/air_temperature/US-TX.json` | `invalid` (escalón en 2001) |
-| `series/precipitation/MX-BCN.json` | `decreasing` (con columnas de %) |
-| `series/precipitation/MX-SON.json` | `inconclusive` |
-| cualquier otra región | sin archivo → `DataError` `not_found` («sin datos») |
-| `map/{variable}.json` | cambio por década de las 84 regiones para todas las ventanas de su periodo |
+Validación (en `pipeline/validation/`):
+- `real_single_cell.json`: la serie de una celda (US-DC) coincide con el gránulo original (diferencia 0,0).
+- `real_sanity.json`: las 84 regiones con valores físicos plausibles.
+- `real_giovanni_*.json`: Texas y California frente a Giovanni con dos reglas espaciales. Precipitación dentro del
+  2 % con ambas; temperatura de Texas dentro de 0,1 °C con la regla de Giovanni; California explicado por el contorno.
 
-003 sustituye esta carpeta entera cuando publique (su T006).
+Cómo citar: `pipeline/ATTRIBUTION.md`, sección 1. Lecturas: `pipeline/manifest/` (gránulo, URL, fecha y huella).

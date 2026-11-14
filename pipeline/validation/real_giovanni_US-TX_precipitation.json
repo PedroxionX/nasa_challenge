@@ -1,0 +1,44 @@
+{
+ "check": "Giovanni frente al pipeline con dos reglas espaciales",
+ "region": "US-TX",
+ "variable": "precipitation",
+ "unit": "mm",
+ "giovanni": {
+  "region": "US-TX",
+  "variable": "precipitation",
+  "service": "Time Series, Area-Averaged (ArAvTs)",
+  "giovanni_variable": "GPM_3IMERGM_07_precipitation",
+  "shape": "tl_2014_us_state/shp_25 (Texas)",
+  "units_giovanni": "mm/hr",
+  "url_to_reproduce": "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2001-01-01T00:00:00Z&endtime=2024-12-31T23:59:59Z&shape=tl_2014_us_state/shp_25&data=GPM_3IMERGM_07_precipitation",
+  "retrieved": "2026-11-14",
+  "months": 288,
+  "annual_method": "suma de 12 meses de tasa (mm/hr) × 24 × días del mes, mm"
+ },
+ "rules": {
+  "fraccion_cubierta": {
+   "n_cells": 6775,
+   "n_years": 24,
+   "mean_diff": -4.013,
+   "max_abs_diff": 8.6391,
+   "max_abs_diff_rel": 0.01115,
+   "slope_decade_pipeline": -22.6392,
+   "slope_decade_giovanni": -22.2624,
+   "tolerance": 15.5007,
+   "within_tolerance": true
+  },
+  "centro_dentro": {
+   "n_cells": 6516,
+   "n_years": 24,
+   "mean_diff": -3.3783,
+   "max_abs_diff": 7.9005,
+   "max_abs_diff_rel": 0.01019,
+   "slope_decade_pipeline": -22.4161,
+   "slope_decade_giovanni": -22.2624,
+   "tolerance": 15.5007,
+   "within_tolerance": true
+  }
+ },
+ "pass_with_giovanni_rule": true,
+ "checked_at_utc": "2026-11-14T22:40:35Z"
+}
