@@ -1,0 +1,861 @@
+{
+  "desktop.load": {
+    "ready": true,
+    "ms": 6024
+  },
+  "desktop.webgl": {
+    "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+    "renderer": "ANGLE (Intel, ANGLE Metal Renderer: Intel(R) UHD Graphics 630, Unspecified Version)",
+    "maxTex": 16384
+  },
+  "desktop.state0": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": false,
+    "panelAriaHidden": "true",
+    "panelRect": {
+      "x": 1456,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": null,
+    "toolbarRect": {
+      "x": 372,
+      "y": 834,
+      "w": 696,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "desktop.textures": [
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texImage2D",
+      "w": 1,
+      "h": 1
+    },
+    {
+      "via": "texStorage2D",
+      "levels": 13,
+      "w": 4096,
+      "h": 2048
+    },
+    {
+      "via": "texStorage2D",
+      "levels": 13,
+      "w": 4096,
+      "h": 2048
+    },
+    {
+      "via": "texStorage2D",
+      "levels": 12,
+      "w": 2048,
+      "h": 1024
+    },
+    {
+      "via": "texStorage2D",
+      "levels": 11.643856189774725,
+      "w": 1600,
+      "h": 800
+    },
+    {
+      "via": "texStorage2D",
+      "levels": 13,
+      "w": 4096,
+      "h": 2048
+    }
+  ],
+  "desktop.dom": {
+    "lang": "es",
+    "title": "Trend Detective",
+    "headings": [
+      "H1:Trend Detective"
+    ],
+    "landmarks": [
+      "MAIN",
+      "HEADER",
+      "NAV[Controles del globo]",
+      "ASIDE"
+    ],
+    "toolbar": [
+      {
+        "tag": "BUTTON",
+        "text": "México",
+        "w": 69,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Estados Unidos",
+        "w": 120,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Vista global",
+        "w": 97,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Pausar rotación",
+        "w": 120,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "Nubes",
+        "w": 65,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "Ir a un estado…Aguascali",
+        "w": 180,
+        "h": 36,
+        "font": "13px",
+        "ariaPressed": null,
+        "ariaLabel": "Ir a un estado"
+      }
+    ],
+    "nOptions": 85,
+    "canvasAttrs": [
+      {
+        "role": null,
+        "aria": null,
+        "tabindex": null
+      }
+    ],
+    "resources": [
+      {
+        "n": "/data/countries.geojson",
+        "kb": 477,
+        "ms": 14
+      },
+      {
+        "n": "/data/mx-states.geojson",
+        "kb": 181,
+        "ms": 9
+      },
+      {
+        "n": "/data/us-states.geojson",
+        "kb": 87,
+        "ms": 8
+      },
+      {
+        "n": "/data/countries.geojson",
+        "kb": 0,
+        "ms": 13
+      },
+      {
+        "n": "/data/mx-states.geojson",
+        "kb": 0,
+        "ms": 11
+      },
+      {
+        "n": "/data/us-states.geojson",
+        "kb": 0,
+        "ms": 9
+      },
+      {
+        "n": "/textures/earth-water.png",
+        "kb": 420,
+        "ms": 6
+      },
+      {
+        "n": "/textures/earth-blue-marble.jpg",
+        "kb": 1428,
+        "ms": 17
+      },
+      {
+        "n": "/textures/earth-topology.png",
+        "kb": 370,
+        "ms": 7
+      },
+      {
+        "n": "/textures/night-sky.png",
+        "kb": 883,
+        "ms": 9
+      },
+      {
+        "n": "/textures/clouds.png",
+        "kb": 4916,
+        "ms": 77
+      }
+    ],
+    "brandPointerEvents": "none",
+    "mutedColor": "rgb(148, 163, 184)",
+    "brandBg": "rgba(10, 16, 28, 0.62)"
+  },
+  "desktop.rate.autorotate": {
+    "rafPerSec": 210,
+    "drawCallsPerSec": 47859
+  },
+  "desktop.tabOrder": [
+    "BUTTON:México | outline=solid 2px rgb(56, 189, 248)",
+    "BUTTON:Estados Unidos | outline=solid 2px rgb(56, 189, 248)",
+    "BUTTON:Vista global | outline=solid 2px rgb(56, 189, 248)",
+    "BUTTON:Pausar rotación | outline=solid 2px rgb(56, 189, 248)",
+    "BUTTON:Nubes | outline=solid 2px rgb(56, 189, 248)",
+    "SELECT:Ir a un estado…Agu | outline=solid 2px rgb(56, 189, 248)",
+    "BODY",
+    "BUTTON:México | outline=solid 2px rgb(56, 189, 248)",
+    "BUTTON:Estados Unidos | outline=solid 2px rgb(56, 189, 248)"
+  ],
+  "desktop.rate.idle": {
+    "rafPerSec": 215,
+    "drawCallsPerSec": 48999
+  },
+  "desktop.afterSelect": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 1064,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": "Baja California",
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "MX-BCN",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "SELECT:Ir a un estado…AguascalientesB",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "desktop.panelText": "MÉXICO · MX-BCN\n\nBaja California\n✕\nSerie de tiempo\n\nGráfica con la variable y su línea de tendencia\n\nCambio por década\n\nPendiente de Sen ×10, con intervalo de confianza\n\n¿Es significativo?\n\nMann-Kendall · valor p\n\nAños para ser significativo\n\nWeatherhead et al. (1998)\n\nPendiente: conectar con los datos del pipeline.",
+  "desktop.hoverCenter": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 1064,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": "Baja California",
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "MX-BCN",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "SELECT:Ir a un estado…AguascalientesB",
+    "tooltip": {
+      "text": "Baja CaliforniaMéxico · Clic para investigar",
+      "x": 621,
+      "y": 476,
+      "w": 169,
+      "h": 45
+    },
+    "cursor": "pointer"
+  },
+  "desktop.afterEscape": {
+    "panelOpen": true
+  },
+  "desktop.afterClose": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": false,
+    "panelAriaHidden": "true",
+    "panelRect": {
+      "x": 1456,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": null,
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "Baja CaliforniaMéxico · Clic para investigar",
+      "x": 621,
+      "y": 476,
+      "w": 169,
+      "h": 45
+    },
+    "cursor": "pointer"
+  },
+  "desktop.afterCanvasClick": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 1064,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": "Baja California",
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "MX-BCN",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "Baja CaliforniaMéxico · Clic para investigar",
+      "x": 618,
+      "y": 474,
+      "w": 169,
+      "h": 45
+    },
+    "cursor": "pointer"
+  },
+  "desktop.afterOceanClick": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": false,
+    "panelAriaHidden": "true",
+    "panelRect": {
+      "x": 1456,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": null,
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "desktop.texas": {
+    "viewport": [
+      1440,
+      900,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 1064,
+      "y": 16,
+      "w": 360,
+      "h": 868
+    },
+    "panelTitle": "Texas",
+    "toolbarRect": {
+      "x": 403,
+      "y": 834,
+      "w": 634,
+      "h": 50
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "US-TX",
+    "canvases": [
+      {
+        "bufW": 2880,
+        "bufH": 1800,
+        "cssW": 1440,
+        "cssH": 900
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "desktop.resize1024": {
+    "viewport": [
+      1024,
+      640,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 648,
+      "y": 16,
+      "w": 360,
+      "h": 608
+    },
+    "panelTitle": "Texas",
+    "toolbarRect": {
+      "x": 256,
+      "y": 534,
+      "w": 512,
+      "h": 90
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "US-TX",
+    "canvases": [
+      {
+        "bufW": 2048,
+        "bufH": 1280,
+        "cssW": 1024,
+        "cssH": 640
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "ChihuahuaMéxico · Clic para investigar",
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "cursor": "pointer"
+  },
+  "desktop.resize700": {
+    "viewport": [
+      700,
+      500,
+      2
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 324,
+      "y": 16,
+      "w": 360,
+      "h": 468
+    },
+    "panelTitle": "Texas",
+    "toolbarRect": {
+      "x": 175,
+      "y": 394,
+      "w": 350,
+      "h": 90
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "US-TX",
+    "canvases": [
+      {
+        "bufW": 1400,
+        "bufH": 1000,
+        "cssW": 700,
+        "cssH": 500
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "ZacatecasMéxico · Clic para investigar",
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "cursor": "pointer"
+  },
+  "desktop.console": [],
+  "mobile.load": {
+    "ready": true,
+    "ms": 1701
+  },
+  "mobile.state0": {
+    "viewport": [
+      390,
+      844,
+      3
+    ],
+    "panelOpen": false,
+    "panelAriaHidden": "true",
+    "panelRect": {
+      "x": 12,
+      "y": 856,
+      "w": 358,
+      "h": 2
+    },
+    "panelTitle": null,
+    "toolbarRect": {
+      "x": 98,
+      "y": 582,
+      "w": 195,
+      "h": 250
+    },
+    "brandRect": {
+      "x": 12,
+      "y": 12,
+      "w": 366,
+      "h": 64
+    },
+    "selectValue": "",
+    "canvases": [
+      {
+        "bufW": 780,
+        "bufH": 1688,
+        "cssW": 390,
+        "cssH": 844
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "mobile.toolbar": [
+    "México 69x34 @160,589",
+    "Estados Unidos 120x34 @135,629",
+    "Vista global 97x34 @147,669",
+    "Pausar rotación 120x34 @135,709",
+    "Nubes 65x34 @162,749",
+    "Ir a un estado…A 180x36 @105,789"
+  ],
+  "mobile.rate.autorotate": {
+    "rafPerSec": 260,
+    "drawCallsPerSec": 58267
+  },
+  "mobile.afterTap": {
+    "viewport": [
+      390,
+      844,
+      3
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 12,
+      "y": 326,
+      "w": 358,
+      "h": 506
+    },
+    "panelTitle": "Coahuila",
+    "toolbarRect": {
+      "x": 98,
+      "y": 622,
+      "w": 195,
+      "h": 210
+    },
+    "brandRect": {
+      "x": 12,
+      "y": 12,
+      "w": 366,
+      "h": 64
+    },
+    "selectValue": "MX-COA",
+    "canvases": [
+      {
+        "bufW": 780,
+        "bufH": 1688,
+        "cssW": 390,
+        "cssH": 844
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "CoahuilaMéxico · Clic para investigar",
+      "x": 110,
+      "y": 354,
+      "w": 169,
+      "h": 45
+    },
+    "cursor": "pointer"
+  },
+  "mobile.afterSelect": {
+    "viewport": [
+      390,
+      844,
+      3
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 12,
+      "y": 326,
+      "w": 358,
+      "h": 506
+    },
+    "panelTitle": "Baja California",
+    "toolbarRect": {
+      "x": 98,
+      "y": 622,
+      "w": 195,
+      "h": 210
+    },
+    "brandRect": {
+      "x": 12,
+      "y": 12,
+      "w": 366,
+      "h": 64
+    },
+    "selectValue": "MX-BCN",
+    "canvases": [
+      {
+        "bufW": 780,
+        "bufH": 1688,
+        "cssW": 390,
+        "cssH": 844
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": {
+      "text": "Baja CaliforniaMéxico · Clic para investigar",
+      "x": 110,
+      "y": 354,
+      "w": 169,
+      "h": 45
+    },
+    "cursor": "pointer"
+  },
+  "mobile.overlap": {
+    "overlapPx": 40950,
+    "toolbarArea": 40950,
+    "elementAtToolbarCenter": "placeholder ",
+    "regionCenterVisible": "el estado queda centrado en 195,422 y el panel empieza en y=326"
+  },
+  "mobile.landscape": {
+    "viewport": [
+      844,
+      390,
+      3
+    ],
+    "panelOpen": true,
+    "panelAriaHidden": "false",
+    "panelRect": {
+      "x": 468,
+      "y": 16,
+      "w": 360,
+      "h": 358
+    },
+    "panelTitle": "Baja California",
+    "toolbarRect": {
+      "x": 211,
+      "y": 284,
+      "w": 422,
+      "h": 90
+    },
+    "brandRect": {
+      "x": 16,
+      "y": 16,
+      "w": 349,
+      "h": 64
+    },
+    "selectValue": "MX-BCN",
+    "canvases": [
+      {
+        "bufW": 1688,
+        "bufH": 780,
+        "cssW": 844,
+        "cssH": 390
+      }
+    ],
+    "active": "BODY:Left-click: rotate, Mouse-whee",
+    "tooltip": null,
+    "cursor": ""
+  },
+  "mobile.console": [],
+  "reduced.load": {
+    "ready": true,
+    "ms": 1807
+  },
+  "reduced.check": {
+    "matches": true,
+    "rotateButton": "México | Estados Unidos | Vista global | Pausar rotación | Nubes",
+    "rate": {
+      "rafPerSec": 265,
+      "drawCallsPerSec": 60394
+    }
+  },
+  "texfail.load": {
+    "ready": false,
+    "ms": 12047
+  },
+  "texfail.text": "Cargando la Tierra…",
+  "texfail.console": [],
+  "geofail.load": {
+    "ready": false,
+    "ms": 8073
+  },
+  "geofail.text": "No se pudieron cargar los mapas.\nTrend Detective\n\nNASA Space Apps 2026 · Earth System Trend Detective\n\nMéxico\nEstados Unidos\nVista global\nPausar rotación\nNubes\nIr a un estado…",
+  "nowebgl.load": {
+    "ready": false,
+    "ms": 10052
+  },
+  "nowebgl.text": "",
+  "nowebgl.rootChildren": 0,
+  "nowebgl.console": [
+    "[error] THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context.",
+    "[error] THREE.WebGLRenderer: THREE.WebGLRenderer: Error creating WebGL context.",
+    "[exception] Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new WebGLRenderer (http://127.0.0.1:5173/node_modules/.vite/deps/three.module-Bhplm_5f.js?v=478b1626:51496:17)\n    at comp.init (http://127.0.0.1:5173/node_modules/.vite/deps/react-globe__gl.js?v=1814c0a9:104049:20)\n    at initStatic (http://127.0.0.1:5173/node_modules/.vite/deps/react-globe__gl.js?v=1814c0a9:796:11)\n    at Object.co",
+    "[warning] %s\n\n%s\n An error occurred in the <Globe> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries.",
+    "[exception] Error: THREE.WebGLRenderer: Error creating WebGL context.\n    at new WebGLRenderer (http://127.0.0.1:5173/node_modules/.vite/deps/three.module-Bhplm_5f.js?v=478b1626:51496:17)\n    at comp.init (http://127.0.0.1:5173/node_modules/.vite/deps/react-globe__gl.js?v=1814c0a9:104049:20)\n    at initStatic (http://127.0.0.1:5173/node_modules/.vite/deps/react-globe__gl.js?v=1814c0a9:796:11)\n    at Object.co",
+    "[warning] %s\n\n%s\n An error occurred in the <Globe> component. Consider adding an error boundary to your tree to customize error handling behavior.\nVisit https://react.dev/link/error-boundaries to learn more about error boundaries."
+  ]
+}
