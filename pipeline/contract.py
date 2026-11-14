@@ -15,10 +15,13 @@ STATUSES = {"increasing", "decreasing", "inconclusive", "insufficient", "invalid
 FLAGS = {"autocorr", "step", "short", "ties", "small_region"}
 WINDOW_COLUMNS = ["start", "end", "n", "slope_decade", "ci_low", "ci_high", "p", "p_uncorrected",
                   "r1", "ols_slope_decade", "ols_p", "status", "flags"]
-# Columnas opcionales al final (pedido de 004, 2026-11-14): cambio relativo en % por década, base = media de los
-# valores anuales de la ventana × 100. null en variables sin relative_change o si la media es ≤ 0.
+# Columnas opcionales al final (pedidos de 004, 2026-11-14); solo agregan, schema_version sigue en 1.
+# line_mid: recta de Theil-Sen en el año central c = (start + end) / 2, en unit_annual; null si slope_decade es null.
+# *_pct: cambio relativo en % por década, base = media de los valores anuales de la ventana; null en variables sin
+# relative_change, si la media es ≤ 0 o si la cifra de origen es null.
 PCT_COLUMNS = ["slope_decade_pct", "ci_low_pct", "ci_high_pct"]
-WINDOW_COLUMNS_PCT = WINDOW_COLUMNS + PCT_COLUMNS
+EXTRA_COLUMNS = ["line_mid"] + PCT_COLUMNS
+WINDOW_COLUMNS_EXT = WINDOW_COLUMNS + EXTRA_COLUMNS
 PROVENANCE_FIELDS = ["source", "product", "api_version", "parameter", "unit_declared", "grid", "spatial_method",
                      "n_cells", "retrieved_at_utc", "requests", "transformations", "is_synthetic"]
 FORBIDDEN_KEY_FRAGMENTS = ("detect",)  # «años para detectar» no se publica (constitución, metodología §7)
@@ -94,9 +97,10 @@ def validate_series(doc: Any, first_year: int | None = None, last_year: int | No
     if not isinstance(diag, dict) or "step_year" not in diag or "autocorr_significant" not in diag:
         errs.append("falta 'diagnostics' con step_year y autocorr_significant")
     win = doc.get("windows")
-    if (not isinstance(win, dict) or win.get("columns") not in (WINDOW_COLUMNS, WINDOW_COLUMNS_PCT)
+    if (not isinstance(win, dict) or win.get("columns") not in (WINDOW_COLUMNS, WINDOW_COLUMNS_EXT)
             or not isinstance(win.get("rows"), list)):
-        errs.append("'windows' debe tener las columnas del contrato (más, opcionalmente, las de %) y una lista 'rows'")
+        errs.append("'windows' debe tener las columnas del contrato (más, opcionalmente, line_mid y las de %) "
+                    "y una lista 'rows'")
         return errs
     columns = win["columns"]
     seen = []
@@ -105,8 +109,15 @@ def validate_series(doc: Any, first_year: int | None = None, last_year: int | No
             errs.append(f"fila {i}: longitud distinta de las columnas")
             continue
         r = dict(zip(columns, row))
-        if columns == WINDOW_COLUMNS_PCT:
+        if columns == WINDOW_COLUMNS_EXT:
+            lm = r["line_mid"]
+            if lm is not None and not _num(lm):
+                errs.append(f"fila {i}: line_mid debe ser número o null")
+            elif (lm is None) != (r["slope_decade"] is None):
+                errs.append(f"fila {i}: line_mid debe ser null exactamente cuando slope_decade es null")
             pct = [r[c] for c in PCT_COLUMNS]
+            if _num(r["slope_decade_pct"]) and _num(r["slope_decade"]) and r["slope_decade_pct"] * r["slope_decade"] < 0:
+                errs.append(f"fila {i}: el signo de slope_decade_pct no coincide con el de slope_decade")
             if any(v is not None and not _num(v) for v in pct):
                 errs.append(f"fila {i}: columnas de % deben ser número o null")
             elif all(_num(v) for v in pct) and not (r["ci_low_pct"] <= r["slope_decade_pct"] <= r["ci_high_pct"]):

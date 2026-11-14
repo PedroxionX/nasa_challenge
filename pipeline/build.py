@@ -135,6 +135,12 @@ def pct_of_mean(slope_decade: float, ci: tuple[float, float], mean: float) -> li
     return [_r(slope_decade / mean * 100, 4), _r(ci[0] / mean * 100, 4), _r(ci[1] / mean * 100, 4)]
 
 
+def sen_line_mid(t: np.ndarray, x: np.ndarray, slope_per_year: float, start: int, end: int) -> float:
+    """Valor de la recta de Theil-Sen en el año central c = (start + end) / 2: mediana(yᵢ − b·(tᵢ − c))."""
+    c = (start + end) / 2
+    return float(np.median(x - slope_per_year * (t - c)))
+
+
 def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, small_region: bool,
                    alpha: float = ALPHA_DEFAULT, relative_change: bool = False) -> WindowStats:
     m = (years >= start) & (years <= end)
@@ -147,10 +153,10 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
         flags.append("short")
     if n < MIN_YEARS_FOR_TEST:
         return WindowStats([start, end, n, None, None, None, None, None, None, None, None, "insufficient", flags]
-                           + _NO_PCT, None, None)
+                           + [None] + _NO_PCT, None, None)
     if np.ptp(x) == 0:
         return WindowStats([start, end, n, None, None, None, None, None, None, None, None, "invalid", flags]
-                           + _NO_PCT, None, None)
+                           + [None] + _NO_PCT, None, None)
     c = trend_core(t, x, alpha)
     if len(np.unique(x)) < n:
         flags.append("ties")
@@ -177,8 +183,10 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
     pct = list(_NO_PCT)
     if relative_change and status != "invalid":
         pct = pct_of_mean(slope, (c.sen_ci[0] * 10, c.sen_ci[1] * 10), mean)
-    row = [start, end, n, _r(slope, 6), _r(c.sen_ci[0] * 10, 6), _r(c.sen_ci[1] * 10, 6), _p(p), _p(c.mk.p_value),
-           _r(r1, 4), _r(ols_slope, 6), _p(ols_p), status, flags] + pct
+    slope_out = _r(slope, 6)
+    line_mid = _r(sen_line_mid(t, x, c.sen_slope, start, end), 6) if slope_out is not None else None
+    row = [start, end, n, slope_out, _r(c.sen_ci[0] * 10, 6), _r(c.sen_ci[1] * 10, 6), _p(p), _p(c.mk.p_value),
+           _r(r1, 4), _r(ols_slope, 6), _p(ols_p), status, flags, line_mid] + pct
     slope_pct = slope / mean * 100 if pct[0] is not None else None
     return WindowStats(row, float(slope), mean, slope_pct)
 
@@ -220,7 +228,7 @@ def build_series(region: Region, cw: CellWeights, variable: VariableSpec, grid: 
     # Diagnósticos del periodo completo (first_year–last_year), no de la primera fila.
     m_full = (years >= first_year) & (years <= last_year)
     step = step_vs_linear(years[m_full].astype(float), values[m_full]) if m_full.sum() >= MIN_YEARS_FOR_TEST else None
-    full_row = next(dict(zip(contract.WINDOW_COLUMNS_PCT, r)) for r in rows if (r[0], r[1]) == (first_year, last_year))
+    full_row = next(dict(zip(contract.WINDOW_COLUMNS_EXT, r)) for r in rows if (r[0], r[1]) == (first_year, last_year))
 
     transformations = list(region.transformations)
     transformations += [
@@ -235,6 +243,9 @@ def build_series(region: Region, cw: CellWeights, variable: VariableSpec, grid: 
     else:
         transformations.append("media anual ponderada por los días de cada mes")
     transformations.append("años incompletos excluidos, sin interpolar")
+    transformations.append("line_mid = valor de la recta de Theil-Sen en el año central c = (start + end) / 2: "
+                           "mediana(y − b·(t − c)) sobre los años completos de la ventana, b = slope_decade / 10; "
+                           "null si slope_decade es null")
     if meta["relative_change"]:
         transformations.append("cambio relativo (slope_decade_pct, ci_low_pct, ci_high_pct) = pendiente e intervalo "
                                "por década ÷ media de los valores anuales de la ventana × 100; null si la media es ≤ 0")
@@ -266,7 +277,7 @@ def build_series(region: Region, cw: CellWeights, variable: VariableSpec, grid: 
             "step_year": step.change_year if step is not None and step.favors_step else None,
             "autocorr_significant": "autocorr" in full_row["flags"],
         },
-        "windows": {"columns": contract.WINDOW_COLUMNS_PCT, "rows": rows},
+        "windows": {"columns": contract.WINDOW_COLUMNS_EXT, "rows": rows},
     }
     return SeriesResult(doc, map_values)
 

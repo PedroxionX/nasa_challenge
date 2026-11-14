@@ -128,14 +128,15 @@ def test_percent_columns(built):
     """slope_decade_pct, ci_low_pct, ci_high_pct: % de la media de la ventana en precipitación; null en T2M."""
     out, _ = built
     t2m = read(out, "series/T2M/US-RI.json")
-    assert t2m["windows"]["columns"] == contract.WINDOW_COLUMNS_PCT
+    assert t2m["windows"]["columns"] == contract.WINDOW_COLUMNS_EXT
     assert all(r[-3:] == [None, None, None] for r in t2m["windows"]["rows"])
+    assert all(r[-4] is not None for r in t2m["windows"]["rows"] if r[3] is not None)
     pr = read(out, "series/PRECTOTCORR/US-RI.json")
     years, values = np.array(pr["years"]), np.array(pr["values"])
     mp = read(out, "map/PRECTOTCORR.json")
     i = mp["regions"].index("US-RI")
     for row in pr["windows"]["rows"][::29]:
-        d = dict(zip(contract.WINDOW_COLUMNS_PCT, row))
+        d = dict(zip(contract.WINDOW_COLUMNS_EXT, row))
         mean = values[(years >= d["start"]) & (years <= d["end"])].mean()
         assert d["slope_decade_pct"] == pytest.approx(d["slope_decade"] / mean * 100, abs=2e-3)
         assert d["ci_low_pct"] == pytest.approx(d["ci_low"] / mean * 100, abs=2e-3)
@@ -143,6 +144,41 @@ def test_percent_columns(built):
         assert d["ci_low_pct"] <= d["slope_decade_pct"] <= d["ci_high_pct"]
         assert mp["windows"][f"{d['start']}-{d['end']}"][i] == pytest.approx(d["slope_decade_pct"], abs=1e-4)
     assert any("ci_high_pct" in t for t in pr["provenance"]["transformations"])
+
+
+def test_known_linear_series_line_mid_and_pct():
+    """y = a + b·t sin ruido: line_mid = a + b·c y pct = pendiente / media × 100."""
+    a, b = 100.0, 2.5
+    years = np.arange(1981, 2026)
+    values = a + b * years
+    ws = build.analyze_window(1990, 2009, years, values, False, relative_change=True)
+    d = dict(zip(contract.WINDOW_COLUMNS_EXT, ws.row))
+    c = (1990 + 2009) / 2
+    assert d["slope_decade"] == pytest.approx(b * 10)
+    assert d["line_mid"] == pytest.approx(a + b * c)
+    mean = values[(years >= 1990) & (years <= 2009)].mean()
+    assert d["slope_decade_pct"] == pytest.approx(b * 10 / mean * 100, abs=1e-4)
+    assert d["ci_low_pct"] <= d["slope_decade_pct"] <= d["ci_high_pct"]
+    t2m = dict(zip(contract.WINDOW_COLUMNS_EXT,
+                   build.analyze_window(1990, 2009, years, values, False, relative_change=False).row))
+    assert t2m["line_mid"] == pytest.approx(a + b * c)
+    assert [t2m[k] for k in contract.PCT_COLUMNS] == [None, None, None]
+
+
+def test_line_mid_excludes_missing_years():
+    """Los años excluidos no cuentan: la recta se ajusta solo con los años completos de la ventana."""
+    years = np.array([y for y in range(1981, 2001) if y != 1990])
+    values = 10.0 + 0.1 * years
+    d = dict(zip(contract.WINDOW_COLUMNS_EXT, build.analyze_window(1981, 2000, years, values, False).row))
+    assert d["n"] == 19 and d["line_mid"] == pytest.approx(10.0 + 0.1 * 1990.5)
+
+
+def test_insufficient_window_is_all_null():
+    years = np.arange(2000, 2009)  # 9 años < 10
+    d = dict(zip(contract.WINDOW_COLUMNS_EXT,
+                 build.analyze_window(1999, 2008, years, 1.0 + years * 0.1, False, relative_change=True).row))
+    assert d["status"] == "insufficient"
+    assert all(d[k] is None for k in ["slope_decade", "ci_low", "ci_high", "p", "line_mid", *contract.PCT_COLUMNS])
 
 
 def test_percent_is_null_when_mean_not_positive():

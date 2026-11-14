@@ -104,9 +104,9 @@ def test_map_requires_one_value_per_region_and_matching_keys():
     assert any("no coinciden" in p for p in contract.validate_map(other, {"MX-BCN": series_doc()}))
 
 
-def pct_doc(pct):
-    doc = series_doc([list(ROW) + list(pct)])
-    doc["windows"]["columns"] = list(contract.WINDOW_COLUMNS_PCT)
+def pct_doc(pct, line_mid=20.5):
+    doc = series_doc([list(ROW) + [line_mid] + list(pct)])
+    doc["windows"]["columns"] = list(contract.WINDOW_COLUMNS_EXT)
     return doc
 
 
@@ -117,6 +117,19 @@ def test_percent_columns_are_optional_and_checked():
     assert any("todas" in p for p in contract.validate_series(pct_doc([10.2, None, 12.9])))
     assert any("número o null" in p for p in contract.validate_series(pct_doc(["10%", 6.8, 12.9])))
     assert any("NaN" in p for p in contract.validate_series(pct_doc([math.nan, 6.8, 12.9])))
+
+
+def test_line_mid_null_exactly_when_slope_null():
+    assert any("line_mid" in p for p in contract.validate_series(pct_doc([None, None, None], line_mid=None)))
+    doc = pct_doc([None, None, None], line_mid=20.5)
+    row = doc["windows"]["rows"][0]
+    row[3:6] = [None, None, None]
+    row[11] = "inconclusive"
+    assert any("line_mid" in p for p in contract.validate_series(doc))
+
+
+def test_pct_sign_must_match_slope():
+    assert any("signo" in p for p in contract.validate_series(pct_doc([-1.0, -2.0, 1.0])))
 
 
 def test_unknown_extra_columns_are_rejected():
