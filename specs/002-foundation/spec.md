@@ -51,7 +51,20 @@ function asset(path: string): string   // URL de web/public/ válida bajo subrut
 // features/analysis/index.ts → AnalysisPanel
 // features/guide/index.ts    → WelcomeCard, MethodsSheet
 // content/index.ts           → explainTrend(row, ctx), VARIABLE_COPY, UI_COPY
+
+// web/src/content/index.ts — firmas (el contenido lo escribe 006)
+interface ExplainContext { regionName: string; variableId: VariableId; unit: string; from: number; to: number
+  alpha: number; fullPeriod: boolean; smallRegion: boolean; isSynthetic: boolean }
+interface Explanation { verdict: string; sentence: string; caveats: string[] }
+function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explanation   // row null ⇒ datos insuficientes
+const VARIABLE_COPY: Record<VariableId, { label: string; short: string; definition: string }>
+const UI_COPY: { appName, tagline, welcome, searchPlaceholder, noData, insufficientData, useFullPeriod,
+  loadError, retry, noWebgl, synthetic, notCause }   // 006 puede añadir claves; no quitarlas
+
+// web/src/app/ErrorBoundary.tsx — el armazón envuelve cada zona; el globo usa onError = markWebglUnavailable
 ```
+
+El armazón decide la posición del panel: a la derecha desde 900 px de ancho; por debajo, hoja inferior con tres alturas (asomada, media, completa). La hoja de métodos se abre en un `<dialog>` del armazón; `MethodsSheet` solo pone el contenido. El cierre del panel lo pone `AnalysisPanel` (004).
 
 El armazón expone además las variables CSS `--panel-inset-right` y `--panel-inset-bottom` para que el globo sepa qué zona queda libre.
 
