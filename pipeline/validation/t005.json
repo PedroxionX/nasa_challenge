@@ -1,0 +1,157 @@
+{
+ "tolerance": 0.01,
+ "period": [
+  1981,
+  2025
+ ],
+ "checks": [
+  {
+   "check": "celda regional = endpoint por punto",
+   "region": "MX-BCN",
+   "variable": "T2M",
+   "cell": [
+    28.5,
+    -113.75
+   ],
+   "point_grid_cell": {
+    "lon": -113.75,
+    "lat": 28.5,
+    "elevation_m": 320.91
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "C",
+   "pass": true
+  },
+  {
+   "check": "valor anual = clave anual de POWER (media ponderada)",
+   "region": "MX-BCN",
+   "variable": "T2M",
+   "n_years": 45,
+   "max_abs_diff": 0.001219,
+   "unit": "°C",
+   "pass": true
+  },
+  {
+   "check": "celda regional = endpoint por punto",
+   "region": "US-TX",
+   "variable": "T2M",
+   "cell": [
+    26.5,
+    -98.125
+   ],
+   "point_grid_cell": {
+    "lon": -98.125,
+    "lat": 26.5,
+    "elevation_m": 36.2
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "C",
+   "pass": true
+  },
+  {
+   "check": "valor anual = clave anual de POWER (media ponderada)",
+   "region": "US-TX",
+   "variable": "T2M",
+   "n_years": 45,
+   "max_abs_diff": 0.000414,
+   "unit": "°C",
+   "pass": true
+  },
+  {
+   "check": "celda regional = endpoint por punto",
+   "region": "MX-BCN",
+   "variable": "PRECTOTCORR",
+   "cell": [
+    28.5,
+    -113.75
+   ],
+   "point_grid_cell": {
+    "lon": -113.75,
+    "lat": 28.5,
+    "elevation_m": 320.91
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "mm/day",
+   "pass": true
+  },
+  {
+   "check": "valor anual = clave anual de POWER (media ponderada)",
+   "region": "MX-BCN",
+   "variable": "PRECTOTCORR",
+   "n_years": 45,
+   "max_abs_diff": 0.001226,
+   "unit": "mm/día (tasa media anual)",
+   "pass": true
+  },
+  {
+   "check": "celda regional = endpoint por punto",
+   "region": "US-TX",
+   "variable": "PRECTOTCORR",
+   "cell": [
+    26.5,
+    -98.125
+   ],
+   "point_grid_cell": {
+    "lon": -98.125,
+    "lat": 26.5,
+    "elevation_m": 36.2
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "mm/day",
+   "pass": true
+  },
+  {
+   "check": "valor anual = clave anual de POWER (media ponderada)",
+   "region": "US-TX",
+   "variable": "PRECTOTCORR",
+   "n_years": 45,
+   "max_abs_diff": 0.000515,
+   "unit": "mm/día (tasa media anual)",
+   "pass": true
+  },
+  {
+   "check": "región de una sola celda = endpoint por punto",
+   "region": "US-DC",
+   "variable": "T2M",
+   "n_cells": 1,
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "point_grid_cell": {
+    "lon": -76.875,
+    "lat": 39.0,
+    "elevation_m": 70.81
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "C",
+   "pass": true
+  },
+  {
+   "check": "región de una sola celda = endpoint por punto",
+   "region": "US-DC",
+   "variable": "PRECTOTCORR",
+   "n_cells": 1,
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "point_grid_cell": {
+    "lon": -76.875,
+    "lat": 39.0,
+    "elevation_m": 70.81
+   },
+   "n_months": 540,
+   "max_abs_diff": 0.0,
+   "unit": "mm/day",
+   "pass": true
+  }
+ ],
+ "all_pass": true,
+ "catalog_built_at_utc": "2026-11-14T19:52:41Z"
+}
