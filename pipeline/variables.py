@@ -15,6 +15,10 @@ from trendlens.config import VARIABLES as POWER_SPECS, VariableSpec
 from weights import IMERG_GRID, MERRA2_GRID, GridSpec
 
 MAP_LABELS = ["Baja mucho", "Baja", "Casi sin cambio", "Sube", "Sube mucho"]
+# Cortes de temperatura fijados el 2026-11-14 al ver la distribución real (1980–2025, 84 regiones: p25 0,30,
+# mediana 0,35, p75 0,40 °C/década): separan el periodo completo en 3 · 35 · 46 regiones (Casi sin cambio · Sube ·
+# Sube mucho). Los de precipitación (−10, −3, 3, 10 %/década) reparten 3 · 20 · 50 · 11 · 0 en 2001–2024.
+T_BREAKS = [-0.35, -0.15, 0.15, 0.35]
 
 
 @dataclass(frozen=True)
@@ -28,7 +32,7 @@ class VarDef:
     aggregation: str  # "mean_day_weighted" | "sum_from_rate"
     relative_change: bool
     map_unit: str
-    breaks: list  # provisionales: se fijan al ver la distribución real (contrato, «map»)
+    breaks: list  # 4 cortes simétricos de la magnitud del cambio por década (no de la evidencia)
     spec: VariableSpec
     grid: GridSpec
     first_request_year: int  # primer año que vale la pena pedir (el primero completo del producto)
@@ -64,7 +68,7 @@ _P_SPEC = VariableSpec(
 VARS: dict[tuple[str, str], VarDef] = {
     ("air_temperature", "gesdisc"): VarDef(
         "air_temperature", "gesdisc", "Temperatura del aire", _T_DEF, "reanalysis", "°C", "mean_day_weighted",
-        False, "°C/década", [-0.4, -0.1, 0.1, 0.4], _T_SPEC, MERRA2_GRID, 1980, "T2M",
+        False, "°C/década", T_BREAKS, _T_SPEC, MERRA2_GRID, 1980, "T2M",
         "K → °C (− 273,15)"),
     ("precipitation", "gesdisc"): VarDef(
         "precipitation", "gesdisc", "Precipitación", _P_DEF_IMERG, "observation", "mm", "sum_from_rate",
@@ -72,7 +76,7 @@ VARS: dict[tuple[str, str], VarDef] = {
         "mm/h × 24 → mm/día; × días reales del mes → mm/mes (= mm/h × horas del mes); suma de 12 meses → mm"),
     ("air_temperature", "power"): VarDef(
         "air_temperature", "power", "Temperatura del aire", _T_DEF, "reanalysis", "°C", "mean_day_weighted",
-        False, "°C/década", [-0.4, -0.1, 0.1, 0.4], POWER_SPECS["T2M"], MERRA2_GRID, 1981, "T2M",
+        False, "°C/década", T_BREAKS, POWER_SPECS["T2M"], MERRA2_GRID, 1981, "T2M",
         "unidad declarada C (sin conversión)"),
     ("precipitation", "power"): VarDef(
         "precipitation", "power", "Precipitación", _P_DEF_POWER, "reanalysis", "mm", "sum_from_rate",
