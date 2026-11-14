@@ -21,10 +21,19 @@ Hereda la comprobación de 001 (sin violaciones). Puerta propia: ningún archivo
 ## Project Structure
 
 ```text
-web/src/features/query/     index.ts, RegionSearch.tsx, VariablePicker.tsx, query.css
+web/src/features/query/     index.ts (exporta QueryBar), QueryBar.tsx, RegionSearch.tsx,
+                            VariablePicker.tsx, search.ts (lógica pura del buscador),
+                            query.css, *.test.tsx
 web/src/features/analysis/  index.ts, AnalysisPanel.tsx, TrendChart.tsx, ResultCards.tsx,
-                            PeriodControl.tsx, analysis.css, *.test.ts
+                            PeriodControl.tsx, PeriodVariation.tsx, Term.tsx, glossary.ts,
+                            format.ts, analysisData.ts (lectura de filas y columnas, sin estadística),
+                            useAnalysisData.ts (carga y estados), analysis.css,
+                            testData.ts (utilidades de prueba), *.test.ts(x)
 ```
+
+`QueryBar` y `AnalysisPanel` conservan el nombre con que los importa el armazón (002).
+
+Cambio respecto a la versión anterior (2026-11-14): no hay carpeta `fixtures/`. Cuando 002 revisó el contrato, los datos de ejemplo de `public/data/trends/` pasaron a traer las columnas opcionales (`line_mid`, `*_pct`); las pruebas usan esos archivos y `testData.ts` genera la variante sin columnas.
 
 **Structure Decision**: Componentes sin props que leen el estado compartido; gráfica en SVG propio; el navegador no calcula estadística, solo consulta la tabla de ventanas.
 
