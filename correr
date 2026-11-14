@@ -1,0 +1,68 @@
+#!/bin/sh
+# Ejecuta TrendLens Lab (practice-lab) en macOS, Linux o Windows con Git Bash / WSL.
+# En Windows desde cmd o PowerShell usa correr.cmd.
+#
+# Uso:  ./correr                         -> http://localhost:8501
+#       ./correr --server.port 8600      (las opciones se pasan a streamlit)
+#
+# La primera vez crea practice-lab/.venv e instala requirements.txt.
+# Vuelve a instalar solo si requirements.txt cambia.
+set -eu
+
+RAIZ=$(cd "$(dirname "$0")" && pwd)
+LAB="$RAIZ/practice-lab"
+VENV="$LAB/.venv"
+MARCA="$VENV/.requirements.instalado"
+
+es_311_o_mayor() {
+  "$1" -c 'import sys; sys.exit(sys.version_info < (3, 11))' >/dev/null 2>&1
+}
+
+python_del_venv() {
+  if [ -x "$VENV/bin/python" ]; then
+    echo "$VENV/bin/python"
+  elif [ -x "$VENV/Scripts/python.exe" ]; then  # venv creado en Windows (Git Bash)
+    echo "$VENV/Scripts/python.exe"
+  fi
+}
+
+PY=$(python_del_venv)
+
+if [ -z "$PY" ]; then
+  if [ -d "$VENV" ]; then
+    echo "Error: $VENV existe pero no contiene un Python utilizable." >&2
+    echo "Bórralo y vuelve a ejecutar ./correr para recrearlo." >&2
+    exit 1
+  fi
+  BASE=""
+  for c in python3.12 python3.13 python3.11 python3 python; do
+    if command -v "$c" >/dev/null 2>&1 && es_311_o_mayor "$c"; then
+      BASE=$c
+      break
+    fi
+  done
+  if [ -z "$BASE" ]; then
+    echo "Error: se necesita Python 3.11 o superior y no se encontró ninguno." >&2
+    echo "Instálalo desde https://www.python.org/downloads/ y vuelve a intentarlo." >&2
+    exit 1
+  fi
+  echo "Creando entorno virtual con $BASE ($("$BASE" --version 2>&1))..."
+  "$BASE" -m venv "$VENV"
+  PY=$(python_del_venv)
+fi
+
+if ! es_311_o_mayor "$PY"; then
+  echo "Error: el entorno $VENV usa una versión de Python menor que 3.11." >&2
+  echo "Bórralo y vuelve a ejecutar ./correr para recrearlo." >&2
+  exit 1
+fi
+
+if [ ! -f "$MARCA" ] || ! cmp -s "$LAB/requirements.txt" "$MARCA"; then
+  echo "Instalando dependencias (requirements.txt)..."
+  "$PY" -m pip install -r "$LAB/requirements.txt"
+  cp "$LAB/requirements.txt" "$MARCA"
+fi
+
+# Streamlit lee .streamlit/config.toml del directorio actual.
+cd "$LAB"
+exec "$PY" -m streamlit run app.py "$@"

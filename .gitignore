@@ -1,0 +1,16 @@
+# Configuración local del editor y del sistema.
+.idea/
+.DS_Store
+
+# Dependencias y salidas de compilación.
+node_modules/
+dist/
+dist-ssr/
+.venv/
+
+# Cachés y archivos generados del laboratorio.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.cache/
+practice-lab/exports/
