@@ -16,7 +16,6 @@ import { paletteIndex, readPalette, valuesForWindow, withAlpha } from './mapColo
 import RegionTable from './RegionTable'
 import { prefersLiteTextures, textureUrls } from './textures'
 
-const FILL_ALPHA = 0.85
 /** Si el globo no arranca en este tiempo, se pasa a la vista sin WebGL. */
 const TEXTURE_TIMEOUT_MS = 25_000
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
@@ -76,7 +75,7 @@ export default function GlobeStage() {
   const classCount = breaks.length + 1
 
   const fills = useMemo(() => ({
-    classes: palette.classes.map(c => withAlpha(c, FILL_ALPHA)),
+    classes: palette.classes.map(c => withAlpha(c, palette.fillOpacity)),
     noData: withAlpha(palette.noData, 0.7),
   }), [palette])
 

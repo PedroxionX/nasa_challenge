@@ -73,12 +73,11 @@
 .globe-legend-range { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
 .globe-legend-note { margin: var(--space-2) 0 0; font-size: var(--text-xs); color: var(--muted); }
 
-.globe-swatch { width: 1.25rem; height: 0.875rem; border: 1px solid var(--border); border-radius: 3px; }
+.globe-swatch { width: 1.25rem; height: 0.875rem; border: 1px solid var(--muted); border-radius: 3px; }
 /* «Sin datos» nunca depende solo del color: trama + etiqueta. */
 .globe-swatch-nodata {
   background:
-    repeating-linear-gradient(45deg, var(--no-data) 0 3px, transparent 3px 6px),
-    var(--surface-2);
+    repeating-linear-gradient(45deg, var(--no-data) 0 3px, transparent 3px 6px);
 }
 .globe-swatch-selected { background: transparent; border: 2px solid var(--selected); box-shadow: 0 2px 0 var(--selected); }
 

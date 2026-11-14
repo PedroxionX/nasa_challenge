@@ -12,7 +12,7 @@ export const GLOBE_COPY = {
   selectedCue: 'Elevada y con su nombre: región elegida',
   colorNote: 'El color es el cambio estimado por década, no su significancia.',
   manyRegions: (n: number) => `Con ${n} estados, algunos destacarán por azar.`,
-  noWindow: 'No hay mapa para este periodo: hacen falta al menos 10 años.',
+  noWindow: 'No hay mapa para este periodo: hacen falta al menos 10 años dentro de los datos de esta variable.',
   layerLoading: 'Cargando el mapa de tendencias…',
   layerError: 'No pudimos cargar el mapa de tendencias.',
   showTable: 'Ver tabla',

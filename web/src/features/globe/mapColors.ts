@@ -11,22 +11,38 @@ export interface Palette {
   classes: string[]
   noData: string
   selected: string
+  /** Opacidad del relleno de regiones con datos (--map-fill-opacity). */
+  fillOpacity: number
 }
 
 const DEFAULT_PALETTE: Palette = {
-  classes: ['#018571', '#80cdc1', '#f5f5f5', '#dfc27d', '#a6611a'],
-  noData: '#5b6472',
+  classes: ['#3b2a7a', '#8e86d6', '#e3ded6', '#f2b84b', '#b45309'], // Ocaso (006)
+  noData: '#8a93a0',
   selected: '#ffffff',
+  fillOpacity: 0.9,
 }
 
-/** Lee las variables de diseño (tokens.css). Si faltan, usa los valores por defecto. */
+const TREND_TOKENS = ['down-strong', 'down-weak', 'neutral', 'up-weak', 'up-strong']
+
+/**
+ * Lee las variables de diseño (tokens.css): primero el nombre canónico (--color-*), después
+ * el alias anterior y, si faltan ambos, el valor por defecto.
+ */
 export function readPalette(): Palette {
   const s = getComputedStyle(document.documentElement)
-  const v = (name: string, fallback: string) => s.getPropertyValue(name).trim() || fallback
+  const v = (names: string[], fallback: string) => {
+    for (const name of names) {
+      const value = s.getPropertyValue(name).trim()
+      if (value) return value
+    }
+    return fallback
+  }
+  const opacity = Number.parseFloat(v(['--map-fill-opacity'], ''))
   return {
-    classes: DEFAULT_PALETTE.classes.map((d, i) => v(`--trend-${i + 1}`, d)),
-    noData: v('--no-data', DEFAULT_PALETTE.noData),
-    selected: v('--selected', DEFAULT_PALETTE.selected),
+    classes: DEFAULT_PALETTE.classes.map((d, i) => v([`--color-trend-${TREND_TOKENS[i]}`, `--trend-${i + 1}`], d)),
+    noData: v(['--color-no-data', '--no-data'], DEFAULT_PALETTE.noData),
+    selected: v(['--color-selection', '--selected'], DEFAULT_PALETTE.selected),
+    fillOpacity: opacity > 0 && opacity <= 1 ? opacity : DEFAULT_PALETTE.fillOpacity,
   }
 }
 

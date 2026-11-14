@@ -9,7 +9,7 @@ import { textureUrls } from './textures'
 
 const MAP: MapFile = {
   schema_version: 1,
-  variable: 'T2M',
+  variable: 'air_temperature',
   unit: '°C/década',
   regions: ['MX-BCN', 'MX-SON', 'US-TX'],
   windows: { '1981-2025': [0.46, null, -0.12] },
