@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { markWebglUnavailable, toSearch, useAppState } from '../../app/state'
-import { UI_COPY, VARIABLE_COPY } from '../../content'
+import { UI_COPY, variableCopy } from '../../content'
 import { loadCatalog, loadMap, windowKey, type Catalog, type MapFile } from '../../lib/data'
 import { GLOBE_COPY } from './copy'
 import EarthGlobe, { type EarthGlobeHandle } from './EarthGlobe'
@@ -109,7 +109,7 @@ export default function GlobeStage() {
     })
   }, [catalog.value, geo.value, values, labels])
 
-  const variableLabel = VARIABLE_COPY[variableId].short
+  const variableLabel = variableCopy(variableId, catalog.value?.variables.find(v => v.id === variableId)).short
   const caption = `${GLOBE_COPY.tableTitle} · ${variableLabel} · ${from}–${to}`
   const tableUnit = values ? unit : null
 

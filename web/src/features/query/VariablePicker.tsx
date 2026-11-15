@@ -1,11 +1,12 @@
 /**
- * Selector de variable (004 T002): dos radios nativos con forma de control segmentado
- * (las flechas cambian de opción sin código extra) y su definición desplegable en la misma pantalla.
+ * Selector de variable (004 T002): un <select> nativo con las variables del catálogo
+ * (teclado y lector de pantalla sin código extra; cabe en móvil con 14 o más opciones)
+ * y su definición desplegable en la misma pantalla.
  */
 import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 import { useAppState } from '../../app/state'
-import { loadCatalog, VARIABLE_IDS, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
-import { VARIABLE_COPY } from '../../content'
+import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
+import { variableCopy } from '../../content'
 
 const KIND: Record<VariableInfo['kind'], string> = {
   reanalysis: 'reanálisis (un modelo que combina observaciones)',
@@ -44,7 +45,9 @@ export default function VariablePicker() {
   }, [])
   const info = catalog?.variables.find(v => v.id === variableId)
   const definitionId = `${uid}-definition`
-  const copy = VARIABLE_COPY[variableId]
+  const copy = variableCopy(variableId, info)
+  // Sin catálogo todavía: solo la variable activa, para que el control no salte vacío.
+  const options = catalog ? catalog.variables : [{ id: variableId, label: copy.label, definition: copy.definition }]
 
   const closeOnEscape = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && showDefinition) {
@@ -55,21 +58,17 @@ export default function VariablePicker() {
 
   return (
     <div className="variable-picker" onKeyDown={closeOnEscape}>
-      <fieldset className="variable-picker-options">
-        <legend className="query-vh">Variable</legend>
-        {VARIABLE_IDS.map(id => (
-          <label key={id} className="variable-picker-option">
-            <input
-              type="radio"
-              name={`${uid}-variable`}
-              value={id}
-              checked={variableId === id}
-              onChange={() => setVariable(id)}
-            />
-            <span>{VARIABLE_COPY[id].short}</span>
-          </label>
+      <label className="query-vh" htmlFor={`${uid}-variable`}>Variable</label>
+      <select
+        id={`${uid}-variable`}
+        className="variable-picker-select"
+        value={variableId}
+        onChange={e => setVariable(e.target.value)}
+      >
+        {options.map(v => (
+          <option key={v.id} value={v.id}>{variableCopy(v.id, v).short}</option>
         ))}
-      </fieldset>
+      </select>
       <button
         type="button"
         className="variable-picker-info"

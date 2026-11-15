@@ -9,8 +9,8 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, VARIABLE_IDS, type Catalog } from '../../lib/data'
-import { VARIABLE_COPY, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY } from '../../content'
 import './guide.css'
 import { loadSeries } from '../../lib/data'
 import { PRODUCT_CITATIONS } from '../../content'
@@ -74,7 +74,7 @@ function useRetrievedDates(catalog: Catalog | null): Record<string, string> {
     let alive = true
     Promise.all(
       catalogProducts(catalog).map(p =>
-        loadSeries(p.variableId as (typeof VARIABLE_IDS)[number], region)
+        loadSeries(p.variableId, region)
           .then(s => [p.shortName, s.provenance.retrieved_at_utc.slice(0, 10)] as const)
           .catch(() => null),
       ),
@@ -210,12 +210,15 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Variables disponibles</h3>
         <dl className="methods-variables">
-          {VARIABLE_IDS.map(id => (
-            <div key={id} className="methods-variable-item">
-              <dt>{VARIABLE_COPY[id].label}</dt>
-              <dd>{VARIABLE_COPY[id].definition}</dd>
-            </div>
-          ))}
+          {(catalog?.variables ?? []).map(v => {
+            const copy = variableCopy(v.id, v)
+            return (
+              <div key={v.id} className="methods-variable-item">
+                <dt>{copy.label}</dt>
+                <dd>{copy.definition}</dd>
+              </div>
+            )
+          })}
         </dl>
       </section>
 

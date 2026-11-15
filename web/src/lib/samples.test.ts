@@ -3,13 +3,13 @@
 // No se lee web/public/data/trends/: es de 003 y tiene datos reales.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  OPTIONAL_WINDOW_COLUMNS, VARIABLE_IDS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
+  OPTIONAL_WINDOW_COLUMNS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
   windowKey,
 } from './data'
 import { TREND_FIXTURES, fixtureFetch } from './testing/fixtures'
 
-/** Los fixtures solo traen dos de las variables de VARIABLE_IDS. */
-const FIXTURE_IDS = ['air_temperature', 'precipitation'] as const
+/** Variables que declaran los fixtures (la web no tiene lista propia: la lee del catálogo). */
+const FIXTURE_VARIABLES = ['air_temperature', 'precipitation']
 
 const seriesFiles = Object.keys(TREND_FIXTURES)
   .map(k => k.match(/series\/([^/]+)\/([^/]+)\.json$/))
@@ -30,8 +30,7 @@ const windowsBetween = (first: number, last: number) => {
 describe('fixtures sintéticos', () => {
   it('el catálogo declara las dos variables con su periodo y producto', async () => {
     const c = await loadCatalog()
-    expect(c.variables.map(v => v.id).sort()).toEqual([...FIXTURE_IDS].sort())
-    for (const v of c.variables) expect(VARIABLE_IDS).toContain(v.id)
+    expect(c.variables.map(v => v.id).sort()).toEqual([...FIXTURE_VARIABLES].sort())
     expect(variablePeriod(c, 'air_temperature')).toEqual({ firstYear: 1980, lastYear: 2025 })
     expect(variablePeriod(c, 'precipitation')).toEqual({ firstYear: 2001, lastYear: 2025 })
     for (const v of c.variables) expect(v.product_short_name && v.product_version).toBeTruthy()
@@ -39,12 +38,12 @@ describe('fixtures sintéticos', () => {
   })
 
   it('hay series de ambas variables', () => {
-    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(FIXTURE_IDS))
+    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(FIXTURE_VARIABLES))
   })
 
   it.each(seriesFiles)('series/$variable/$region carga, está rotulada como sintética y cubre el periodo de su variable', async ({ variable, region }) => {
     const c = await loadCatalog()
-    const id = variable as (typeof VARIABLE_IDS)[number]
+    const id = variable
     const s = await loadSeries(id, region)
     const { firstYear, lastYear } = variablePeriod(c, id)
     expect(s.provenance.is_synthetic).toBe(true)
@@ -59,7 +58,7 @@ describe('fixtures sintéticos', () => {
     expect(pickWindow(s, firstYear - 1, lastYear)).toBeNull()
   })
 
-  it.each([...FIXTURE_IDS])('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
+  it.each(FIXTURE_VARIABLES)('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
     const c = await loadCatalog()
     const m = await loadMap(id)
     const { firstYear, lastYear } = variablePeriod(c, id)

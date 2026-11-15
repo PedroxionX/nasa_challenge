@@ -1,7 +1,7 @@
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { filterRegions, NO_MATCH, normalize } from './search'
-import { VARIABLE_IDS, type RegionInfo } from '../../lib/data'
+import type { RegionInfo } from '../../lib/data'
 import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 
 // Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
@@ -68,7 +68,7 @@ describe('RegionSearch (T001)', () => {
     fireEvent.keyDown(input, { key: 'ArrowDown' })
     expect(screen.getByRole('group', { name: 'México' })).toBeTruthy()
     expect(screen.getByRole('group', { name: 'Estados Unidos' })).toBeTruthy()
-    const options = screen.getAllByRole('option')
+    const options = within(screen.getByRole('listbox', { name: 'Estados' })).getAllByRole('option')
     expect(options.length).toBe(84)
     expect(input.getAttribute('aria-activedescendant')).toBe(options[0].id)
     fireEvent.keyDown(input, { key: 'ArrowDown' })
@@ -83,7 +83,7 @@ describe('RegionSearch (T001)', () => {
     await renderQuery()
     const input = screen.getByRole('combobox', { name: 'Buscar un estado' })
     fireEvent.change(input, { target: { value: 'atlantida' } })
-    expect(screen.queryAllByRole('option')).toHaveLength(0)
+    expect(document.querySelectorAll('[role="listbox"] [role="option"]')).toHaveLength(0)
     expect(screen.getByRole('status').textContent).toBe(NO_MATCH)
     expect(screen.getAllByText(NO_MATCH).length).toBeGreaterThan(0)
   })
@@ -115,15 +115,15 @@ describe('RegionSearch (T001)', () => {
 })
 
 describe('VariablePicker (T002)', () => {
-  it('ofrece todas las variables y se cambia con flechas de teclado', async () => {
+  it('ofrece todas las variables del catálogo y cambia la de la URL', async () => {
+    const catalog = JSON.parse(TREND_FIXTURES['data/trends/catalog.json'])
     await renderQuery()
-    const radios = screen.getAllByRole('radio')
-    expect(radios).toHaveLength(VARIABLE_IDS.length)
-    expect(screen.getByRole('group', { name: 'Variable' })).toBeTruthy()
-    const [temp, prec] = radios as HTMLInputElement[]
-    expect(temp.checked).toBe(true)
-    fireEvent.click(prec) // los radios nativos convierten ← → en «click» en el navegador
-    expect(prec.checked).toBe(true)
+    const select = screen.getByRole('combobox', { name: 'Variable' }) as HTMLSelectElement
+    await vi.waitFor(() => expect(select.options).toHaveLength(catalog.variables.length))
+    expect([...select.options].map(o => o.value)).toEqual(catalog.variables.map((v: { id: string }) => v.id))
+    expect(select.value).toBe('air_temperature')
+    fireEvent.change(select, { target: { value: 'precipitation' } })
+    expect(select.value).toBe('precipitation')
     expect(varInUrl()).toBe('precipitation')
   })
 
