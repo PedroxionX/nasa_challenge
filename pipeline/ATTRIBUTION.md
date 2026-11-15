@@ -39,6 +39,22 @@ Cita (estilo APA, como la ofrece el catálogo):
 Cita (estilo APA, como la ofrece el catálogo):
 > Huffman, G. J., Stocker, E. F., Bolvin, D. T., Nelkin, E. J., & Tan, J. (2023). *GPM IMERG Final Precipitation L3 1 month 0.1 degree x 0.1 degree V07* [Data set]. NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07
 
+### Humedad del suelo (`soil_moisture`) y evapotranspiración (`evapotranspiration`): GLDAS Noah GLDAS_NOAH025_M v2.1
+
+| Campo | Valor |
+|---|---|
+| Producto | GLDAS Noah Land Surface Model L4 monthly 0.25 x 0.25 degree V2.1 (GLDAS_NOAH025_M); variables `SoilMoi0_10cm_inst` (kg m⁻²) y `Evap_tavg` (kg m⁻² s⁻¹) |
+| Qué es | Salida de un **modelo** de superficie terrestre (Noah) alimentado con observaciones; no es una medición directa. Solo hay datos sobre tierra |
+| DOI | 10.5067/SXAVCZFAQLNO |
+| Autoría | Beaudoing, H.; Rodell, M.; Hydrological Sciences Laboratory (HSL), NASA/GSFC |
+| Publica | NASA Goddard Earth Sciences Data and Information Services Center (GES DISC) |
+| Año | 2020 |
+| Cobertura | desde 2000-01, activa (en curso) |
+| De dónde sale | <https://www.earthdata.nasa.gov/data/catalog/ges-disc-gldas-noah025-m-2.1> (destino del DOI) y <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=GLDAS_NOAH025_M&version=2.1> (comprobados el 2026-11-14) |
+
+Cita (estilo APA, como la ofrece el catálogo):
+> Beaudoing, H., Rodell, M., & Hydrological Sciences Laboratory (HSL). (2020). *GLDAS Noah Land Surface Model L4 monthly 0.25 x 0.25 degree, Version 2.1* [Data set]. NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/SXAVCZFAQLNO
+
 Añadir «Fecha de consulta: AAAA-MM-DD» con la de `provenance.retrieved_at_utc` del archivo publicado.
 
 ### Versión breve para la interfaz (traducción propia, no texto oficial)

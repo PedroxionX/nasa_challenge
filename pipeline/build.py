@@ -407,7 +407,11 @@ def default_sources(source: str) -> dict[str, Any]:
         from sources.imerg import IMERG_PRECIP
         from sources.merra2 import MERRA2_T2M
 
-        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP)}
+        from sources.gldas import GLDAS_EVAPOTRANSPIRATION, GLDAS_SOIL_MOISTURE
+
+        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP),
+                "soil_moisture": GesDiscSource(GLDAS_SOIL_MOISTURE),
+                "evapotranspiration": GesDiscSource(GLDAS_EVAPOTRANSPIRATION)}
     if source == "power":
         from sources.power import PowerSource
 
@@ -477,17 +481,18 @@ def build(region_ids: list[str], var_ids: list[str], out_dir: Path, sources: dic
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--regions", default=",".join(ALL_REGION_IDS), help="ids ISO 3166-2 separados por coma")
-    ap.add_argument("--variables", default=",".join(variables.VARIABLE_IDS))
+    ap.add_argument("--variables", default=None, help="ids separados por coma (por omisión, todas las de la fuente)")
     ap.add_argument("--source", default="gesdisc", choices=["gesdisc", "power"],
                     help="gesdisc (MERRA-2 e IMERG, por omisión) o power (alternativa; solo a mano)")
     ap.add_argument("--out", default=str(PIPELINE_DIR / "out" / "trends"))
     ap.add_argument("--last-year", type=int, default=None, help="tope del último año completo (por omisión, el año pasado)")
     args = ap.parse_args(argv)
     region_ids = [r.strip() for r in args.regions.split(",") if r.strip()]
-    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()]
+    sources = default_sources(args.source)
+    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()] if args.variables else list(sources)
     t0 = _dt.datetime.now()
     try:
-        files = build(region_ids, var_ids, Path(args.out), default_sources(args.source), last_year_max=args.last_year)
+        files = build(region_ids, var_ids, Path(args.out), sources, last_year_max=args.last_year)
     except ReadFailed as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         print(f"Regiones afectadas: {', '.join(exc.affected_regions)}", file=sys.stderr)

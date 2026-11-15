@@ -12,7 +12,7 @@ from __future__ import annotations
 from dataclasses import dataclass, replace
 
 from trendlens.config import VARIABLES as POWER_SPECS, VariableSpec
-from weights import IMERG_GRID, MERRA2_GRID, GridSpec
+from weights import GLDAS_GRID, IMERG_GRID, MERRA2_GRID, GridSpec
 
 MAP_LABELS = ["Baja mucho", "Baja", "Casi sin cambio", "Sube", "Sube mucho"]
 # Cortes de temperatura fijados el 2026-11-14 al ver la distribución real (1980–2025, 84 regiones: p25 0,30,
@@ -88,7 +88,31 @@ VARS: dict[tuple[str, str], VarDef] = {
         "tasa mm/día × días reales del mes → mm/mes; suma de 12 meses → mm"),
 }
 
-VARIABLE_IDS = ("air_temperature", "precipitation")
+_SM_DEF = ("Humedad del suelo en los primeros 10 cm, de GLDAS Noah: modelo de superficie terrestre alimentado con "
+           "observaciones (no es una medición directa). Media anual ponderada por los días de cada mes.")
+_ET_DEF = ("Evapotranspiración (agua que pasa del suelo y las plantas a la atmósfera), de GLDAS Noah: modelo de superficie "
+           "terrestre alimentado con observaciones (no es una medición directa). Suma de 12 meses.")
+_SM_SPEC = VariableSpec(
+    code="soil_moisture", name_es="Humedad del suelo (0–10 cm)", short_es="Humedad del suelo", description_es=_SM_DEF,
+    power_unit_label="kg m-2", native_unit="kg/m²", monthly_unit="kg/m²", annual_unit="kg/m²", aggregation="mean",
+    physical_min=0.0, physical_max=100.0, product="GLDAS_NOAH025_M v2.1 SoilMoi0_10cm_inst")
+# El adaptador entrega mm/día (kg m⁻² s⁻¹ × 86 400); el procesamiento multiplica por los días del mes.
+_ET_SPEC = VariableSpec(
+    code="evapotranspiration", name_es="Evapotranspiración", short_es="Evapotranspiración", description_es=_ET_DEF,
+    power_unit_label="kg m-2 s-1", native_unit="mm/día", monthly_unit="mm/mes", annual_unit="mm",
+    aggregation="sum_from_rate", physical_min=0.0, physical_max=30.0, product="GLDAS_NOAH025_M v2.1 Evap_tavg")
+
+VARS[("soil_moisture", "gesdisc")] = VarDef(
+    "soil_moisture", "gesdisc", "Humedad del suelo", _SM_DEF, "reanalysis", "kg/m²", "mean_day_weighted",
+    True, "%/década", [-10.0, -3.0, 3.0, 10.0], _SM_SPEC, GLDAS_GRID, 2000, "SoilMoi0_10cm_inst",
+    "relleno −9999 (mar) → faltante; kg m⁻² sin conversión", min_valid_fraction=0.5)
+VARS[("evapotranspiration", "gesdisc")] = VarDef(
+    "evapotranspiration", "gesdisc", "Evapotranspiración", _ET_DEF, "reanalysis", "mm", "sum_from_rate",
+    True, "%/década", [-10.0, -3.0, 3.0, 10.0], _ET_SPEC, GLDAS_GRID, 2000, "Evap_tavg",
+    "relleno −9999 (mar) → faltante; kg m⁻² s⁻¹ × 86 400 → mm/día; × días reales del mes → mm/mes; suma de 12 meses → mm",
+    min_valid_fraction=0.5)
+
+VARIABLE_IDS = ("air_temperature", "precipitation", "soil_moisture", "evapotranspiration")
 
 
 def get(var_id: str, source: str) -> VarDef:

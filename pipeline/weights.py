@@ -105,6 +105,7 @@ class GridSpec:
 
 MERRA2_GRID = GridSpec("merra2", 0.5, 0.625, 0.0, 0.0, "0.5° × 0.625°")  # también la de NASA POWER
 IMERG_GRID = GridSpec("imerg", 0.1, 0.1, 0.05, 0.05, "0.1° × 0.1°")
+GLDAS_GRID = GridSpec("gldas", 0.25, 0.25, 0.125, 0.125, "0.25° × 0.25°")
 
 
 def candidate_cells(bounds: tuple[float, float, float, float], grid: GridSpec = MERRA2_GRID

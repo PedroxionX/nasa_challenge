@@ -146,9 +146,11 @@ def cell_indices(file_lats: np.ndarray, file_lons: np.ndarray, lats: np.ndarray,
 # --------------------------------------------------------------------------------------
 # Un gránulo (función de módulo: se puede ejecutar en otro proceso)
 # --------------------------------------------------------------------------------------
-def cache_path(cache_dir: Path, short_name: str, key: str, name: str) -> Path:
+def cache_path(cache_dir: Path, short_name: str, key: str, name: str, parameter: str) -> Path:
+    """`<caché>/<producto>/<variable>/<celdas>/<gránulo>.npz`. La variable va en la ruta porque varias salen del
+    mismo producto (GLDAS: humedad del suelo y evapotranspiración); sin ella se leerían los valores de otra."""
     safe = re.sub(r"[^A-Za-z0-9._-]", "_", name)
-    return Path(cache_dir) / short_name / key / f"{safe}.npz"
+    return Path(cache_dir) / short_name / parameter / key / f"{safe}.npz"
 
 
 def read_cache(p: Path) -> dict | None:
@@ -178,7 +180,7 @@ def read_granule_cached(product: Product, g: Granule, lats: np.ndarray, lons: np
                         cache_dir: Path, opener: Callable = None, sleep: Callable = time.sleep) -> tuple:
     """Devuelve (valores, meta) o (None, meta con error). Caché, 3 reintentos y sin cambiar de fuente."""
     opener = opener or open_granule
-    p = cache_path(cache_dir, product.short_name, key, g.name)
+    p = cache_path(cache_dir, product.short_name, key, g.name, product.parameter)
     cached = read_cache(p)
     if cached is not None:
         return cached["values"], {"retrieved_at_utc": cached["retrieved_at_utc"], "sha256": cached["sha256"],
