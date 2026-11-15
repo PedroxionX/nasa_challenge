@@ -3,11 +3,13 @@
  * Se muestra en la primera visita (sin región seleccionada).
  * Ofrece dos ejemplos que abren un análisis completo con un toque.
  * Los dos ejemplos se eligieron con los datos reales de 003 (ver docs/demo.md §2 y §3).
+ * Debajo, la entrada al modo detective (008).
  */
 import { useAppState } from '../../app/state'
 import { variableCopy, UI_COPY } from '../../content'
 import type { VariableId } from '../../lib/data'
 import './guide.css'
+import { DetectiveMode } from './detective'
 
 export default function WelcomeCard() {
   const { setRegion, setVariable, resetPeriod } = useAppState()
@@ -56,6 +58,8 @@ export default function WelcomeCard() {
           <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>
       </div>
+
+      <DetectiveMode />
 
       <p className="welcome-note">{UI_COPY.notCause}</p>
     </div>
