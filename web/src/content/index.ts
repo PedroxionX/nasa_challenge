@@ -8,7 +8,7 @@
  * - Nunca «X años para ser significativo».
  * - Solo cifras que provienen del archivo calculado por 003.
  */
-import type { TrendRow, TrendStatus, VariableId } from '../lib/data'
+import type { TrendRow, TrendStatus, VariableId, VariableInfo } from '../lib/data'
 
 // ---------- Tipos públicos (firma fijada por 002) ----------
 
@@ -47,7 +47,8 @@ export interface VariableCopy {
 
 // ---------- VARIABLE_COPY (FR-C02, FR-C03) ----------
 
-export const VARIABLE_COPY: Record<VariableId, VariableCopy> = {
+/** Textos propios de 006. Las variables sin entrada usan los del catálogo (ver `variableCopy`). */
+export const VARIABLE_COPY: Partial<Record<VariableId, VariableCopy>> = {
   air_temperature: {
     label: 'Temperatura del aire',
     short: 'Temperatura',
@@ -65,6 +66,18 @@ export const VARIABLE_COPY: Record<VariableId, VariableCopy> = {
       'Su tendencia es menos fiable que la de temperatura: ' +
       'las observaciones de precipitación por satélite tienen mayor incertidumbre en zonas áridas y montañosas.',
   },
+}
+
+/**
+ * Texto de una variable: el de 006 si existe; si no, la etiqueta y la definición del catálogo;
+ * si tampoco hay catálogo, uno genérico con el id. Así una variable nueva se ve sin esperar a 006.
+ */
+export function variableCopy(id: VariableId, info?: Pick<VariableInfo, 'label' | 'definition'> | null): VariableCopy {
+  const own = VARIABLE_COPY[id]
+  if (own) return own
+  if (info) return { label: info.label, short: info.label, definition: info.definition }
+  const label = id.replace(/_/g, ' ')
+  return { label, short: label, definition: 'Variable del catálogo de datos de la NASA.' }
 }
 
 // ---------- GLOSARIO (FR-C03) ----------

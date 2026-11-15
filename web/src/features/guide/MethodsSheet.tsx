@@ -9,8 +9,8 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, VARIABLE_IDS, type Catalog } from '../../lib/data'
-import { VARIABLE_COPY, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY } from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -162,12 +162,15 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Variables disponibles</h3>
         <dl className="methods-variables">
-          {VARIABLE_IDS.map(id => (
-            <div key={id} className="methods-variable-item">
-              <dt>{VARIABLE_COPY[id].label}</dt>
-              <dd>{VARIABLE_COPY[id].definition}</dd>
-            </div>
-          ))}
+          {(catalog?.variables ?? []).map(v => {
+            const copy = variableCopy(v.id, v)
+            return (
+              <div key={v.id} className="methods-variable-item">
+                <dt>{copy.label}</dt>
+                <dd>{copy.definition}</dd>
+              </div>
+            )
+          })}
         </dl>
       </section>
 
