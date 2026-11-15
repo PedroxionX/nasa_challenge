@@ -5,7 +5,6 @@
  * Ninguna zona se superpone a otra; el globo recibe la zona tapada en --panel-inset-*.
  */
 .shell {
-  --panel-w: clamp(340px, 32vw, 440px);
   --sheet-h: 50%;
   position: relative;
   display: grid;

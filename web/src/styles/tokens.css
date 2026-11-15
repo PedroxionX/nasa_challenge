@@ -89,6 +89,7 @@
   --panel-inset-right: 0px;
   --panel-inset-bottom: 0px;
   --tools-bottom: 0px;
+  --panel-w: clamp(340px, 32vw, 440px); /* panel de análisis en escritorio */
   --rail-w: 20rem;             /* columna izquierda del escenario: leyenda, sus botones y la bienvenida */
 }
 

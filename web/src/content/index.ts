@@ -375,6 +375,317 @@ const SUBJECT: Readonly<Record<VariableId, { text: string; plural?: boolean }>> 
 
 // ---------- explainTrend — four variants (SC-C02) ----------
 
+// ---------- Detective mode (008) ----------
+//
+// Copy for the three-question flow and the reveal sentence. Rules, on top of the ones above:
+// - With `inconclusive` there is no direction and no slope (006 clarification, 2026-11-14; 004 FR-A05).
+// - «Stayed about the same» is never confirmed by a lack of evidence.
+// - The prediction is not judged when it is «Not sure» or when there is no verdict.
+
+export type Prediction = 'up' | 'down' | 'flat' | 'unsure'
+export type PlaceId = 'desert' | 'tropical' | 'farmland' | 'cold' | 'northeast' | 'pacific' | 'southeast'
+export type GroupId = 'heat' | 'water' | 'air' | 'particles'
+
+const DETECTIVE_METHOD_LABEL: Record<string, string> = {
+  'theil-sen': 'Theil-Sen slope',
+  'mann-kendall-ar1-corrected': 'Mann-Kendall test corrected for autocorrelation',
+}
+
+/**
+ * Plain names for each topic. `name` goes on the topic card; `noun` goes inside a sentence («What do you think
+ * happened to rainfall in…?»). A new catalog variable without an entry uses its `label` in quotes.
+ */
+const DETECTIVE_TOPIC_WORDS: Readonly<Record<string, { name: string; noun: string; plural?: boolean }>> = {
+  air_temperature: { name: 'Air temperature', noun: 'air temperature' },
+  max_air_temperature: { name: 'Daily high temperature', noun: 'the daily high temperature' },
+  min_air_temperature: { name: 'Daily low temperature (usually at night)', noun: 'the daily low temperature' },
+  soil_temperature: { name: 'Soil temperature', noun: 'soil temperature' },
+  precipitation: { name: 'Rain and snow (precipitation)', noun: 'rainfall' },
+  soil_moisture: { name: 'Soil moisture', noun: 'soil moisture' },
+  evapotranspiration: {
+    name: 'Water evaporating from soil and plants (evapotranspiration)',
+    noun: 'the water evaporating from soil and plants',
+  },
+  runoff: { name: 'Water running off the ground (runoff)', noun: 'runoff' },
+  snow_water_equivalent: { name: 'Snow on the ground', noun: 'snow on the ground' },
+  specific_humidity: { name: 'Air humidity', noun: 'air humidity' },
+  total_precipitable_water: { name: 'Water vapor in the whole atmosphere', noun: 'water vapor in the atmosphere' },
+  total_ozone: { name: 'Ozone in the whole atmosphere (ozone layer)', noun: 'atmospheric ozone' },
+  aerosol_optical_depth: { name: 'Particles in the air (aerosols)', noun: 'particles in the air', plural: true },
+  dust_optical_depth: { name: 'Dust in the air', noun: 'dust in the air' },
+}
+
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1)
+
+export const DETECTIVE_COPY = {
+  entry: 'Detective mode',
+  entryHint: 'Guess what changed in a place, then check the data.',
+  exit: 'Exit',
+  back: 'Back',
+  step: (n: number) => `Question ${n} of 3`,
+  /** First screen of question 1: groups (FR-E15). */
+  groupTitle: 'Which part of the climate interests you?',
+  groupHint: 'Pick a group, then a topic. The data come from NASA satellites and models.',
+  groups: {
+    heat: 'Heat and cold',
+    water: 'Water',
+    air: 'The air',
+    particles: 'What floats in the air',
+  } as Readonly<Record<GroupId, string>>,
+  groupDetail: {
+    heat: 'Air temperature by day and night, and soil temperature',
+    water: 'Rain, soil moisture, evaporation, runoff and snow',
+    air: 'Humidity, water vapor and ozone',
+    particles: 'Dust, smoke, pollution and sea salt',
+  } as Readonly<Record<GroupId, string>>,
+  topicTitle: 'Which change do you want to investigate?',
+  topicHint: (group: string) => `${group}: pick a topic.`,
+  /** variableId → plain question (FR-E02, FR-E16). Only variables published in the catalog are shown. */
+  topics: {
+    air_temperature: 'Is it hotter than before?',
+    max_air_temperature: 'Are the days hotter?',
+    min_air_temperature: 'Are the nights less cold?',
+    soil_temperature: 'Is the ground warmer than before?',
+    precipitation: 'Does it rain more or less than before?',
+    soil_moisture: 'Is the ground drier than before?',
+    evapotranspiration: 'Does more water evaporate from soil and plants?',
+    runoff: 'Does more or less water run off the ground?',
+    snow_water_equivalent: 'Is there less snow than before?',
+    specific_humidity: 'Is the air more humid than before?',
+    total_precipitable_water: 'Is there more water vapor in the sky?',
+    total_ozone: 'Has the ozone over this place changed?',
+    aerosol_optical_depth: 'Are there more or fewer particles in the air (smoke, pollution, sea salt)?',
+    dust_optical_depth: 'Is there more or less dust in the air?',
+  } as Readonly<Record<string, string>>,
+  /** Is the topic noun plural? For verb agreement («particles in the air… increased»). */
+  topicPlural: (variableId: string) => DETECTIVE_TOPIC_WORDS[variableId]?.plural ?? false,
+  /** Plain topic name («Rain and snow (precipitation)»); otherwise the catalog `label`. */
+  topicName: (variableId: string, label: string) => DETECTIVE_TOPIC_WORDS[variableId]?.name ?? label,
+  /** Subtitle of each topic: what is measured and since when, so that «before» has a date. */
+  topicDetail: (variableId: string, label: string, from: number, to: number) =>
+    `${DETECTIVE_TOPIC_WORDS[variableId]?.name ?? label} · data from ${from} to ${to}`,
+  /** Topic noun to use inside a sentence. */
+  topicNoun: (variableId: string, label: string) => DETECTIVE_TOPIC_WORDS[variableId]?.noun ?? `“${label}”`,
+  surprise: 'Surprise me',
+  surpriseHint: 'We pick a place and a topic with an interesting result for you.',
+  placeTitle: 'Where do you want to investigate it?',
+  placeHint: 'Pick a kind of place and we will choose one of its states. Or pick a state from the list below.',
+  places: {
+    desert: 'Desert',
+    tropical: 'Humid tropics',
+    farmland: 'Farmland',
+    cold: 'Cold or mountains',
+    northeast: 'US Northeast',
+    pacific: 'US Pacific coast',
+    southeast: 'US Southeast',
+  } as Readonly<Record<PlaceId, string>>,
+  mineUsOnly: 'Or pick a US state',
+  placeUnavailable: 'There are no data on this topic for these states.',
+  mine: 'Or pick a state of Mexico or the United States',
+  regionSelectLabel: 'Pick a state',
+  regionSelectPlaceholder: 'Pick a state…',
+  countries: { MX: 'Mexico', US: 'United States' } as Readonly<Record<string, string>>,
+  continue: 'Continue',
+  otherRegion: 'I prefer another state of this kind',
+  /** Question 3 with all its context: what, where and which years (FR-E04). */
+  predictTitle: (noun: string, region: string, from: number, to: number) =>
+    `What do you think happened to ${noun} in ${region} between ${from} and ${to}?`,
+  predictHint: 'Answer before you see the data. Getting it wrong is fine: that is how detectives work.',
+  predictions: {
+    up: 'It increased',
+    down: 'It decreased',
+    flat: 'It stayed about the same',
+    unsure: 'Not sure',
+  } as Readonly<Record<Prediction, string>>,
+  revealTitle: 'What the data show',
+  revealContext: (region: string, name: string, from: number, to: number) => `${region} · ${name} · ${from}–${to}`,
+  yourPrediction: (p: string) => `Your answer: ${p}.`,
+  changeLabel: 'Estimated change',
+  technicalLabel: 'Technical details',
+  openAnalysis: 'See the chart and the full analysis',
+  loading: 'Looking for the data…',
+  catalogUnavailable: 'Detective mode is not available right now: we could not load the data list.',
+  /**
+   * «Why does it matter for the Earth?» (FR-E21): environmental relevance of the TOPIC, in general. It does not say
+   * why this place changed or that the change will continue (constitution I; 006 FR-C01).
+   */
+  whyTitle: 'Why does it matter for the Earth?',
+  why: {
+    air_temperature:
+      'Air temperature affects people’s health, crops and how much water evaporates. ' +
+      'A few tenths of a degree per decade, added up over years, can shift when plants bloom and how many extremely hot days there are.',
+    max_air_temperature:
+      'Hotter days raise the risk of heat stroke and the use of water and energy. They also stress crops and livestock.',
+    min_air_temperature:
+      'If nights do not cool down, bodies and plants do not recover from the heat of the day. ' +
+      'Some crops, such as certain fruit trees, need cold nights to bear fruit.',
+    soil_temperature:
+      'Soil temperature decides when seeds sprout and how active the microorganisms that keep it fertile are. ' +
+      'In cold places, warmer soil can thaw ground that used to stay frozen.',
+    precipitation:
+      'Rain fills rivers, reservoirs and aquifers, and rain-fed crops depend on it. ' +
+      'Both too little and too much affect people: droughts in one case, floods in the other.',
+    soil_moisture:
+      'It is the water available to plants and crops. Drier soil makes farm droughts and wildfires more likely; very wet soil, waterlogging.',
+    evapotranspiration:
+      'It is how water from soil and plants returns to the air, where it can form clouds and rain. ' +
+      'If it increases, crops need more irrigation to stay alive.',
+    runoff:
+      'It is the water that feeds rivers, reservoirs and lakes. A lot at once can cause floods; little for years reduces the water for cities and fields.',
+    snow_water_equivalent:
+      'Snow works as a natural reservoir: it stores water in winter and releases it in spring, when rivers and fields need it most. ' +
+      'It also reflects sunlight and helps keep the surface cool.',
+    specific_humidity:
+      'With more moisture in the air, heat feels worse: sweat evaporates less and the body cools down with more difficulty. ' +
+      'It also favors some pests and fungi in crops.',
+    total_precipitable_water:
+      'Water vapor is the gas that traps the most heat in the atmosphere and the raw material of rain. ' +
+      'More vapor means more water that can fall at once in a storm.',
+    total_ozone:
+      'Ozone in the atmosphere filters much of the sun’s ultraviolet radiation, which harms skin, eyes and plants. ' +
+      'That is why satellites keep track of it.',
+    aerosol_optical_depth:
+      'Particles in the air affect the quality of the air we breathe and our health. ' +
+      'They also change how much sunlight reaches the ground and help form clouds.',
+    dust_optical_depth:
+      'Dust in the air affects breathing and visibility, and it can travel thousands of kilometers. ' +
+      'When it settles, it carries nutrients to distant soils and oceans and darkens snow, which then melts sooner.',
+  } as Readonly<Record<string, string>>,
+  whyNote: 'This explains why the topic matters. The result above says what changed, not why it changed.',
+  /** Offer after the reveal (FR-E19). No causes: only that the same variable went the other way somewhere else. */
+  contrastTitle: 'And somewhere else?',
+  contrastText: (noun: string, other: string) =>
+    `In ${other}, the trend in ${noun} went the opposite way. The same topic can rise in one place and fall in another.`,
+  contrastAction: (other: string) => `Investigate ${other}`,
+  method: (slope: string, test: string) =>
+    `${DETECTIVE_METHOD_LABEL[slope] ?? slope} and ${DETECTIVE_METHOD_LABEL[test] ?? test}`,
+} as const
+
+export interface RevealContext {
+  regionName: string
+  /** Topic inside a sentence, e.g. «rainfall» (`DETECTIVE_COPY.topicNoun`). */
+  topic: string
+  /** Is `topic` plural? («particles in the air») — verb agreement. */
+  plural?: boolean
+  /** Variable without a physical unit («unitless»): the change is given only in % (FR-E20). */
+  dimensionless?: boolean
+  /** Unit of the absolute slope, already with «/decade», e.g. «mm/decade». */
+  unit: string
+  /**
+   * Relative change in % per decade (`slope_decade_pct`), only for variables with `relative_change`; otherwise `null`.
+   * Shown after the absolute figure, as in the panel (004).
+   */
+  pct: number | null
+  from: number
+  to: number
+  alpha: number
+  /** Plain name of the method (`DETECTIVE_COPY.method(...)`), constitution I. */
+  method: string
+  smallRegion: boolean
+}
+
+export interface Reveal {
+  verdict: string
+  match: 'match' | 'opposite' | 'undecided' | 'neutral' | 'none'
+  sentence: string
+  /** Change in plain words («+0.31 °C per decade (every 10 years)»); only with evidence of a trend. */
+  change: string | null
+  /** Figures from the file: period, n, p, α and method. `null` if there is no verdict. */
+  facts: string | null
+  caveats: string[]
+}
+
+const NO_ABSENCE = 'This does not prove that there is no change: sometimes more years of data are needed to tell.'
+const EVIDENCE = 'There is evidence of a trend: it would be very unusual to see this by chance alone.'
+
+/**
+ * Compares the person’s prediction with the result already computed by the pipeline (008 FR-E05, FR-E07).
+ * Reads only `status`, `slope_decade` (in `ctx.unit`), `p` and `n`, plus `ctx.pct` (the % already published in
+ * `slope_decade_pct`): it computes nothing.
+ */
+export function revealPrediction(prediction: Prediction, row: TrendRow | null, ctx: RevealContext): Reveal {
+  const caveats: string[] = []
+  if (ctx.smallRegion) caveats.push(UI_COPY.smallRegion)
+  caveats.push(UI_COPY.notCause)
+
+  if (!row || row.status === 'insufficient' || row.status === 'invalid') {
+    const status: TrendStatus = row?.status === 'invalid' ? 'invalid' : 'insufficient'
+    return {
+      verdict: VERDICT_LABEL[status],
+      match: 'none',
+      sentence:
+        `With the available data we cannot tell whether ${ctx.topic} changed in ${ctx.regionName}, ` +
+        'so we cannot compare your answer. The full analysis explains why.',
+      change: null,
+      facts: null,
+      caveats,
+    }
+  }
+  const subject = `${capitalize(ctx.topic)} in ${ctx.regionName}`
+
+  const { status, slope_decade, p, n } = row
+  const level = `α${NBSP}=${NBSP}${ctx.alpha}`
+  const pStr = p !== null ? fmtP(p) : 'p not available'
+  const tail = `${ctx.from}–${ctx.to} · ${n}${NBSP}years · ${pStr} · ${level} · ${ctx.method}`
+  // Without a physical unit the % is declared (it is what is shown); otherwise the unit from the file (constitution I).
+  const unitDecl = ctx.dimensionless ? '% per decade' : ctx.unit
+
+  if (status === 'inconclusive') {
+    let sentence: string
+    let match: Reveal['match'] = 'undecided'
+    // No direction or slope (006 decision): only why a change cannot be claimed.
+    const why = `${subject} ${ctx.plural ? 'go' : 'goes'} up and down from year to year, and with that the data ` +
+      'are not enough to say there was an underlying change.'
+    if (prediction === 'flat') {
+      sentence = `We cannot tell yet whether you got it right. ${why} But that is not the same as proving it stayed the same.`
+    } else if (prediction === 'unsure') {
+      match = 'neutral'
+      sentence = `${why} ${NO_ABSENCE}`
+    } else {
+      sentence = `We cannot tell yet whether you got it right. ${why} ${NO_ABSENCE}`
+    }
+    // No slope figure, but the unit of the analysis is declared anyway (constitution I).
+    return {
+      verdict: VERDICT_LABEL.inconclusive, match, sentence, change: null,
+      facts: `${tail} · unit: ${unitDecl}`, caveats,
+    }
+  }
+
+  // increasing / decreasing: the direction comes from the status, not from the sign.
+  const verb = status === 'increasing' ? 'increased' : 'decreased'
+  const pctNum = ctx.pct !== null && Number.isFinite(ctx.pct)
+    ? `${ctx.pct >= 0 ? '+' : '−'}${Math.abs(ctx.pct).toFixed(1)}${NBSP}%`
+    : null
+  // The figure goes in `change` (in words); the technical details do not repeat it, but declare the unit.
+  const facts = `${tail} · unit: ${unitDecl}`
+  const base = ctx.unit.replace(/\/decade$/, '')
+  // Without a physical unit (aerosols, dust): only the % (FR-E20); «+0.01 unitless» tells nobody anything.
+  const change = ctx.dimensionless
+    ? (pctNum ? `${pctNum} per decade (every 10 years), relative to the average of those years` : null)
+    : slope_decade !== null
+      ? `${fmt(slope_decade, 2)}${NBSP}${base} per decade (every 10 years)` +
+        (pctNum ? `; that is ${pctNum} of the average of those years` : '')
+      : null
+  const sameWay = (prediction === 'up' && status === 'increasing') || (prediction === 'down' && status === 'decreasing')
+
+  let match: Reveal['match']
+  let sentence: string
+  if (prediction === 'unsure') {
+    match = 'neutral'
+    sentence = `${subject} ${verb}. ${EVIDENCE}`
+  } else if (sameWay) {
+    match = 'match'
+    sentence = `You got it! ${subject} ${verb}. ${EVIDENCE}`
+  } else if (prediction === 'flat') {
+    match = 'opposite'
+    sentence = `It did change: ${ctx.topic} in ${ctx.regionName} ${verb}. ${EVIDENCE}`
+  } else {
+    match = 'opposite'
+    sentence = `Surprise! The opposite happened: ${ctx.topic} in ${ctx.regionName} ${verb}. ${EVIDENCE}`
+  }
+  return { verdict: VERDICT_LABEL[status], match, sentence, change, facts, caveats }
+}
+
 /**
  * Plain-language explanation of an analysis result.
  *   1. increasing  — rises, with evidence

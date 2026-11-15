@@ -3,11 +3,13 @@
  * Se muestra en la primera visita (sin región seleccionada). Dice qué hacer (tocar un estado o buscarlo) y
  * ofrece dos ejemplos que abren un análisis completo con un toque, diciendo qué enseña cada uno.
  * Los dos ejemplos se eligieron con los datos reales de 003 (ver docs/demo.md §2 y §3).
+ * Debajo, la entrada al modo detective (008).
  */
 import { useAppState } from '../../app/state'
 import { variableCopy, UI_COPY, WELCOME_COPY } from '../../content'
 import type { VariableId } from '../../lib/data'
 import './guide.css'
+import { DetectiveMode } from './detective'
 
 /*
  * Baja California: sin evidencia suficiente en el periodo completo, y el veredicto cambia según el año inicial.
@@ -46,6 +48,8 @@ export default function WelcomeCard() {
           </li>
         ))}
       </ul>
+
+      <DetectiveMode />
 
       <p className="welcome-note">{UI_COPY.notCause}</p>
     </div>

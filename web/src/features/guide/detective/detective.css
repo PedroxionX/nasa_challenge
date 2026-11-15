@@ -1,0 +1,355 @@
+/*
+ * Estilos del modo detective — 008 (T009). Solo variables de tokens.css.
+ * Abierto, el flujo sustituye al resto del contenido de la tarjeta de bienvenida.
+ */
+
+/* Abierto, el flujo sustituye al resto de la tarjeta. Va después de la regla anterior (misma especificidad). */
+.welcome-card:has(.detective-flow) > :not(.detective) {
+  display: none;
+}
+
+.detective {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detective-entry {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  column-gap: var(--space-2);
+  padding-block: var(--space-2);
+  border-color: var(--color-accent);
+}
+
+.detective-entry:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.detective-note {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+/* Fondo propio: el flujo no se lee encima del globo ni de la leyenda aunque la pantalla sea baja. */
+.detective-flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  /*
+   * Alto máximo = pantalla menos la cabecera y la leyenda del mapa (005, ~27rem medidos el 2026-11-15) y el
+   * margen inferior. Si el contenido no cabe, el flujo se desplaza por dentro en vez de subir sobre la leyenda.
+   * En pantallas muy bajas se garantiza un mínimo usable aunque roce la leyenda.
+   */
+  max-height: max(16rem, calc(100dvh - 29rem));
+  overflow-y: auto;
+  padding: var(--space-3);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+
+.detective-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-2)) 0;
+}
+
+.detective-link {
+  min-height: var(--tap);
+  padding: 0 var(--space-2);
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.detective-link:hover,
+.detective-link:focus-visible {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+.detective-link:focus-visible,
+.detective-primary:focus-visible,
+.detective-mine select:focus-visible,
+.detective-title:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.detective-step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.detective-title {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  margin: 0;
+  color: var(--color-text);
+}
+
+.detective-title--reveal {
+  font-size: var(--text-base);
+}
+
+/* Texto solo para lectores de pantalla (el título visible ya da el contexto). */
+.detective .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.detective-title:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.detective-step-count {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.detective-hint {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.detective-change {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.detective-lead {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Dos columnas en todos los pasos: con 4 temas (GLDAS) o 4 lugares el flujo no sube sobre la leyenda. */
+.detective-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.detective-option {
+  padding: var(--space-2) var(--space-3);
+}
+
+.detective-option .welcome-example-place { font-size: var(--text-sm); }
+.detective-option .welcome-example-teaches { font-size: var(--text-xs); }
+
+.detective-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.detective-mine {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.detective-mine-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.detective-mine select {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--tap);
+  padding: 0 var(--space-2);
+  background: var(--color-panel-raised);
+  color: var(--color-text);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  font: inherit;
+}
+
+.detective-primary {
+  min-height: var(--tap);
+  padding: 0 var(--space-4);
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border: none;
+  border-radius: var(--radius);
+  font: inherit;
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+
+.detective-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* La revelación es el paso más alto: letra y espacios compactos para no subir sobre la leyenda del mapa. */
+.detective-step:has(.detective-reveal) .detective-lead {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.detective-reveal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+
+.detective-verdict {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  margin: 0;
+}
+
+.detective-sentence {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.detective-facts {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.detective-caveats {
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.detective-error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  color: var(--color-danger);
+}
+
+.detective-error p {
+  margin: 0;
+}
+
+.detective-open {
+  align-self: stretch;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .detective-step {
+    animation: detective-in var(--dur) ease-out;
+  }
+
+  @keyframes detective-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+/* «¿Y en otro lugar?» (FR-E19): discreto, debajo del resultado. */
+.detective-contrast {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-1);
+  border-top: 1px solid var(--color-line);
+}
+
+.detective-contrast-title {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+}
+
+.detective-contrast .detective-link {
+  padding-inline: 0;
+  color: var(--color-accent);
+}
+
+/* Abierto: el detective se abre como el panel de análisis (lateral en escritorio, hoja desde abajo en móvil),
+ * apoyado en la caja de bienvenida del armazón solo mientras el flujo está abierto. */
+.detective-entry .welcome-example-place { color: var(--color-accent); }
+
+/* Abierto, en móvil: hoja desde abajo, como el panel de análisis. */
+.shell-welcome:has(.detective-flow) {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: 70%;
+}
+
+.shell-welcome:has(.detective-flow) .welcome-card {
+  height: 100%;
+  padding: 0;
+}
+
+.shell-welcome:has(.detective-flow) .detective {
+  height: 100%;
+}
+
+.shell-welcome:has(.detective-flow) .detective-flow {
+  height: 100%;
+  max-height: none;
+  padding: var(--space-4) var(--space-5);
+  border: 0;
+  border-top: 1px solid var(--color-line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+}
+
+/* Abierto, en escritorio: panel lateral derecho de arriba abajo, como las métricas de una región. */
+@media (min-width: 900px) {
+  .shell-welcome:has(.detective-flow) {
+    top: 0;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    width: var(--panel-w);
+    height: auto;
+    max-height: none;
+  }
+
+  .shell-welcome:has(.detective-flow) .detective-flow {
+    border-top: 0;
+    border-left: 1px solid var(--color-line);
+    border-radius: 0;
+  }
+}
+
+/* «Why does it matter for the Earth?» (FR-E21): desplegable aparte del resultado. */
+.detective-why-text {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.detective-why-note {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* En móvil la entrada es una línea: la explicación se lee al abrirla. */
+@media (max-width: 899px) {
+  .detective-entry .welcome-example-teaches { display: none; }
+}
