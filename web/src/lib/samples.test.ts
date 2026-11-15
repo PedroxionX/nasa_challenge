@@ -8,6 +8,9 @@ import {
 } from './data'
 import { TREND_FIXTURES, fixtureFetch } from './testing/fixtures'
 
+/** Los fixtures solo traen dos de las variables de VARIABLE_IDS. */
+const FIXTURE_IDS = ['air_temperature', 'precipitation'] as const
+
 const seriesFiles = Object.keys(TREND_FIXTURES)
   .map(k => k.match(/series\/([^/]+)\/([^/]+)\.json$/))
   .filter((m): m is RegExpMatchArray => m !== null)
@@ -27,7 +30,8 @@ const windowsBetween = (first: number, last: number) => {
 describe('fixtures sintéticos', () => {
   it('el catálogo declara las dos variables con su periodo y producto', async () => {
     const c = await loadCatalog()
-    expect(c.variables.map(v => v.id).sort()).toEqual([...VARIABLE_IDS].sort())
+    expect(c.variables.map(v => v.id).sort()).toEqual([...FIXTURE_IDS].sort())
+    for (const v of c.variables) expect(VARIABLE_IDS).toContain(v.id)
     expect(variablePeriod(c, 'air_temperature')).toEqual({ firstYear: 1980, lastYear: 2025 })
     expect(variablePeriod(c, 'precipitation')).toEqual({ firstYear: 2001, lastYear: 2025 })
     for (const v of c.variables) expect(v.product_short_name && v.product_version).toBeTruthy()
@@ -35,7 +39,7 @@ describe('fixtures sintéticos', () => {
   })
 
   it('hay series de ambas variables', () => {
-    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(VARIABLE_IDS))
+    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(FIXTURE_IDS))
   })
 
   it.each(seriesFiles)('series/$variable/$region carga, está rotulada como sintética y cubre el periodo de su variable', async ({ variable, region }) => {
@@ -55,7 +59,7 @@ describe('fixtures sintéticos', () => {
     expect(pickWindow(s, firstYear - 1, lastYear)).toBeNull()
   })
 
-  it.each([...VARIABLE_IDS])('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
+  it.each([...FIXTURE_IDS])('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
     const c = await loadCatalog()
     const m = await loadMap(id)
     const { firstYear, lastYear } = variablePeriod(c, id)

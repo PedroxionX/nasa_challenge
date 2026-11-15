@@ -65,6 +65,152 @@ export const VARIABLE_COPY: Record<VariableId, VariableCopy> = {
       'Su tendencia es menos fiable que la de temperatura: ' +
       'las observaciones de precipitación por satélite tienen mayor incertidumbre en zonas áridas y montañosas.',
   },
+
+  // --- GLDAS Noah (modelo de superficie terrestre): solo hay datos sobre tierra ---
+  soil_moisture: {
+    label: 'Humedad del suelo',
+    short: 'Humedad del suelo',
+    definition:
+      'Agua que hay en los primeros 10 centímetros del suelo, en kilogramos por metro cuadrado (media del año). ' +
+      'Procede de GLDAS Noah, un modelo de superficie terrestre de la NASA alimentado con observaciones; ' +
+      'no es una medición directa. Solo hay datos sobre tierra.',
+  },
+  evapotranspiration: {
+    label: 'Evapotranspiración',
+    short: 'Evapotranspiración',
+    definition:
+      'Agua que pasa del suelo y de las plantas a la atmósfera a lo largo del año, expresada en milímetros. ' +
+      'Procede de GLDAS Noah, un modelo de superficie terrestre de la NASA alimentado con observaciones; ' +
+      'no es una medición directa. Solo hay datos sobre tierra.',
+  },
+  soil_temperature: {
+    label: 'Temperatura del suelo',
+    short: 'Temp. del suelo',
+    definition:
+      'Temperatura de la superficie del terreno, en °C (media del año). No es la temperatura del aire. ' +
+      'Procede de GLDAS Noah, un modelo de superficie terrestre de la NASA alimentado con observaciones; ' +
+      'no es una medición directa. Solo hay datos sobre tierra.',
+  },
+  runoff: {
+    label: 'Escorrentía',
+    short: 'Escorrentía',
+    definition:
+      'Agua que el suelo no retiene y que corre por la superficie o drena por debajo de ella, ' +
+      'sumada a lo largo del año en milímetros. Es la que calcula GLDAS Noah, un modelo de superficie ' +
+      'terrestre de la NASA alimentado con observaciones; no es el caudal medido en los ríos. ' +
+      'Solo hay datos sobre tierra. El Distrito de Columbia sale muy por encima de sus vecinos ' +
+      'porque en el modelo sus celdas son urbanas.',
+  },
+  snow_water_equivalent: {
+    label: 'Nieve acumulada',
+    short: 'Nieve',
+    definition:
+      'Agua que contiene la nieve acumulada en el suelo, expresada en milímetros: la altura que tendría ' +
+      'si se fundiera (media del año). Procede de GLDAS Noah, un modelo de superficie terrestre de la NASA ' +
+      'alimentado con observaciones; no es una medición directa. Solo hay datos sobre tierra. ' +
+      'Vale cero en casi todo México; Campeche, Quintana Roo, Tabasco, Yucatán y Puerto Rico ' +
+      'no tienen tendencia (sin dato).',
+  },
+
+  // --- MERRA-2 M2TMNXSLV (reanálisis) ---
+  specific_humidity: {
+    label: 'Humedad del aire',
+    short: 'Humedad del aire',
+    definition:
+      'Gramos de vapor de agua que hay en cada kilogramo de aire, a 2 metros del suelo (humedad específica). ' +
+      'No es la humedad relativa, que se da en porcentaje. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que combina observaciones con un modelo atmosférico; ' +
+      'no es una medición directa.',
+  },
+  total_precipitable_water: {
+    label: 'Vapor de agua total',
+    short: 'Vapor de agua',
+    definition:
+      'Todo el vapor de agua de la columna de aire, desde el suelo hasta lo alto de la atmósfera, ' +
+      'expresado como los milímetros de agua que habría si se condensara entero. No es la lluvia que cae. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que combina observaciones con un modelo atmosférico; ' +
+      'no es una medición directa.',
+  },
+  total_ozone: {
+    label: 'Ozono total',
+    short: 'Ozono',
+    definition:
+      'Cantidad total de ozono en la columna de aire, en unidades Dobson (DU), la medida habitual del ozono. ' +
+      'Casi todo está en la estratosfera: no es el ozono que se respira a nivel del suelo. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que asimila mediciones de satélite; ' +
+      'no es una medición directa. En 2004 MERRA-2 cambia de sensores asimilados: ' +
+      'una tendencia que cruce ese año puede deberse en parte a ese cambio.',
+  },
+
+  // --- MERRA-2 M2SMNXSLV (estadísticas diarias del reanálisis) ---
+  max_air_temperature: {
+    label: 'Temperatura máxima',
+    short: 'Temp. máxima',
+    definition:
+      'La temperatura más alta de cada día a 2 metros del suelo, promediada en cada mes y luego en el año, en °C. ' +
+      'Es el promedio de las máximas, no el récord del mes. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que combina observaciones con un modelo atmosférico; ' +
+      'no es una medición directa ni la de una estación.',
+  },
+  min_air_temperature: {
+    label: 'Temperatura mínima',
+    short: 'Temp. mínima',
+    definition:
+      'La temperatura más baja de cada día a 2 metros del suelo, promediada en cada mes y luego en el año, en °C. ' +
+      'Es el promedio de las mínimas, no el récord del mes. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que combina observaciones con un modelo atmosférico; ' +
+      'no es una medición directa ni la de una estación.',
+  },
+
+  // --- MERRA-2 M2TMNXAER (aerosoles del reanálisis) ---
+  aerosol_optical_depth: {
+    label: 'Aerosoles',
+    short: 'Aerosoles',
+    definition:
+      'Cuánto atenúan la luz del sol las partículas suspendidas en el aire (polvo, humo, sulfatos, sal marina). ' +
+      'Se mide como espesor óptico a 550 nanómetros y no tiene unidad: cuanto mayor, menos luz llega al suelo. ' +
+      'Cuenta toda la columna de aire, no la contaminación a nivel del suelo. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que asimila observaciones de satélite; ' +
+      'no es una medición directa.',
+  },
+  dust_optical_depth: {
+    label: 'Polvo en el aire',
+    short: 'Polvo',
+    definition:
+      'La parte del espesor óptico de aerosoles (cuánto atenúan la luz del sol las partículas del aire, ' +
+      'a 550 nanómetros y sin unidad) que se debe al polvo mineral. ' +
+      'Cuenta toda la columna de aire, no la contaminación a nivel del suelo. ' +
+      'Donde casi no hay polvo el valor es casi cero, y un cambio en porcentaje puede ser grande sin ser relevante. ' +
+      'Procede de MERRA-2, un reanálisis de la NASA que asimila observaciones de satélite; ' +
+      'no es una medición directa.',
+  },
+}
+
+/**
+ * Citas de los productos de datos, por `product_short_name` del catálogo (pipeline/ATTRIBUTION.md).
+ * La hoja de métodos solo muestra las de los productos que publica el catálogo.
+ */
+export const PRODUCT_CITATIONS: Readonly<Record<string, string>> = {
+  M2TMNXSLV:
+    'Global Modeling and Assimilation Office, & Pawson, S. (2015). MERRA-2 tavgM_2d_slv_Nx: 2d,Monthly mean,' +
+    'Time-Averaged,Single-Level,Assimilation,Single-Level Diagnostics V5.12.4 [Data set]. ' +
+    'NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/AP1B0BA5PD2K',
+  M2SMNXSLV:
+    'Global Modeling and Assimilation Office (GMAO). (2015). MERRA-2 statM_2d_slv_Nx: 2d,Monthly,' +
+    'Aggregated Statistics,Single-Level,Assimilation,Single-Level Diagnostics V5.12.4 [Data set]. ' +
+    'Goddard Earth Sciences Data and Information Services Center (GES DISC). https://doi.org/10.5067/KVIMOMCUO83U',
+  M2TMNXAER:
+    'Global Modeling and Assimilation Office (GMAO). (2015). MERRA-2 tavgM_2d_aer_Nx: 2d,Monthly mean,' +
+    'Time-averaged,Single-Level,Assimilation,Aerosol Diagnostics V5.12.4 [Data set]. ' +
+    'Goddard Earth Sciences Data and Information Services Center (GES DISC). https://doi.org/10.5067/FH9A0MLJPC7N',
+  GPM_3IMERGM:
+    'Huffman, G. J., Stocker, E. F., Bolvin, D. T., Nelkin, E. J., & Tan, J. (2023). GPM IMERG Final ' +
+    'Precipitation L3 1 month 0.1 degree x 0.1 degree V07 [Data set]. NASA Goddard Earth Sciences Data and ' +
+    'Information Services Center. https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07',
+  GLDAS_NOAH025_M:
+    'Beaudoing, H., Rodell, M., & Hydrological Sciences Laboratory (HSL). (2020). GLDAS Noah Land Surface ' +
+    'Model L4 monthly 0.25 x 0.25 degree, Version 2.1 [Data set]. NASA Goddard Earth Sciences Data and ' +
+    'Information Services Center. https://doi.org/10.5067/SXAVCZFAQLNO',
 }
 
 // ---------- GLOSARIO (FR-C03) ----------

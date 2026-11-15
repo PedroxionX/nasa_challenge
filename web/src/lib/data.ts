@@ -11,7 +11,12 @@ import { asset } from './assets'
 
 export const SCHEMA_VERSION = 1
 /** Ids neutrales y estables (contrato, revisión 2026-11-14); el producto exacto va en el catálogo y en provenance. */
-export const VARIABLE_IDS = ['air_temperature', 'precipitation'] as const
+export const VARIABLE_IDS = [
+  'air_temperature', 'precipitation',
+  'soil_moisture', 'evapotranspiration', 'soil_temperature', 'runoff', 'snow_water_equivalent',
+  'specific_humidity', 'total_precipitable_water', 'total_ozone',
+  'max_air_temperature', 'min_air_temperature', 'aerosol_optical_depth', 'dust_optical_depth',
+] as const
 export type VariableId = (typeof VARIABLE_IDS)[number]
 /** Ids anteriores (nombres de NASA POWER) que pueden llegar en enlaces viejos: ?var=T2M. */
 export const LEGACY_VARIABLE_IDS: Readonly<Record<string, VariableId>> = {

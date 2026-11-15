@@ -1,7 +1,7 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { filterRegions, NO_MATCH, normalize } from './search'
-import type { RegionInfo } from '../../lib/data'
+import { VARIABLE_IDS, type RegionInfo } from '../../lib/data'
 import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 
 // Fixtures sintéticos compartidos de 002 (nunca web/public/data/trends/, que es de 003 y cambia).
@@ -115,10 +115,10 @@ describe('RegionSearch (T001)', () => {
 })
 
 describe('VariablePicker (T002)', () => {
-  it('ofrece dos variables y se cambia con flechas de teclado', async () => {
+  it('ofrece todas las variables y se cambia con flechas de teclado', async () => {
     await renderQuery()
     const radios = screen.getAllByRole('radio')
-    expect(radios).toHaveLength(2)
+    expect(radios).toHaveLength(VARIABLE_IDS.length)
     expect(screen.getByRole('group', { name: 'Variable' })).toBeTruthy()
     const [temp, prec] = radios as HTMLInputElement[]
     expect(temp.checked).toBe(true)
