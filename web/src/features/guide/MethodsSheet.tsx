@@ -105,7 +105,6 @@ export default function MethodsSheet() {
 
   return (
     <article className="methods-sheet" aria-label="Métodos y fuentes">
-      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="methods-title">Métodos y fuentes</h2>
 
       {error && (
