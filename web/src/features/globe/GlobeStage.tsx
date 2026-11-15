@@ -4,6 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { markWebglUnavailable, toSearch, useAppState } from '../../app/state'
+import { exitMapPlayback, toggleMapPlayback, useMapPlayback } from '../../app/playback'
 import { localizeClassLabel, localizeUnit, UI_COPY, variableCopy } from '../../content'
 import { loadCatalog, loadMap, windowKey, type Catalog, type MapFile } from '../../lib/data'
 import CloseButton from '../../lib/ui/CloseButton'
@@ -16,6 +17,8 @@ import MapLegend, { type LayerStatus } from './MapLegend'
 import { paletteIndex, readPalette, valuesForWindow, withAlpha } from './mapColors'
 import RegionTable from './RegionTable'
 import { prefersLiteTextures, textureUrls } from './textures'
+import { playbackRegionFill } from './playbackColors'
+import { fmtValue } from '../../lib/format'
 
 /** Si el globo no arranca en este tiempo, se pasa a la vista sin WebGL. */
 const TEXTURE_TIMEOUT_MS = 25_000
@@ -53,6 +56,7 @@ function useLoaded<T>(key: string, load: () => Promise<T>): { value: T | null | 
 
 export default function GlobeStage() {
   const { regionId, compareId, variableId, from, to, webgl, setRegion, setCompare } = useAppState()
+  const playback = useMapPlayback({ regionId, compareId, variableId, from, to })
   const globe = useRef<EarthGlobeHandle>(null)
   const tableDialog = useRef<HTMLDialogElement>(null)
   const [ready, setReady] = useState(false)
@@ -82,17 +86,22 @@ export default function GlobeStage() {
   }), [palette])
 
   const regionFill = useCallback((id: string) => {
+    if (playback) return playbackRegionFill(id, playback, palette)
     if (!values) return undefined
     const v = values.get(id)
     if (!v || v.kind === 'no-data') return fills.noData
     return fills.classes[paletteIndex(v.classIndex, classCount, fills.classes.length)]
-  }, [values, fills, classCount])
+  }, [playback, palette, values, fills, classCount])
 
   const regionNote = useCallback((id: string) => {
+    if (playback) {
+      if (id !== playback.regionId) return 'Not colored during playback'
+      return `${playback.year} · ${playback.value === null ? 'No complete annual value' : `${fmtValue(playback.value)} ${playback.unit}`}`
+    }
     if (!values) return undefined
     const v = values.get(id)
     return v?.kind === 'value' ? `${formatSlope(v.value)} ${unit ?? ''}`.trim() : GLOBE_COPY.noData
-  }, [values, unit])
+  }, [playback, values, unit])
 
   // ---------- Filas para la tabla (catálogo; si falla, los nombres del GeoJSON) ----------
   const rows = useMemo<RegionRow[]>(() => {
@@ -191,7 +200,7 @@ export default function GlobeStage() {
           regionFill={regionFill}
           regionNote={regionNote}
           selectedColor={palette.selected}
-          decorative={status === 'error'}
+          decorative={!playback && status === 'error'}
           reducedMotion={reducedMotion}
           lite={lite}
           initialView={GLOBAL_VIEW}
@@ -212,6 +221,9 @@ export default function GlobeStage() {
       )}
 
       <MapLegend
+        playback={playback}
+        onTogglePlayback={toggleMapPlayback}
+        onExitPlayback={exitMapPlayback}
         status={status}
         variableLabel={variableLabel}
         unit={unit}

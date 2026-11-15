@@ -169,4 +169,46 @@ describe('VariablePicker (T002)', () => {
     expect(text).toContain(temp.product_short_name)
     expect(text).toContain(`Years${temp.first_year}–${temp.last_complete_year}`)
   })
+
+  it('se puede leer por dentro y cierra al tocar fuera, incluso en una zona sin foco', async () => {
+    await renderQuery()
+    const info = screen.getByRole('button', { name: /What is air temperature/ })
+    fireEvent.click(info)
+    const details = screen.getByRole('region', { name: 'Variable details' })
+    fireEvent.pointerDown(within(details).getByText('Unit'))
+    expect(info.getAttribute('aria-expanded')).toBe('true')
+    fireEvent.pointerDown(document.body)
+    expect(info.getAttribute('aria-expanded')).toBe('false')
+    expect(details.hidden).toBe(true)
+    expect(regionInUrl()).toBeNull()
+  })
+
+  it('su cierre visible devuelve el foco al botón de información', async () => {
+    await renderQuery()
+    const info = screen.getByRole('button', { name: /What is air temperature/ })
+    fireEvent.click(info)
+    fireEvent.click(screen.getByRole('button', { name: 'Close variable details' }))
+    expect(info.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(info)
+  })
+
+  it('al salir con el teclado cierra el popup y conserva el foco de destino', async () => {
+    await renderQuery()
+    const info = screen.getByRole('button', { name: /What is air temperature/ })
+    const search = screen.getByRole('combobox', { name: 'Search for a state' })
+    fireEvent.click(info)
+    act(() => { screen.getByRole('button', { name: 'Close variable details' }).focus() })
+    expect(info.getAttribute('aria-expanded')).toBe('true')
+    act(() => { search.focus() })
+    expect(info.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(search)
+  })
+
+  it('cambiar de variable también cierra su definición', async () => {
+    await renderQuery()
+    fireEvent.click(screen.getByRole('button', { name: /What is air temperature/ }))
+    fireEvent.change(screen.getByRole('combobox', { name: 'Variable' }), { target: { value: 'precipitation' } })
+    expect(varInUrl()).toBe('precipitation')
+    expect(screen.getByRole('button', { name: /What is precipitation/ }).getAttribute('aria-expanded')).toBe('false')
+  })
 })

@@ -16,6 +16,9 @@ function Icon({ size = 20, className, children, box = 20 }: Props & { children: 
 }
 
 export const CloseIcon = (p: Props) => <Icon {...p}><path d="M5 5l10 10M15 5L5 15" /></Icon>
+export const PlayIcon = (p: Props) => <Icon {...p}><path d="M6 3l11 7-11 7Z" /></Icon>
+export const PauseIcon = (p: Props) => <Icon {...p}><path d="M6 4v12M14 4v12" /></Icon>
+export const ReplayIcon = (p: Props) => <Icon {...p}><path d="M4 7a7 7 0 1 1-1 6M4 3v4h4" /></Icon>
 export const InfoIcon = (p: Props) => (
   <Icon {...p}><circle cx="10" cy="10" r="8" /><path d="M10 9v5.5" /><path d="M10 6v.01" /></Icon>
 )

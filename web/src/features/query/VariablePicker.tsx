@@ -3,11 +3,12 @@
  * (teclado y lector de pantalla sin código extra; cabe en móvil con 14 o más opciones)
  * y su definición desplegable en la misma pantalla.
  */
-import { useEffect, useId, useState, type KeyboardEvent } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { useAppState } from '../../app/state'
 import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
 import { localizeUnit, variableCopy } from '../../content'
 import { InfoIcon } from '../../lib/ui/icons'
+import CloseButton from '../../lib/ui/CloseButton'
 
 const KIND: Record<string, string> = {
   reanalysis: 'reanalysis (a model that combines observations)',
@@ -37,6 +38,8 @@ export default function VariablePicker() {
   const { variableId, setVariable } = useAppState()
   const [showDefinition, setShowDefinition] = useState(false)
   const [catalog, setCatalog] = useState<Catalog | null>(null)
+  const pickerRef = useRef<HTMLDivElement>(null)
+  const infoRef = useRef<HTMLButtonElement>(null)
   const uid = useId()
 
   useEffect(() => {
@@ -50,21 +53,43 @@ export default function VariablePicker() {
   // Sin catálogo todavía: solo la variable activa, para que el control no salte vacío.
   const options = catalog ? catalog.variables : [{ id: variableId, label: copy.label, definition: copy.definition }]
 
-  const closeOnEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape' && showDefinition) {
+  // El popup no atrapa el foco: se cierra al continuar en otra zona de la interfaz.
+  // Escape se atiende antes que el panel de análisis para conservar la selección.
+  useEffect(() => {
+    if (!showDefinition) return
+    const dismissOutside = (e: Event) => {
+      if (e.target instanceof Node && !pickerRef.current?.contains(e.target)) setShowDefinition(false)
+    }
+    const onKeyDown = (e: globalThis.KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      e.preventDefault()
       e.stopPropagation()
       setShowDefinition(false)
+      infoRef.current?.focus()
     }
+    document.addEventListener('pointerdown', dismissOutside, true)
+    document.addEventListener('focusin', dismissOutside)
+    document.addEventListener('keydown', onKeyDown, true)
+    return () => {
+      document.removeEventListener('pointerdown', dismissOutside, true)
+      document.removeEventListener('focusin', dismissOutside)
+      document.removeEventListener('keydown', onKeyDown, true)
+    }
+  }, [showDefinition])
+
+  const closeDefinition = () => {
+    setShowDefinition(false)
+    infoRef.current?.focus()
   }
 
   return (
-    <div className="variable-picker" onKeyDown={closeOnEscape}>
+    <div className="variable-picker" ref={pickerRef}>
       <label className="vh" htmlFor={`${uid}-variable`}>Variable</label>
       <select
         id={`${uid}-variable`}
         className="variable-picker-select"
         value={variableId}
-        onChange={e => setVariable(e.target.value)}
+        onChange={e => { setShowDefinition(false); setVariable(e.target.value) }}
       >
         {options.map(v => (
           <option key={v.id} value={v.id}>{variableCopy(v.id, v).short}</option>
@@ -72,15 +97,21 @@ export default function VariablePicker() {
       </select>
       <button
         type="button"
+        ref={infoRef}
         className="icon-button variable-picker-info"
         aria-expanded={showDefinition}
         aria-controls={definitionId}
         aria-label={`What is ${copy.label.toLowerCase()}`}
+        title={`About ${copy.label.toLowerCase()}`}
         onClick={() => setShowDefinition(s => !s)}
       >
         <InfoIcon />
       </button>
-      <div id={definitionId} className="variable-picker-definition" hidden={!showDefinition}>
+      <div id={definitionId} role="region" aria-labelledby={`${uid}-definition-title`} className="variable-picker-definition" hidden={!showDefinition}>
+        <div className="variable-picker-definition-header">
+          <h2 id={`${uid}-definition-title`}>Variable details</h2>
+          <CloseButton label="Close variable details" onClick={closeDefinition} />
+        </div>
         <p><strong>{copy.label}:</strong> {copy.definition}</p>
         {catalog && info && <VariableFacts catalog={catalog} info={info} />}
       </div>

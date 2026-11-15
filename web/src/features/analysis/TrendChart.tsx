@@ -13,6 +13,9 @@ import type { SeriesFile, TrendRow } from '../../lib/data'
 import { HAS_TREND, yearPoints, type YearPoint } from './analysisData'
 import { fmtTick, fmtValue, fmtYear, fmtYears } from '../../lib/format'
 import Term from '../../lib/ui/Term'
+import TimelineControls from '../../lib/ui/TimelineControls'
+import { useTimelinePlayback } from '../../lib/ui/useTimelinePlayback'
+import { usePublishPlayback, type PlaybackFrame } from '../../app/playback'
 
 interface Props {
   series: SeriesFile
@@ -54,11 +57,26 @@ function withGaps(points: YearPoint[]): (YearPoint | null)[] {
   return out
 }
 
-export default function TrendChart({ series, row, from, to, unit, variableLabel, regionName, lineMid }: Props) {
+export default function TrendChart(props: Props) {
+  // Otra consulta empieza detenida y limpia los temporizadores de la reproducción anterior.
+  return <AnnualChart key={`${props.series.variable}/${props.series.region}/${props.from}/${props.to}`} {...props} />
+}
+
+function AnnualChart({ series, row, from, to, unit, variableLabel, regionName, lineMid }: Props) {
   const { ref, width } = useWidth()
   const [showTable, setShowTable] = useState(false)
   const uid = useId()
   const points = useMemo(() => yearPoints(series), [series])
+  const playback = useTimelinePlayback(from, to)
+  const currentPoint = points.find(p => p.year === playback.year)
+  const annualValues = useMemo(() => points.filter(p => p.year >= from && p.year <= to).map(p => p.value), [points, from, to])
+  const playable = to > from && annualValues.length >= 2
+  const valueLabel = currentPoint ? `${fmtValue(currentPoint.value)} ${unit}` : 'No complete annual value'
+  const frame = useMemo<PlaybackFrame | null>(() => playback.active && playable ? {
+    regionId: series.region, regionName, variableId: series.variable, from, to, year: playback.year, playing: playback.playing,
+    value: currentPoint?.value ?? null, unit, min: Math.min(...annualValues), max: Math.max(...annualValues),
+  } : null, [playback.active, playback.year, playback.playing, playable, series.region, series.variable, regionName, from, to, currentPoint, unit, annualValues])
+  usePublishPlayback(frame, playback.stop, playback.toggle)
   const partial = series.partial_year ?? null
   const excluded = series.excluded_years
 
@@ -85,7 +103,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
   const xTicks = x.ticks(width < 420 ? 4 : 8).filter(t => Number.isInteger(t))
 
   const path = line<YearPoint | null>()
-    .defined(d => d !== null)
+    .defined(d => d !== null && (!playback.active || d.year <= playback.year || d.year > to))
     .x(d => x(d!.year))
     .y(d => y(d!.value))(withGaps(points)) ?? ''
 
@@ -151,7 +169,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         <desc id={descId}>
           {`One point per complete year. Period analyzed: ${fmtYears(from, to)}. `}
           {drawLine ? 'Includes the Sen line and the band of the 95% interval. ' : 'No trend line. '}
-          The exact values are in “View as table”.
+          The exact values are in “View as table”. Use Play timeline to explore the annual values in 9 seconds.
         </desc>
         <defs>
           <clipPath id={clipId}>
@@ -213,13 +231,22 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
             <circle
               key={p.year}
               className={inPeriod(p.year) ? 'chart-point' : 'chart-point is-outside'}
+              visibility={playback.active && inPeriod(p.year) && p.year > playback.year ? 'hidden' : undefined}
               cx={x(p.year)}
               cy={y(p.value)}
               r={3}
             />
           ))}
+          {playback.active && (
+            <g className="chart-current" aria-hidden="true">
+              <line x1={x(playback.year)} x2={x(playback.year)} y1={plot.top} y2={plot.bottom} />
+              {currentPoint && <circle cx={x(playback.year)} cy={y(currentPoint.value)} r={6} />}
+            </g>
+          )}
         </g>
       </svg>
+
+      <TimelineControls playback={playback} from={from} to={to} valueLabel={valueLabel} disabled={!playable} />
 
       <figcaption className="chart-legend">
         <span><i className="swatch swatch--point" aria-hidden="true" />Yearly value</span>
@@ -243,6 +270,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
           <span><i className="swatch swatch--outside" aria-hidden="true" />Outside the period chosen</span>
         )}
       </figcaption>
+      {playback.active && drawLine && <p className="timeline-hint">The trend line and interval describe the full selected period.</p>}
 
       <button
         type="button"

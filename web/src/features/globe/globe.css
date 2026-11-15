@@ -81,6 +81,10 @@
 .globe-legend-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); margin: 0; }
 .globe-legend-title { font-weight: var(--weight-medium); }
 .globe-legend-sub { font-size: var(--text-xs); color: var(--color-text-muted); }
+.globe-annual-value { display: grid; gap: var(--space-1); margin: var(--space-2) 0 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+.globe-annual-value strong { font-size: var(--text-base); font-weight: var(--weight-medium); color: var(--color-text); font-variant-numeric: tabular-nums; }
+.globe-annual-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); margin-top: var(--space-2); }
+.globe-annual-toggle { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); font-size: var(--text-sm); }
 
 .globe-scale { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
 .globe-scale-bar { display: flex; height: 0.625rem; border: 1px solid var(--color-region-border); border-radius: 3px; overflow: hidden; }
@@ -108,7 +112,7 @@
 /* «Sin datos» nunca depende solo del color: trama + etiqueta. */
 .globe-swatch-nodata { background: repeating-linear-gradient(45deg, var(--color-no-data) 0 3px, transparent 3px 6px); }
 
-.globe-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-1); }
+.globe-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-2); }
 .globe-actions button {
   display: inline-flex;
   align-items: center;
@@ -129,6 +133,7 @@
   .globe-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: var(--rail-w); gap: var(--space-2); }
   .globe-actions button { padding: 0 var(--space-2); }
   .globe-actions button span { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+  .globe-tools[data-playback="true"] .globe-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ---------- Tabla ---------- */

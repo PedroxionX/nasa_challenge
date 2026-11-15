@@ -246,21 +246,23 @@
 .period-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
 .period-row label, .period-row .period-fixed { color: var(--color-text-muted); }
 .period-row select { min-width: 5.5rem; }
-.period-row .link-button { margin-left: var(--space-1); }
+.period-field { flex: 1 1 8rem; display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.period-field select { flex: 1 1 auto; }
 .period-hint { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
 
 /* ---------- Términos con definición ---------- */
 /* La definición va en el flujo, debajo del término: no tapa lo que explica ni se sale del panel. */
-.term { display: inline-flex; flex-wrap: wrap; align-items: center; }
-.term:has(> .term-definition:not([hidden])) { display: flex; width: 100%; }
-.term-label { font-style: normal; }
+.term { display: inline-flex; align-items: center; column-gap: var(--space-1); max-width: 100%; }
+.term:has(> .term-definition:not([hidden])) { display: flex; flex-wrap: wrap; width: 100%; }
+.term-label { min-width: 0; font-style: normal; }
 .term-button {
   display: inline-grid;
   place-items: center;
   /* Objetivo táctil de 44 px con un círculo visible pequeño. */
   min-height: var(--tap);
+  flex: 0 0 var(--tap);
   width: var(--tap);
-  margin: calc((var(--tap) - 1.4em) / -2) calc((var(--tap) - 1.4em) / -2 + 2px);
+  margin: 0;
   padding: 0;
   color: var(--color-accent);
   background: transparent;
@@ -327,6 +329,17 @@
 .swatch--partial { height: 0; border-top: 2px dashed var(--color-text-muted); border-radius: 0; }
 .swatch--outside { background: var(--color-bg); border: 1px solid var(--color-line); }
 .chart.is-muted .swatch--point { background: var(--color-text-muted); opacity: 0.7; }
+
+/* ---------- Reproducción de valores anuales ---------- */
+.timeline { display: grid; gap: var(--space-2); min-width: 0; padding-block: var(--space-3); border-block: 1px solid var(--color-line); font-variant-numeric: tabular-nums; }
+.timeline-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-1) var(--space-2); }
+.timeline-duration, .timeline-hint { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+.timeline-readout { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-3); font-size: var(--text-sm); overflow-wrap: anywhere; }
+.timeline-readout strong { font-size: var(--text-lg); }
+.timeline-controls { display: flex; align-items: center; gap: var(--space-2); min-width: 0; }
+.timeline-play { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); flex: 0 0 7rem; padding-inline: var(--space-2); font-size: var(--text-sm); }
+.timeline-scrubber { flex: 1 1 0; min-width: 0; width: 100%; min-height: var(--tap); margin: 0; padding: 0; cursor: pointer; }
+.timeline-scrubber:disabled { cursor: default; opacity: 0.5; }
 
 /* ---------- Selector de estado (cabecera y comparación): campo con lista filtrable ---------- */
 .combo { position: relative; min-width: 0; }

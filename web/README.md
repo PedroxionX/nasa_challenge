@@ -18,6 +18,9 @@ npm run build    # tsc + versión de producción en dist/
 
 - **Elegir**: un estado (tocándolo en el globo, con el buscador o en la tabla), una variable y un periodo.
 - **Leer el resultado**: veredicto con icono y palabra, cambio por década, intervalo, valor p, una frase en lenguaje llano, la serie anual con su recta de tendencia y la tabla de valores.
+- **Reproducir la serie anual** del estado seleccionado en 9 segundos: Play/Pause, Replay, reinicio y barra para explorar un año con su valor y unidad. Funciona con todas las variables y el periodo elegido; los años sin datos mantienen su hueco. Cambiar la consulta detiene y reinicia la reproducción. La recta y el intervalo siguen describiendo el periodo completo.
+- Durante la reproducción, **solo el estado seleccionado tiene relleno**: cambia con su valor anual, usando una escala fija del mínimo al máximo del periodo. La leyenda muestra año, valor y unidad; los años sin dato se identifican en gris. Pausar conserva el fotograma y «Show trend map» restaura el mapa de cambios por década. Este estado temporal no modifica el enlace.
+- En móvil, Play reduce la hoja al resumen para dejar visible el globo. La leyenda permite pausar, continuar o salir sin volver a abrir el análisis.
 - **Comparar** dos estados: prueba de la diferencia entre sus tendencias.
 - **Comprobar**: método, supuestos y procedencia de cada serie (producto, versión, DOI, fecha de consulta), y la hoja «Methods and sources».
 - Todo el estado está en la URL (`var`, `from`, `to`, `region`, `vs`): un enlace reproduce la vista. Ejemplo: `?var=precipitation&from=2005&to=2024&region=MX-SON&vs=MX-CHH`.

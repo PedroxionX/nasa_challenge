@@ -6,14 +6,19 @@
  */
 import { useEffect, useId, useRef, useState } from 'react'
 import { UI_COPY } from '../../content'
-import { GlobeIcon, InfoIcon, TableIcon } from '../../lib/ui/icons'
+import { GlobeIcon, InfoIcon, PauseIcon, PlayIcon, TableIcon } from '../../lib/ui/icons'
 import { GLOBE_COPY } from './copy'
 import { formatBreak } from './format'
 import { classRanges, paletteIndex, type Palette } from './mapColors'
+import type { PlaybackFrame } from '../../app/playback'
+import { fmtValue } from '../../lib/format'
 
 export type LayerStatus = 'loading' | 'error' | 'no-window' | 'ready'
 
 interface Props {
+  playback?: PlaybackFrame | null
+  onExitPlayback?: () => void
+  onTogglePlayback?: () => void
   status: LayerStatus
   variableLabel: string
   unit: string | null
@@ -26,6 +31,35 @@ interface Props {
   onRetry: () => void
   onOpenTable: () => void
   onGlobalView: () => void
+}
+
+function AnnualLegend({ frame, variableLabel, palette, onExit, onToggle }: {
+  frame: PlaybackFrame; variableLabel: string; palette: Palette; onExit?: () => void; onToggle?: () => void
+}) {
+  return (
+    <>
+      <p className="globe-legend-head">
+        <span className="globe-legend-title">Annual value · {frame.year}</span>
+        <span className="globe-legend-sub">{variableLabel} · {frame.unit}</span>
+      </p>
+      <p className="globe-annual-value">
+        <span>{frame.regionName}</span>
+        <strong>{frame.value === null ? 'No complete annual value' : `${fmtValue(frame.value)} ${frame.unit}`}</strong>
+      </p>
+      <div className="globe-scale" aria-label="Annual value color scale">
+        <div className="globe-scale-bar" style={{ background: `linear-gradient(to right, ${palette.classes.join(', ')})` }} />
+        <div className="globe-scale-ends"><span>{fmtValue(frame.min)} {frame.unit}</span><span>{fmtValue(frame.max)} {frame.unit}</span></div>
+        <div className="globe-scale-ends"><span>Lower value</span><span>Higher value</span></div>
+      </div>
+      <p className="globe-legend-note">Scale: this state, {frame.from}–{frame.to}. Other states are uncolored.</p>
+      <div className="globe-annual-controls">
+        <button type="button" className="globe-annual-toggle" onClick={onToggle} aria-label={frame.playing ? 'Pause map playback' : 'Play map playback'}>
+          {frame.playing ? <PauseIcon size={18} /> : <PlayIcon size={18} />}{frame.playing ? 'Pause' : 'Play'}
+        </button>
+        <button type="button" className="link-button" onClick={onExit}>Show trend map</button>
+      </div>
+    </>
+  )
 }
 
 export default function MapLegend(p: Props) {
@@ -62,8 +96,9 @@ export default function MapLegend(p: Props) {
   }, [])
 
   return (
-    <div className="globe-tools" ref={toolsRef}>
+    <div className="globe-tools" ref={toolsRef} data-playback={Boolean(p.playback)}>
       <section className="globe-legend" aria-label={GLOBE_COPY.legendLabel}>
+        {p.playback ? <AnnualLegend frame={p.playback} variableLabel={p.variableLabel} palette={p.palette} onExit={p.onExitPlayback} onToggle={p.onTogglePlayback} /> : <>
         <p className="globe-legend-head">
           <span className="globe-legend-title">{GLOBE_COPY.legendTitle}</span>
           <span className="globe-legend-sub">
@@ -114,16 +149,17 @@ export default function MapLegend(p: Props) {
             </div>
           </>
         )}
+        </>}
       </section>
 
       <div className="globe-actions">
-        {p.status === 'ready' && (
-          <button type="button" aria-label={GLOBE_COPY.aboutColors} aria-expanded={open} aria-controls={moreId} onClick={() => setOpen(o => !o)}>
+        {p.status === 'ready' && !p.playback && (
+          <button type="button" title={GLOBE_COPY.aboutColors} aria-label={GLOBE_COPY.aboutColors} aria-expanded={open} aria-controls={moreId} onClick={() => setOpen(o => !o)}>
             <InfoIcon size={18} /><span aria-hidden="true">Colors</span>
           </button>
         )}
-        <button type="button" aria-label={GLOBE_COPY.showTable} onClick={p.onOpenTable}><TableIcon size={18} /><span aria-hidden="true">Table</span></button>
-        <button type="button" aria-label={GLOBE_COPY.globalView} onClick={p.onGlobalView}><GlobeIcon size={18} /><span aria-hidden="true">Reset</span></button>
+        <button type="button" title={GLOBE_COPY.showTable} aria-label={GLOBE_COPY.showTable} onClick={p.onOpenTable}><TableIcon size={18} /><span aria-hidden="true">Table</span></button>
+        <button type="button" title={GLOBE_COPY.globalView} aria-label={GLOBE_COPY.globalView} onClick={p.onGlobalView}><GlobeIcon size={18} /><span aria-hidden="true">Reset</span></button>
       </div>
     </div>
   )

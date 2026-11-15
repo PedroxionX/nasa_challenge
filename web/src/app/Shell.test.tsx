@@ -89,10 +89,37 @@ describe('Shell', () => {
     expect(window.location.search).toContain('region=US-TX')
   })
 
+  it('el foco en contenido recortado amplía la hoja sin perder la selección', async () => {
+    const { container } = await renderShell('?region=MX-BCN')
+    const shell = container.querySelector('.shell')!
+    act(() => { screen.getByRole('button', { name: 'Close analysis' }).focus() })
+    expect(shell.getAttribute('data-sheet')).toBe('peek')
+    const table = screen.getByRole('button', { name: 'View as table' })
+    act(() => { table.focus() })
+    expect(shell.getAttribute('data-sheet')).toBe('full')
+    expect(document.activeElement).toBe(table)
+    expect(window.location.search).toContain('region=MX-BCN')
+  })
+
   it('una región sin archivo muestra «sin datos» sin romper el armazón', async () => {
     await renderShell('?region=MX-JAL')
     await screen.findByText('There are no data for this region.')
     expect(screen.getByRole('banner')).toBeTruthy()
+  })
+
+  it('Escape cierra primero la información de variable y después el análisis', async () => {
+    await renderShell('?region=MX-BCN')
+    const info = screen.getByRole('button', { name: /What is air temperature/ })
+    fireEvent.click(info)
+    // También funciona si el foco estaba en el mapa, fuera del popup.
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(info.getAttribute('aria-expanded')).toBe('false')
+    expect(document.activeElement).toBe(info)
+    expect(window.location.search).toContain('region=MX-BCN')
+    expect(screen.getByRole('complementary', { name: 'Analysis' })).toBeTruthy()
+    fireEvent.keyDown(info, { key: 'Escape' })
+    expect(screen.queryByRole('complementary', { name: 'Analysis' })).toBeNull()
+    expect(document.activeElement).toBe(screen.getByRole('combobox', { name: 'Search for a state' }))
   })
 
   it('una región inexistente en la URL avisa y vuelve al predeterminado', async () => {
