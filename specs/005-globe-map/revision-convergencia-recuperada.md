@@ -1,0 +1,31 @@
+# Revisión histórica recuperada del stash de 005
+
+Recuperada el 2026-11-14 para conservar el trabajo local pendiente. El contenido siguiente corresponde a una revisión anterior a la integración de datos reales de 003; sus cifras, fallos y referencias a datos sintéticos describen ese momento y deben revalidarse contra el código actual. No sustituye las notas actuales de [tasks.md](tasks.md).
+
+## Phase 4: Convergence
+
+Revisión del 2026-11-14: **tasks_appended; no Converged**. Evaluación del código actual contra spec, plan, tareas y constitución. Se contrastaron 14 requisitos/criterios (5 FR-G, 3 SC-G y 6 FR heredados), 5 escenarios o comprobaciones independientes, las 8 tareas existentes, 6 decisiones del plan (biblioteca, estado compartido, carga estática, propiedad de archivos, dependencias y presupuesto medido) y los 5 principios de la constitución. Hallazgos: 1 `contradicts`, 2 `partial`; 1 CRITICAL, 1 HIGH, 1 MEDIUM. Las comprobaciones de navegador siguientes son automatizadas; no equivalen a aceptación del usuario ni a mediciones en dispositivos de referencia.
+
+- [ ] T009 [US2] **CRITICAL — F1**: Rotular los datos sintéticos de forma visible en el mapa, la tabla modal y la vista sin WebGL, incluso sin región elegida o con la leyenda plegada. Evidencia: `web/public/data/trends/LEEME.md` identifica los mapas actuales como sintéticos, pero `GlobeStage.tsx`, `MapLegend.tsx`, `RegionTable.tsx` y `Fallback.tsx` no muestran ese aviso; el texto del panel de 004 queda fuera del diálogo. Mantener la corrección dentro de `web/src/features/globe/`; coordinar con 002/003 cualquier señal de procedencia que requiera ampliar el contrato compartido, sin modificar sus rutas. Acepta: el carácter sintético es explícito en las tres vistas y no se etiqueta como sintético un futuro mapa real. Fuente: Constitución II, procedencia y honestidad de los datos (`contradicts`).
+- [ ] T010 [US1] **HIGH — F2**: Conservar los estados de carga, error recuperable y periodo sin mapa en la alternativa sin WebGL, pasando el estado y el reintento desde `GlobeStage.tsx` a `Fallback.tsx`. Evidencia: con WebGL desactivado y fallo simulado de `map/air_temperature.json`, aparecen 84 nombres, desaparecen las columnas de valores y no hay aviso del fallo ni botón de reintento. Acepta: el fallo se explica, reintentar recupera los valores sin recargar la página y un periodo no disponible tiene su propio mensaje; la selección de regiones sigue operativa. Fuente: FR-015 de 001, cubierto por 005; T003 (`partial`).
+- [ ] T011 [US3] **MEDIUM — F3**: Completar la evidencia pendiente de T008 en `specs/005-globe-map/tasks.md`: identificar Android de gama media de 2022–2023, iPhone reciente y portátil con gráfica integrada conforme a UX §3, o dejar documentado el alcance acordado si se reduce esa lista. Registrar modelo, SO, navegador, fecha, escenario, resolución, método, mediana/p95 de tiempo por cuadro al rotar y seleccionar, llamadas/triángulos, reposo, carga en 4G simulada y bytes de texturas; dejar una decisión por cada objetivo incumplido. La guía abreviada menciona solo teléfono y portátil: la diferencia debe quedar explícita. Esta tarea concreta el cierre de T008, no acredita mediciones nuevas ni sustituye los dispositivos por emulación. Fuente: SC-G02, SC-G03, T008, plan y UX §3 (`partial`).
+
+### Evidencia de esta revisión
+
+| Comprobación | Resultado actual |
+|---|---|
+| `npm run build` | Pasa. Vite advierte de un paquete JS de 2 293,40 kB minificado (651,48 kB gzip), superior al umbral de 500 kB. |
+| `npm run lint` | Pasa. |
+| `npm run test` | 8 archivos, 96 pruebas correctas. La nota anterior sobre el fallo de `Shell.test.tsx` ya no describe el estado actual. |
+| Ocaso y selección | Leyenda con bordes visibles; `--map-fill-opacity = 0.9`. Baja California conserva contorno, elevación y nombre fuera del panel en escritorio y en 390×844 emulado. Texas se revisó en 1440×900: sin el artefacto de triangulación en esa vista. |
+| Variable, periodo y tabla | Precipitación usa `%/década` y 2001–2025. Los 84 valores de la tabla coinciden con el JSON para esa ventana; ordenación por valor comprobada. Cambio a temperatura 2000–2020 mediante URL actualiza leyenda y selección. El control de periodo de 004 aún es un esbozo. |
+| Teclado y móvil emulado | La tabla abre con Enter, muestra foco visible y cierra con Escape. La etiqueta de Baja California queda a y=325–344, por encima del panel que empieza en y=504,5. No hay desbordamiento horizontal de la página principal en 390×844. Tacto real y recorrido completo con teclado siguen pendientes de aceptación. |
+| Pausa | 0 cuadros nuevos durante intervalos de 1 s tras estabilizar la escena, tanto en escritorio con región como en móvil emulado; rotación automática desactivada. No sustituye una prueba prolongada en hardware de referencia. |
+| Dibujo y texturas | Muestras con Baja California/precipitación: 350 llamadas en escritorio y 286 en móvil emulado, dependientes de la vista. Las cuatro texturas únicas del modo móvil con datos suman 1 699 772 bytes de contenido (1,70 MB); no se solicita la textura de nubes. No es memoria GPU ni una medida de tiempo por cuadro en un teléfono. |
+| Sin WebGL / textura fallida | Ambos escenarios simulados muestran aviso y tabla de 84 regiones. El fallo adicional del mapa reproduce F2. |
+| Periodo corto | 2020–2025 muestra el aviso de que hacen falta al menos 10 años en la vista con globo. |
+| Consola | Sin errores ni advertencias en la comprobación de escritorio de selección, precipitación y tabla; los fallos inducidos se prueban por separado. |
+
+Las capturas de la sesión se guardaron temporalmente en `/tmp/globe-005-desktop.png`, `/tmp/globe-005-desktop-selected.png`, `/tmp/globe-005-mobile.png`, `/tmp/globe-005-mobile-table.png`, `/tmp/globe-005-texas.png` y `/tmp/globe-005-fallback.png`; no son artefactos versionados. El navegador conserva la vista principal y la vista móvil emulada. Los datos siguen siendo los ejemplos sintéticos de 002, y el buscador y el panel siguen siendo esbozos de 004.
+
+Siguiente paso: `/speckit-implement` para T009–T010, completar T008/T011 con dispositivos reales y volver a ejecutar `/speckit-converge`. Las casillas de aceptación anteriores se conservan sin cambios.
