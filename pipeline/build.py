@@ -173,11 +173,12 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
     r1 = float(acf(x - c.sen_slope * t, 1)[1])
     p = c.primary.p_value
     slope = c.sen_slope * 10
+    slope_out = _r(slope, 6)
     if not (np.isfinite(p) and np.isfinite(slope) and np.all(np.isfinite(c.sen_ci))):
         status = "invalid"
-    elif p < alpha and slope > 0:
+    elif slope_out is not None and slope_out > 0 and p < alpha:
         status = "increasing"
-    elif p < alpha and slope < 0:
+    elif slope_out is not None and slope_out < 0 and p < alpha:
         status = "decreasing"
     else:
         status = "inconclusive"
@@ -188,7 +189,6 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
     pct = list(_NO_PCT)
     if relative_change and status != "invalid":
         pct = pct_of_mean(slope, (c.sen_ci[0] * 10, c.sen_ci[1] * 10), mean)
-    slope_out = _r(slope, 6)
     line_mid = _r(sen_line_mid(t, x, c.sen_slope, start, end), 6) if slope_out is not None else None
     row = [start, end, n, slope_out, _r(c.sen_ci[0] * 10, 6), _r(c.sen_ci[1] * 10, 6), _p(p), _p(c.mk.p_value),
            _r(r1, 4), _r(ols_slope, 6), _p(ols_p), status, flags, line_mid] + pct
@@ -405,13 +405,27 @@ def default_sources(source: str) -> dict[str, Any]:
     if source == "gesdisc":
         from sources.gesdisc import GesDiscSource
         from sources.imerg import IMERG_PRECIP
-        from sources.merra2 import MERRA2_T2M
+        from sources.merra2 import MERRA2_QV2M, MERRA2_T2M, MERRA2_TO3, MERRA2_TQV
+        from sources.gldas import (
+            GLDAS_EVAPOTRANSPIRATION,
+            GLDAS_RUNOFF,
+            GLDAS_SOIL_MOISTURE,
+            GLDAS_SURF_TEMP,
+            GLDAS_SWE,
+        )
 
-        from sources.gldas import GLDAS_EVAPOTRANSPIRATION, GLDAS_SOIL_MOISTURE
-
-        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP),
-                "soil_moisture": GesDiscSource(GLDAS_SOIL_MOISTURE),
-                "evapotranspiration": GesDiscSource(GLDAS_EVAPOTRANSPIRATION)}
+        return {
+            "air_temperature": GesDiscSource(MERRA2_T2M),
+            "precipitation": GesDiscSource(IMERG_PRECIP),
+            "soil_moisture": GesDiscSource(GLDAS_SOIL_MOISTURE),
+            "evapotranspiration": GesDiscSource(GLDAS_EVAPOTRANSPIRATION),
+            "specific_humidity": GesDiscSource(MERRA2_QV2M),
+            "total_precipitable_water": GesDiscSource(MERRA2_TQV),
+            "total_ozone": GesDiscSource(MERRA2_TO3),
+            "runoff": GesDiscSource(GLDAS_RUNOFF),
+            "snow_water_equivalent": GesDiscSource(GLDAS_SWE),
+            "soil_temperature": GesDiscSource(GLDAS_SURF_TEMP),
+        }
     if source == "power":
         from sources.power import PowerSource
 
@@ -455,7 +469,8 @@ def build(region_ids: list[str], var_ids: list[str], out_dir: Path, sources: dic
             union = {(round(float(a), 4), round(float(o), 4)) for w in w_all.values() for a, o in zip(w.lats, w.lons)}
             ulats, ulons = (np.array(c) for c in zip(*sorted(union)))
             w = {r.id: w_all[r.id] for r in regions}
-            data = src.read(var, regions, w, ulats, ulons, var.first_request_year, today.year)
+            req_end_year = min(today.year, last_year_max) if last_year_max is not None else today.year
+            data = src.read(var, regions, w, ulats, ulons, var.first_request_year, req_end_year)
             fy, ly = complete_period(data.months, var.first_request_year, last_year_max)
             periods[var_id], infos[var_id] = (fy, ly), data.info
             cells[var_id] = {r.id: w[r.id].n_cells for r in regions}
