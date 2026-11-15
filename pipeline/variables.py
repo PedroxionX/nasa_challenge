@@ -19,6 +19,9 @@ MAP_LABELS = ["Baja mucho", "Baja", "Casi sin cambio", "Sube", "Sube mucho"]
 # mediana 0,35, p75 0,40 °C/década): separan el periodo completo en 3 · 35 · 46 regiones (Casi sin cambio · Sube ·
 # Sube mucho). Los de precipitación (−10, −3, 3, 10 %/década) reparten 3 · 20 · 50 · 11 · 0 en 2001–2024.
 T_BREAKS = [-0.35, -0.15, 0.15, 0.35]
+# GLDAS (2026-11-14, 2000–2025): humedad del suelo mediana −1,4 %/década (−7,3…4,1); evapotranspiración
+# mediana +2,8 (−11,6…13,7). Con −6, −2, 2, 6 el periodo completo reparte 3·29·51·1·0 y 2·7·26·35·14.
+GLDAS_BREAKS = [-6.0, -2.0, 2.0, 6.0]
 
 
 @dataclass(frozen=True)
@@ -104,11 +107,11 @@ _ET_SPEC = VariableSpec(
 
 VARS[("soil_moisture", "gesdisc")] = VarDef(
     "soil_moisture", "gesdisc", "Humedad del suelo", _SM_DEF, "reanalysis", "kg/m²", "mean_day_weighted",
-    True, "%/década", [-10.0, -3.0, 3.0, 10.0], _SM_SPEC, GLDAS_GRID, 2000, "SoilMoi0_10cm_inst",
+    True, "%/década", GLDAS_BREAKS, _SM_SPEC, GLDAS_GRID, 2000, "SoilMoi0_10cm_inst",
     "relleno −9999 (mar) → faltante; kg m⁻² sin conversión", min_valid_fraction=0.5)
 VARS[("evapotranspiration", "gesdisc")] = VarDef(
     "evapotranspiration", "gesdisc", "Evapotranspiración", _ET_DEF, "reanalysis", "mm", "sum_from_rate",
-    True, "%/década", [-10.0, -3.0, 3.0, 10.0], _ET_SPEC, GLDAS_GRID, 2000, "Evap_tavg",
+    True, "%/década", GLDAS_BREAKS, _ET_SPEC, GLDAS_GRID, 2000, "Evap_tavg",
     "relleno −9999 (mar) → faltante; kg m⁻² s⁻¹ × 86 400 → mm/día; × días reales del mes → mm/mes; suma de 12 meses → mm",
     min_valid_fraction=0.5)
 
