@@ -1,0 +1,40 @@
+{
+ "region": "US-AZ",
+ "variable": "dust_optical_depth",
+ "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "M2TMNXAER_5_12_4_DUEXTTAU",
+ "shape": "tl_2014_us_state/shp_55 (Arizona)",
+ "units_giovanni": "1",
+ "url_to_reproduce": [
+  "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2003-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_55&data=M2TMNXAER_5_12_4_DUEXTTAU"
+ ],
+ "retrieved": "2026-11-15",
+ "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+ "months": 276,
+ "annual_method": "media de 12 meses ponderada por días, adimensional",
+ "annual": {
+  "2003": 0.026127,
+  "2004": 0.026253,
+  "2005": 0.024437,
+  "2006": 0.024059,
+  "2007": 0.027761,
+  "2008": 0.029319,
+  "2009": 0.024938,
+  "2010": 0.023273,
+  "2011": 0.025249,
+  "2012": 0.024286,
+  "2013": 0.023393,
+  "2014": 0.021232,
+  "2015": 0.022433,
+  "2016": 0.019454,
+  "2017": 0.020887,
+  "2018": 0.023619,
+  "2019": 0.021422,
+  "2020": 0.020903,
+  "2021": 0.023023,
+  "2022": 0.023903,
+  "2023": 0.020482,
+  "2024": 0.019233,
+  "2025": 0.01859
+ }
+}

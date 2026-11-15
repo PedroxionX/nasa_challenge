@@ -46,6 +46,11 @@ VARS = {
     "dust_optical_depth": {"fields": ["M2TMNXAER_5_12_4_DUEXTTAU"], "factor": 1.0, "first": 2003, "last": 2025,
                            "units_giovanni": "1",
                            "annual_method": "media de 12 meses ponderada por días, adimensional"},
+    # Referencia independiente para T041: MODIS Aqua Deep Blue (AOD total, no solo polvo). MERRA-2 asimila el
+    # producto Dark Target de MODIS, no el Deep Blue sobre tierra, así que no es la misma información de entrada.
+    "modis_deep_blue_aod": {"fields": ["MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean"],
+                            "factor": 1.0, "first": 2003, "last": 2025, "units_giovanni": "1",
+                            "annual_method": "media de 12 meses ponderada por días, adimensional"},
 }
 
 
@@ -141,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
     parts = [fetch_field(s, field, v["first"], v["last"], shape, a.bbox) for field in v["fields"]]
     common = set.intersection(*(set(p) for p in parts))
     monthly = {k: sum(p[k] for p in parts) * v["factor"] for k in sorted(common)}
-    aggregation = "mean" if a.var == "dust_optical_depth" else "sum_from_rate"
+    aggregation = "sum_from_rate" if a.var == "runoff" else "mean"
     ann = annual(monthly, aggregation)
     where = f"bbox={a.bbox}" if a.bbox else f"shape={shape}"
     rep = {"region": a.region, "variable": a.var, "service": "Time Series, Area-Averaged (ArAvTs)",
