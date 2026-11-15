@@ -259,6 +259,31 @@ def test_regional_monthly_weighted_mean_and_all_cells_rule():
     assert np.isnan(out[1])
 
 
+def test_land_only_rule_renormalizes_and_applies_threshold():
+    """FR-D10: celdas de mar (NaN siempre) no invalidan el mes; se repesan las de tierra; umbral sobre el peso."""
+    info = SourceInfo("s", "p", "sn", "v", None, "a", "x", "x", "g")
+    lats = np.array([30.0, 30.0, 30.0])
+    lons = np.array([-115.0, -114.375, -113.75])
+    vals = np.array([[10.0, 10.0, np.nan],
+                     [20.0, np.nan, np.nan],
+                     [np.nan, np.nan, 5.0]])  # celda 3 = mar (NaN salvo el último mes)
+    grid = GridData(lats, lons, [(2000, 1), (2000, 2), (2000, 3)], vals, info)
+    cw = CellWeights(lats, lons, np.ones(3), np.array([2.0, 1.0, 1.0]))  # peso total 4
+    out = build.regional_monthly(grid, cw, 0.5)
+    assert out[0] == pytest.approx((2 * 10 + 1 * 20) / 3)  # tierra cubre 3/4 ≥ 50 %
+    assert out[1] == pytest.approx(10.0)  # 2/4 = 50 % exacto: válido
+    assert np.isnan(out[2])  # solo 1/4 con dato < 50 %
+    strict = build.regional_monthly(grid, cw)  # regla de siempre: cualquier NaN invalida
+    assert np.isnan(strict).all()
+
+
+def test_existing_variables_keep_the_all_cells_rule():
+    import variables
+    for (vid, src), v in variables.VARS.items():
+        if vid in ("air_temperature", "precipitation"):
+            assert v.min_valid_fraction is None, (vid, src)
+
+
 def test_power_is_never_chosen_automatically():
     """Constitución II: la fuente por omisión es GES DISC; POWER solo con --source power."""
     import inspect

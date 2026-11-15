@@ -70,16 +70,29 @@ def _p(x: Any) -> float | None:
 # --------------------------------------------------------------------------------------
 # Serie regional
 # --------------------------------------------------------------------------------------
-def regional_monthly(grid, cw: CellWeights) -> np.ndarray:
-    """Media ponderada por mes; NaN si falta cualquiera de las celdas con peso."""
+def regional_monthly(grid, cw: CellWeights, min_valid_fraction: float | None = None) -> np.ndarray:
+    """Media ponderada por mes.
+
+    Regla por omisión (`min_valid_fraction=None`): NaN si falta cualquiera de las celdas con peso.
+    Variables solo de tierra (FR-D10): media de las celdas con dato, con los pesos renormalizados, y NaN si esas
+    celdas suman menos de `min_valid_fraction` del peso total de la región.
+    """
     lookup = {(round(float(a), 4), round(float(o), 4)): i for i, (a, o) in enumerate(zip(grid.lats, grid.lons))}
     try:
         idx = np.array([lookup[(round(float(a), 4), round(float(o), 4))] for a, o in zip(cw.lats, cw.lons)])
     except KeyError as exc:
         raise KeyError(f"La lectura no incluye la celda {exc.args[0]}: revisa el recuadro de lectura.") from exc
     vals = grid.values[idx]
-    out = (cw.weights[:, None] * vals).sum(axis=0) / cw.weights.sum()
-    out[np.isnan(vals).any(axis=0)] = np.nan
+    w = cw.weights[:, None]
+    if min_valid_fraction is None:
+        out = (w * vals).sum(axis=0) / cw.weights.sum()
+        out[np.isnan(vals).any(axis=0)] = np.nan
+        return out
+    valid = ~np.isnan(vals)
+    wv = (w * valid).sum(axis=0)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = (w * np.where(valid, vals, 0.0)).sum(axis=0) / wv
+    out[wv < min_valid_fraction * cw.weights.sum()] = np.nan
     return out
 
 
@@ -195,7 +208,7 @@ class SeriesResult:
 def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, first_year: int, last_year: int,
                  manifest_ref: str) -> SeriesResult:
     spec, info = var.spec, data.info
-    monthly = regional_monthly(data, cw)
+    monthly = regional_monthly(data, cw, var.min_valid_fraction)
     bundle = regional_bundle(region, spec, data.months, monthly, info.source, info.product, info.grid_text)
     clean, rep = clean_monthly(bundle, first_year, last_year)
     annual = to_annual(clean, spec)
@@ -228,7 +241,9 @@ def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, f
         "relleno declarado por la fuente → faltante",
         var.conversion,
         f"promedio de área de {cw.n_cells} celdas de {info.grid_text} (peso = cos(latitud) × fracción cubierta); "
-        "un mes regional solo es válido si todas sus celdas lo son",
+        + ("un mes regional solo es válido si todas sus celdas lo son" if var.min_valid_fraction is None else
+           f"variable solo de tierra: media de las celdas con dato (pesos renormalizados); el mes es faltante si "
+           f"cubren menos del {var.min_valid_fraction:.0%} del peso de la región"),
     ]
     if rep.n_out_of_range:
         transformations.append(f"{rep.n_out_of_range} meses fuera de rango físico → faltante")
@@ -392,7 +407,11 @@ def default_sources(source: str) -> dict[str, Any]:
         from sources.imerg import IMERG_PRECIP
         from sources.merra2 import MERRA2_T2M
 
-        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP)}
+        from sources.gldas import GLDAS_EVAPOTRANSPIRATION, GLDAS_SOIL_MOISTURE
+
+        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP),
+                "soil_moisture": GesDiscSource(GLDAS_SOIL_MOISTURE),
+                "evapotranspiration": GesDiscSource(GLDAS_EVAPOTRANSPIRATION)}
     if source == "power":
         from sources.power import PowerSource
 
@@ -462,17 +481,18 @@ def build(region_ids: list[str], var_ids: list[str], out_dir: Path, sources: dic
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--regions", default=",".join(ALL_REGION_IDS), help="ids ISO 3166-2 separados por coma")
-    ap.add_argument("--variables", default=",".join(variables.VARIABLE_IDS))
+    ap.add_argument("--variables", default=None, help="ids separados por coma (por omisión, todas las de la fuente)")
     ap.add_argument("--source", default="gesdisc", choices=["gesdisc", "power"],
                     help="gesdisc (MERRA-2 e IMERG, por omisión) o power (alternativa; solo a mano)")
     ap.add_argument("--out", default=str(PIPELINE_DIR / "out" / "trends"))
     ap.add_argument("--last-year", type=int, default=None, help="tope del último año completo (por omisión, el año pasado)")
     args = ap.parse_args(argv)
     region_ids = [r.strip() for r in args.regions.split(",") if r.strip()]
-    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()]
+    sources = default_sources(args.source)
+    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()] if args.variables else list(sources)
     t0 = _dt.datetime.now()
     try:
-        files = build(region_ids, var_ids, Path(args.out), default_sources(args.source), last_year_max=args.last_year)
+        files = build(region_ids, var_ids, Path(args.out), sources, last_year_max=args.last_year)
     except ReadFailed as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         print(f"Regiones afectadas: {', '.join(exc.affected_regions)}", file=sys.stderr)
