@@ -9,11 +9,9 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, type Catalog } from '../../lib/data'
-import { variableCopy, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, loadSeries, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY, PRODUCT_CITATIONS } from '../../content'
 import './guide.css'
-import { loadSeries } from '../../lib/data'
-import { PRODUCT_CITATIONS } from '../../content'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
 const DEFAULT_METHOD = {

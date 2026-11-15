@@ -172,7 +172,9 @@ export const VARIABLE_COPY: Partial<Record<VariableId, VariableCopy>> = {
       'Se mide como espesor óptico a 550 nanómetros y no tiene unidad: cuanto mayor, menos luz llega al suelo. ' +
       'Cuenta toda la columna de aire, no la contaminación a nivel del suelo. ' +
       'Procede de MERRA-2, un reanálisis de la NASA que asimila observaciones de satélite; ' +
-      'no es una medición directa.',
+      'no es una medición directa. ' +
+      'La serie empieza en 2003: antes el reanálisis contaba con menos satélites, ' +
+      'y las erupciones de El Chichón (1982) y Pinatubo (1991) elevan los primeros años.',
   },
   dust_optical_depth: {
     label: 'Polvo en el aire',
@@ -183,7 +185,9 @@ export const VARIABLE_COPY: Partial<Record<VariableId, VariableCopy>> = {
       'Cuenta toda la columna de aire, no la contaminación a nivel del suelo. ' +
       'Donde casi no hay polvo el valor es casi cero, y un cambio en porcentaje puede ser grande sin ser relevante. ' +
       'Procede de MERRA-2, un reanálisis de la NASA que asimila observaciones de satélite; ' +
-      'no es una medición directa.',
+      'no es una medición directa. ' +
+      'La serie empieza en 2003: en 2000 da un salto al empezar a asimilarse satélites nuevos, ' +
+      'y con él la tendencia desde 1980 sería un artefacto.',
   },
 }
 
