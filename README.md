@@ -3,7 +3,7 @@
 ## Recursos de trabajo
 
 - [Prompt para planificar con Claude, Spec Kit e Impeccable](PROMPT_PLAN_PROYECTO_CLAUDE.md).
-- [Prototipo del globo React y Three.js](web/README.md).
+- [Aplicación web: Trend Detective](web/README.md) · [producto](PRODUCT.md) · [sistema de diseño](DESIGN.md).
 - Laboratorio científico: rama `practice/trendlens-lab`.
 
 Los scripts `correr` y `correr.cmd` arrancan el laboratorio cuando están presentes sus archivos `practice-lab/app.py` y `practice-lab/requirements.txt`. El globo de `sync_main` se ejecuta siguiendo las instrucciones de `web/README.md`.
