@@ -98,7 +98,7 @@ export default function PairChart({ items, unit, from, to }: { items: ChartItem[
       <button type="button" className="link-button" aria-expanded={showTable} aria-controls={tableId} onClick={() => setShowTable(s => !s)}>
         {showTable ? 'Hide table' : 'View as table'}
       </button>
-      <div id={tableId} className="table-wrap table-wrap--tall" hidden={!showTable}>
+      <div id={tableId} className="table-wrap table-wrap--tall" hidden={!showTable} role="region" aria-label="Yearly values table for both states" tabIndex={0}>
         <table className="data-table">
           <caption className="vh">{`Yearly values (${unit})`}</caption>
           <thead>

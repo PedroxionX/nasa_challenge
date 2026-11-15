@@ -65,7 +65,7 @@ export default function AnalysisPanel() {
   const regionName = region?.name ?? regionId
   const variable = variableCopy(variableId, catalog?.variables.find(v => v.id === variableId))
 
-  const close = () => { setRegion(null); focusSearch() }
+  const close = (restoreFocus: boolean) => { setRegion(null); if (restoreFocus) focusSearch() }
 
   return (
     <article className="analysis" aria-busy={load.kind === 'loading'}>
@@ -76,7 +76,7 @@ export default function AnalysisPanel() {
             {region && `${COUNTRY[region.country]} · `}{variable.label} · {fmtYears(from, to)}
           </p>
         </div>
-        <CloseButton label="Close analysis" onClick={close} />
+        <CloseButton label="Close analysis" onClick={e => close(e.detail === 0)} />
       </div>
 
       {load.kind === 'loading' && <Skeleton />}

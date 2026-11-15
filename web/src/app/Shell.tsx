@@ -19,12 +19,14 @@ import { configureState, dismissStateNotice, markWebglUnavailable, useAppState, 
 import './shell.css'
 
 /** Igual que el punto de corte de shell.css. */
-export const DESKTOP_QUERY = '(min-width: 900px)'
+export const DESKTOP_QUERY = '(min-width: 900px), (min-width: 600px) and (max-height: 500px)'
+/** Pantallas donde la bienvenida y la hoja van acopladas abajo (incluye teléfonos en horizontal). */
+const COMPACT_QUERY = '(max-width: 899px), (max-height: 500px)'
 
 type Sheet = 'peek' | 'half' | 'full'
 const NEXT_SHEET: Record<Sheet, Sheet> = { peek: 'half', half: 'full', full: 'peek' }
 /** Lo que hará el asa al tocarla; se lee en la propia asa, junto a una flecha con la dirección. */
-const SHEET_LABEL: Record<Sheet, string> = { peek: 'Show more', half: 'Expand', full: 'Collapse' }
+const SHEET_LABEL: Record<Sheet, string> = { peek: 'Show analysis', half: 'Expand analysis', full: 'Show globe' }
 
 function setInsets(right: number, bottom: number) {
   const s = document.documentElement.style
@@ -33,18 +35,19 @@ function setInsets(right: number, bottom: number) {
 }
 
 export default function Shell() {
-  const { regionId, compareId, webgl } = useAppState()
+  const { regionId, compareId, variableId, webgl } = useAppState()
   const notice = useStateNotice()
   const [catalogFailed, setCatalogFailed] = useState(false)
   const [catalogAttempt, setCatalogAttempt] = useState(0)
-  // La altura de la hoja se recuerda por región: al elegir otra vuelve a la media.
-  const [sheetFor, setSheetFor] = useState<{ region: string | null; sheet: Sheet }>({ region: null, sheet: 'half' })
-  const sheet: Sheet = sheetFor.region === regionId ? sheetFor.sheet : 'half'
+  // Una región nueva empieza con su resumen (asomada); ampliar es una decisión explícita.
+  const [sheetFor, setSheetFor] = useState<{ region: string | null; sheet: Sheet }>({ region: null, sheet: 'peek' })
+  const sheet: Sheet = sheetFor.region === regionId ? sheetFor.sheet : 'peek'
   const setSheet = (next: Sheet) => setSheetFor({ region: regionId, sheet: next })
   const panelRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLElement>(null)
   const methodsRef = useRef<HTMLDialogElement>(null)
   const welcomeRef = useRef<HTMLElement>(null)
+  const panelBodyRef = useRef<HTMLDivElement>(null)
 
   // El catálogo fija años y regiones válidos.
   useEffect(() => {
@@ -65,6 +68,15 @@ export default function Shell() {
     return () => { live = false }
   }, [catalogAttempt])
 
+  // Cada consulta empieza desde el título, incluso después de leer hasta el final de otra.
+  useLayoutEffect(() => {
+    if (panelBodyRef.current) panelBodyRef.current.scrollTop = 0
+  }, [regionId, compareId, variableId])
+
+  useLayoutEffect(() => {
+    if (sheet === 'peek' && panelBodyRef.current) panelBodyRef.current.scrollTop = 0
+  }, [sheet])
+
   // Zona que ocupa el panel sobre el escenario.
   useLayoutEffect(() => {
     // Con región, lo que tapa es el panel; sin ella, en móvil, la bienvenida (va acoplada abajo como la hoja).
@@ -75,7 +87,10 @@ export default function Shell() {
     const measure = () => {
       const p = panel.getBoundingClientRect()
       const s = stage.getBoundingClientRect()
-      if (window.matchMedia?.(DESKTOP_QUERY).matches) setInsets(isPanel ? Math.max(0, s.right - p.left) : 0, 0)
+      const compact = window.matchMedia?.(COMPACT_QUERY).matches
+      // Sin WebGL no hay globo que despejar: la bienvenida no reserva sitio.
+      if (!isPanel && (!compact || !webgl)) setInsets(0, 0)
+      else if (window.matchMedia?.(DESKTOP_QUERY).matches) setInsets(isPanel ? Math.max(0, s.right - p.left) : 0, 0)
       else setInsets(0, Math.max(0, s.bottom - p.top))
     }
     measure()
@@ -91,7 +106,7 @@ export default function Shell() {
       window.removeEventListener('resize', measure)
       setInsets(0, 0)
     }
-  }, [regionId, sheet])
+  }, [regionId, sheet, webgl])
 
   const openMethods = () => {
     const d = methodsRef.current
@@ -149,18 +164,26 @@ export default function Shell() {
 
       {regionId && (
         <aside className="shell-panel" ref={panelRef} aria-label="Analysis">
-          <button
-            type="button"
-            className="shell-sheet-handle"
-            onClick={() => setSheet(NEXT_SHEET[sheet])}
-          >
-            <span className="shell-sheet-grip" aria-hidden="true" />
-            <span className="shell-sheet-action">
-              <ChevronIcon size={16} up={sheet !== 'full'} />
-              {SHEET_LABEL[sheet]}
-            </span>
-          </button>
-          <div className="shell-panel-body">
+          <div className="shell-sheet-controls">
+            <button
+              type="button"
+              className="shell-sheet-handle"
+              onClick={() => setSheet(NEXT_SHEET[sheet])}
+              aria-controls="analysis-panel-body"
+            >
+              <span className="shell-sheet-grip" aria-hidden="true" />
+              <span className="shell-sheet-action">
+                <ChevronIcon size={16} up={sheet !== 'full'} />
+                {SHEET_LABEL[sheet]}
+              </span>
+            </button>
+            {sheet === 'half' && (
+              <button type="button" className="shell-sheet-back" onClick={() => setSheet('peek')} aria-controls="analysis-panel-body">
+                Show globe
+              </button>
+            )}
+          </div>
+          <div className="shell-panel-body" id="analysis-panel-body" ref={panelBodyRef}>
             {/* 007: con una segunda región (vs=) el panel muestra la comparación; sin ella, el análisis y su entrada. */}
             {compareId ? (
               <ErrorBoundary zone="comparison" resetKeys={[regionId, compareId]}><ComparePanel /></ErrorBoundary>

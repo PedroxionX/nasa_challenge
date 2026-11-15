@@ -25,6 +25,12 @@ h1, h2, h3, h4 { line-height: var(--leading-tight); text-wrap: balance; }
 p, li, dd { text-wrap: pretty; }
 
 button, select, input { font: inherit; color: inherit; }
+button, select, input, fieldset { min-width: 0; max-width: 100%; }
+
+/* Mantener legibles los campos táctiles, también al abrir el teclado del teléfono. */
+@media (pointer: coarse) {
+  .shell input, .shell select { font-size: max(16px, var(--text-base)); }
+}
 
 a { color: var(--color-accent); text-underline-offset: 3px; }
 

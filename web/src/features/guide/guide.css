@@ -3,6 +3,19 @@
 /* ── WelcomeCard: la superficie (panel opaco) la pone el armazón ── */
 .welcome-card { display: grid; gap: var(--space-3); padding: var(--space-4); }
 .welcome-title { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); }
+.welcome-intro { display: grid; gap: var(--space-2); }
+.welcome-intro summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  cursor: pointer;
+  list-style: none;
+}
+.welcome-intro summary::-webkit-details-marker { display: none; }
+.welcome-intro summary::after { content: '+'; font-size: var(--text-lg); color: var(--color-text-muted); }
+.welcome-intro[open] summary::after { content: '\2212'; }
 .welcome-how { margin: 0; font-size: var(--text-sm); color: var(--color-text-muted); }
 .welcome-examples { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
 .welcome-example {
@@ -18,9 +31,13 @@
 @media (min-width: 900px) {
   .welcome-card { padding: var(--space-5); }
 }
-/* En móvil la tarjeta tapa parte del globo: la nota de causalidad se lee después, en cada análisis. */
+/* En móvil la tarjeta tapa parte del globo (009): más compacta, ejemplos en dos columnas y solo con el lugar. */
 @media (max-width: 899px) {
-  .welcome-note { display: none; }
+  .welcome-card { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
+  .welcome-title { font-size: var(--text-base); }
+  .welcome-examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .welcome-example { min-width: 0; min-height: var(--tap); padding: var(--space-1) var(--space-2); overflow-wrap: anywhere; }
+  .welcome-example-teaches { display: none; }
 }
 /* Pantallas bajas (teléfono apaisado): lo esencial es el título y los ejemplos. */
 @media (max-height: 560px) {

@@ -71,7 +71,7 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
             >
               {showTable ? 'Hide table' : 'View as table'}
             </button>
-            <div id={`${uid}-table`} className="table-wrap table-wrap--tall" hidden={!showTable}>
+            <div id={`${uid}-table`} className="table-wrap table-wrap--tall" hidden={!showTable} role="region" aria-label="Slope by start year table" tabIndex={0}>
               <table className="data-table">
                 <caption className="vh">{`Slope per decade by start year, ending in ${fmtYear(to)} (${unit} per decade)`}</caption>
                 <thead>

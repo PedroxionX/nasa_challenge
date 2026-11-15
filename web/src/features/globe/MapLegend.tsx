@@ -4,7 +4,7 @@
  * cómo se marca el estado elegido y qué significa el color (cambio estimado, no significancia).
  * Al lado, el acceso a la tabla y a la vista inicial.
  */
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { UI_COPY } from '../../content'
 import { GlobeIcon, InfoIcon, TableIcon } from '../../lib/ui/icons'
 import { GLOBE_COPY } from './copy'
@@ -32,11 +32,33 @@ export default function MapLegend(p: Props) {
   // El detalle empieza cerrado: la escala con sus cortes basta para leer el mapa y deja sitio al globo.
   const [open, setOpen] = useState(false)
   const moreId = useId()
+  const toolsRef = useRef<HTMLDivElement>(null)
   const ranges = classRanges(p.breaks, formatBreak)
   const color = (i: number) => p.palette.classes[paletteIndex(i, ranges.length, p.palette.classes.length)]
 
+  // En pantallas compactas las herramientas tapan la parte de arriba del escenario: el globo se centra debajo (009).
+  useEffect(() => {
+    const el = toolsRef.current
+    if (!el) return
+    const measure = () => {
+      const compact = window.matchMedia?.('(max-width: 899px), (max-height: 500px)').matches
+      const value = `${compact ? el.offsetTop + el.offsetHeight + 8 : 0}px`
+      const style = document.documentElement.style
+      if (style.getPropertyValue('--globe-inset-top') !== value) style.setProperty('--globe-inset-top', value)
+    }
+    measure()
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    ro?.observe(el)
+    window.addEventListener('resize', measure)
+    return () => {
+      ro?.disconnect()
+      window.removeEventListener('resize', measure)
+      document.documentElement.style.setProperty('--globe-inset-top', '0px')
+    }
+  }, [])
+
   return (
-    <div className="globe-tools">
+    <div className="globe-tools" ref={toolsRef}>
       <section className="globe-legend" aria-label={GLOBE_COPY.legendLabel}>
         <p className="globe-legend-head">
           <span className="globe-legend-title">{GLOBE_COPY.legendTitle}</span>

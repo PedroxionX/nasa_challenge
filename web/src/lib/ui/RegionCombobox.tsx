@@ -34,6 +34,7 @@ export default function RegionCombobox({ id, label, showLabel = false, placehold
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const pointerType = useRef('')
   const uid = useId()
   const listId = `${uid}-list`
   const optionId = (regionId: string) => `${uid}-opt-${regionId}`
@@ -66,10 +67,12 @@ export default function RegionCombobox({ id, label, showLabel = false, placehold
     document.getElementById(`${uid}-opt-${activeRegion.id}`)?.scrollIntoView?.({ block: 'nearest' })
   }, [activeRegion, uid])
 
-  const choose = (region: RegionInfo) => {
+  const choose = (region: RegionInfo, touch = false) => {
     onChange(region.id)
     setQuery(null)
     setOpen(false)
+    // Con el dedo, soltar el campo cierra el teclado y deja ver el resultado (009).
+    if (touch) inputRef.current?.blur()
     // Deja el nombre seleccionado: si se sigue escribiendo, se reemplaza en vez de añadirse.
     requestAnimationFrame(() => {
       const input = inputRef.current
@@ -162,7 +165,8 @@ export default function RegionCombobox({ id, label, showLabel = false, placehold
                     data-current={r.id === value || undefined}
                     className="combo-option"
                     // mousedown en vez de click: así el campo no pierde el foco antes de elegir.
-                    onMouseDown={e => { e.preventDefault(); choose(r) }}
+                    onPointerDown={e => { pointerType.current = e.pointerType }}
+                    onMouseDown={e => { e.preventDefault(); choose(r, pointerType.current === 'touch' || pointerType.current === 'pen') }}
                     onMouseMove={() => setActive(visible.indexOf(r))}
                   >
                     {r.name}

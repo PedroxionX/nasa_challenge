@@ -7,6 +7,7 @@
 import { useAppState } from '../../app/state'
 import { variableCopy, UI_COPY, WELCOME_COPY } from '../../content'
 import type { VariableId } from '../../lib/data'
+import { useState } from 'react'
 import './guide.css'
 
 /*
@@ -20,6 +21,8 @@ const EXAMPLES: { regionId: string; place: string; variableId: VariableId; teach
 ]
 
 export default function WelcomeCard() {
+  // En pantallas pequeñas la explicación empieza plegada: los ejemplos y el globo quedan a la vista (009).
+  const [showIntro, setShowIntro] = useState(() => window.matchMedia?.('(min-width: 900px) and (min-height: 640px)').matches ?? false)
   const { setRegion, setVariable, resetPeriod } = useAppState()
 
   function openExample(regionId: string, variableId: VariableId) {
@@ -31,7 +34,10 @@ export default function WelcomeCard() {
   return (
     // Sin landmark propio: el armazón (002) ya envuelve esto en <section aria-label="Welcome">.
     <div className="welcome-card">
-      <h2 className="welcome-title">{UI_COPY.welcome}</h2>
+      <details className="welcome-intro" open={showIntro} onToggle={e => setShowIntro(e.currentTarget.open)}>
+        <summary><h2 className="welcome-title">{UI_COPY.welcome}</h2></summary>
+        <p className="welcome-note">{UI_COPY.notCause}</p>
+      </details>
       <p className="welcome-how">{WELCOME_COPY.how}</p>
 
       <ul className="welcome-examples">
@@ -44,8 +50,6 @@ export default function WelcomeCard() {
           </li>
         ))}
       </ul>
-
-      <p className="welcome-note">{UI_COPY.notCause}</p>
     </div>
   )
 }
