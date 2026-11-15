@@ -1,6 +1,8 @@
 /**
- * Estado único de la aplicación (región, variable, periodo, WebGL), sincronizado con la URL:
- *   ?region=MX-BCN&var=air_temperature&from=1980&to=2025
+ * Estado único de la aplicación (región, región de comparación, variable, periodo, WebGL), sincronizado con la URL:
+ *   ?region=MX-BCN&vs=US-TX&var=air_temperature&from=1980&to=2025
+ * Las variables válidas son las del catálogo (lista abierta, 007 FR-K14); hasta que carga, `var` se acepta por formato.
+ * `vs` es la segunda región de la comparación (007): exige `region` y debe ser distinta de ella.
  * El periodo se valida contra el de la variable activa (cada producto tiene el suyo).
  * Los ids anteriores (?var=T2M, ?var=PRECTOTCORR) se traducen sin aviso.
  * Solo 002 edita este archivo. Los componentes no reciben props: leen y escriben con useAppState().
@@ -14,6 +16,8 @@ export type { VariableId }
 
 export interface AppState {
   regionId: string | null
+  /** Segunda región de la comparación (007); `null` si no se compara. Nunca igual a `regionId`. */
+  compareId: string | null
   variableId: VariableId
   from: number
   to: number
@@ -22,6 +26,8 @@ export interface AppState {
 
 export interface AppActions {
   setRegion(id: string | null): void
+  /** Elige o quita (`null`) la segunda región. Se ignora sin región principal o si es la misma. */
+  setCompare(id: string | null): void
   setVariable(id: VariableId): void
   setPeriod(from: number, to: number): void
   resetPeriod(): void
@@ -82,6 +88,20 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
     regionId = null
   }
 
+  // Segunda región (007): solo tiene sentido con una región principal distinta.
+  let compareId = q.get('vs')
+  if (compareId !== null) {
+    if (!regionOk(compareId, limits)) {
+      notices.push(`La región «${compareId}» no existe; se quitó la comparación.`)
+      compareId = null
+    } else if (regionId === null) {
+      compareId = null
+    } else if (compareId === regionId) {
+      notices.push('Para comparar hacen falta dos regiones distintas; se quitó la comparación.')
+      compareId = null
+    }
+  }
+
   const rawVar = q.get('var')
   let variableId = defaultVariable(limits)
   if (rawVar !== null) {
@@ -103,14 +123,16 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
     else notices.push(`El periodo ${rawFrom ?? '…'}–${rawTo ?? '…'} no es válido; se muestra ${from}–${to}.`)
   }
 
-  return { state: { regionId, variableId, from, to }, notices }
+  return { state: { regionId, compareId, variableId, from, to }, notices }
 }
 
-/** Escribe el estado en la query conservando otros parámetros. */
-export function toSearch(s: UrlState, current = ''): string {
+/** Escribe el estado en la query conservando otros parámetros. Sin `compareId` el enlace no lleva comparación. */
+export function toSearch(s: Omit<UrlState, 'compareId'> & { compareId?: string | null }, current = ''): string {
   const q = new URLSearchParams(current)
   if (s.regionId) q.set('region', s.regionId)
   else q.delete('region')
+  if (s.regionId && s.compareId && s.compareId !== s.regionId) q.set('vs', s.compareId)
+  else q.delete('vs')
   q.set('var', s.variableId)
   q.set('from', String(s.from))
   q.set('to', String(s.to))
@@ -149,7 +171,7 @@ function writeUrl() {
 function update(patch: Partial<AppState>) {
   const next = { ...state, ...patch }
   if (
-    next.regionId === state.regionId && next.variableId === state.variableId &&
+    next.regionId === state.regionId && next.compareId === state.compareId && next.variableId === state.variableId &&
     next.from === state.from && next.to === state.to && next.webgl === state.webgl
   ) return
   state = next
@@ -166,7 +188,15 @@ const actions: AppActions = {
       console.warn(`setRegion: id desconocido «${id}»`)
       return
     }
-    update({ regionId: id })
+    // Sin región principal no hay comparación; si la nueva principal es la comparada, la comparación se quita.
+    update({ regionId: id, compareId: id === null || id === state.compareId ? null : state.compareId })
+  },
+  setCompare(id) {
+    if (id !== null && (!regionOk(id, limits) || state.regionId === null || id === state.regionId)) {
+      console.warn(`setCompare: «${id}» no se puede comparar con «${String(state.regionId)}»`)
+      return
+    }
+    update({ compareId: id })
   },
   setVariable(id) {
     if (!variableOk(id, limits)) {

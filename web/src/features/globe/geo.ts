@@ -50,22 +50,30 @@ function allPositions(geometry: Geometry): Position[] {
   return (geometry.coordinates as Ring[][]).flat(2)
 }
 
-/** Vista de cámara centrada en una geometría, con altitud según su tamaño. */
-export function viewForGeometry(geometry: Geometry): View {
+/** Vista de cámara centrada en una o varias geometrías, con altitud según lo que ocupan juntas. */
+function viewForGeometries(geometries: Geometry[], maxAltitude: number): View {
   let minLng = Infinity, maxLng = -Infinity, minLat = Infinity, maxLat = -Infinity
-  for (const [lng, lat] of allPositions(geometry)) {
-    if (lng < minLng) minLng = lng
-    if (lng > maxLng) maxLng = lng
-    if (lat < minLat) minLat = lat
-    if (lat > maxLat) maxLat = lat
+  for (const geometry of geometries) {
+    for (const [lng, lat] of allPositions(geometry)) {
+      if (lng < minLng) minLng = lng
+      if (lng > maxLng) maxLng = lng
+      if (lat < minLat) minLat = lat
+      if (lat > maxLat) maxLat = lat
+    }
   }
   const span = Math.max(maxLng - minLng, maxLat - minLat)
   return {
     lat: (minLat + maxLat) / 2,
     lng: (minLng + maxLng) / 2,
-    altitude: Math.min(1.2, Math.max(0.25, span / 18)),
+    altitude: Math.min(maxAltitude, Math.max(0.25, span / 18)),
   }
 }
+
+/** Vista de cámara centrada en una geometría, con altitud según su tamaño. */
+export const viewForGeometry = (geometry: Geometry): View => viewForGeometries([geometry], 1.2)
+
+/** Vista que deja a la vista dos regiones a la vez (comparación, 007 FR-K15); se aleja más que con una sola. */
+export const viewForPair = (a: Geometry, b: Geometry): View => viewForGeometries([a, b], 2.5)
 
 interface FeatureCollection<P> {
   features: { properties: P; geometry: Geometry }[]

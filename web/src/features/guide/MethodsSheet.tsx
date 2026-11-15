@@ -9,8 +9,8 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, loadSeries, type Catalog } from '../../lib/data'
-import { variableCopy, UI_COPY, GLOSSARY, PRODUCT_CITATIONS } from '../../content'
+import { loadCatalog, loadSeries, variablePeriod, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY, productCitation } from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -96,8 +96,6 @@ export default function MethodsSheet() {
 
   const alpha = catalog?.alpha ?? 0.05
   const level = Math.round((1 - alpha) * 100)
-  const firstYear = catalog?.period.first_year ?? 1981
-  const lastYear = catalog?.period.last_complete_year ?? 2025
   const minWindow = catalog?.period.min_window_years ?? 10
   const method = catalog?.method ?? DEFAULT_METHOD
   const products = catalog ? catalogProducts(catalog) : []
@@ -105,7 +103,6 @@ export default function MethodsSheet() {
 
   return (
     <article className="methods-sheet" aria-label="Métodos y fuentes">
-      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="methods-title">Métodos y fuentes</h2>
 
       {error && (
@@ -118,10 +115,11 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Periodo analizado</h3>
         <p>
-          Los análisis cubren desde <strong>{firstYear}</strong> hasta{' '}
-          <strong>{lastYear}</strong>. Solo se usan años completos (12 meses
-          válidos), porque agregar por año elimina el ciclo estacional. Con menos
-          de {minWindow} años completos no se calcula tendencia.
+          Cada variable tiene su propio periodo, según el producto del que procede;
+          aparece junto a cada una en «Variables disponibles». Solo se usan años completos (12 meses válidos), porque agregar por año
+          elimina el ciclo estacional. Con menos de {minWindow} años completos no
+          se calcula tendencia. Un periodo más corto tiene menos años y, por tanto,
+          menos capacidad de distinguir una tendencia del azar.
         </p>
       </section>
 
@@ -159,7 +157,7 @@ export default function MethodsSheet() {
         <p>
           Aquí la prueba corrige la varianza usando solo la autocorrelación de
           primer orden (r₁). La corrección es imperfecta: en un experimento del
-          laboratorio con autocorrelación fuerte (φ&nbsp;=&nbsp;0,75) y series de
+          laboratorio con autocorrelación fuerte (φ&nbsp;=&nbsp;0.75) y series de
           30 a 45 años, la prueba corregida rechazaba la ausencia de tendencia
           entre el 9&nbsp;% y el 11&nbsp;% de las veces, en lugar del
           5&nbsp;% esperado. Con autocorrelación fuerte, un valor p cercano a α
@@ -210,10 +208,17 @@ export default function MethodsSheet() {
         <dl className="methods-variables">
           {(catalog?.variables ?? []).map(v => {
             const copy = variableCopy(v.id, v)
+            const { firstYear, lastYear } = variablePeriod(catalog!, v.id)
             return (
               <div key={v.id} className="methods-variable-item">
                 <dt>{copy.label}</dt>
-                <dd>{copy.definition}</dd>
+                <dd>
+                  {copy.definition}
+                  <span className="methods-origin">
+                    {' '}Origen: {v.product_short_name ?? 'producto no declarado'}
+                    {v.product_version ? ` v${v.product_version}` : ''}. Periodo: {firstYear}–{lastYear}.
+                  </span>
+                </dd>
               </div>
             )
           })}
@@ -230,10 +235,16 @@ export default function MethodsSheet() {
           Applications, Version 2), GPM IMERG y el modelo GLDAS Noah. El promedio
           de cada estado lo calcula Trend Detective.
         </p>
+        <p>
+          Cada valor es un <strong>promedio de área del estado</strong>, ponderado por
+          la latitud y por la parte de cada celda que cae dentro del estado; no es el
+          valor de un punto ni de una estación. La fecha de consulta de cada serie
+          aparece también en «De dónde salen estos datos», dentro del análisis.
+        </p>
         <ul className="methods-citations">
           {products.map(p => (
             <li key={p.shortName}>
-              {PRODUCT_CITATIONS[p.shortName] ?? `${p.shortName} ${p.version} (NASA GES DISC).`}
+              {productCitation(p.shortName, p.version)}
               {retrieved[p.shortName] && <> Fecha de consulta: {retrieved[p.shortName]}.</>}
             </li>
           ))}

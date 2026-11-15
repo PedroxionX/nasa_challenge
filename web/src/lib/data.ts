@@ -1,6 +1,7 @@
 /**
  * Carga tipada de los archivos que produce el pipeline (003).
- * Tipos = contrato de specs/001-trend-explorer-mvp/contracts/data-files.md. Solo 002 edita este archivo;
+ * Tipos = contrato de specs/001-trend-explorer-mvp/contracts/data-files.md. Solo 002 edita este archivo
+ * (007 añadió, avisando, la lista abierta de variables y los lectores de `compare/`);
  * cambiar un tipo exige cambiar antes el contrato y avisar al equipo.
  *
  * El navegador NO calcula estadística: solo lee y elige la fila ya calculada (constitución, principio I).
@@ -32,9 +33,11 @@ export interface VariableInfo {
   id: VariableId
   label: string
   definition: string
-  kind: 'reanalysis' | 'observation'
+  /** Hoy `reanalysis` u `observation`; una variable nueva puede traer otro valor y se muestra tal cual. */
+  kind: string
   unit_annual: string
-  aggregation: 'mean_day_weighted' | 'sum_from_rate'
+  /** Hoy `mean_day_weighted` o `sum_from_rate`; igual que `kind`, lista abierta. */
+  aggregation: string
   relative_change: boolean
   /** Periodo propio de la variable (primer y último año completos). Si falta, vale `catalog.period`. */
   first_year?: number
@@ -143,6 +146,63 @@ export interface MapFile {
    */
   windows: Record<string, (number | null)[]>
   classes: { breaks: number[]; labels: string[] }
+}
+
+// ---------- Comparación de dos regiones (007; contrato en specs/007-region-comparison/contracts/compare-files.md) ----------
+
+export type DifferenceStatus = 'differ' | 'inconclusive' | 'insufficient' | 'invalid'
+export type NotComparableReason = 'different_unit' | 'different_product' | 'mixed_synthetic' | 'identical_series'
+/** `absolute`: diferencia en `unit_annual` por década. `relative`: series en % de su media; puntos porcentuales por década. */
+export type CompareBasis = 'absolute' | 'relative'
+
+export interface CompareVariableInfo {
+  basis: CompareBasis
+  unit: string
+  /** Año final de todas las ventanas publicadas (el último año completo de la variable). */
+  end: number
+  /** Años iniciales con fila. */
+  starts: number[]
+  n_pairs: number
+  series_sha256: string
+}
+
+export interface CompareIndex {
+  schema_version: number
+  built_at_utc: string
+  alpha: number
+  method: { series: string; slope: string; test: string; interval: string }
+  /** Una variable del catálogo puede faltar aquí: su prueba de la diferencia aún no se ha publicado. */
+  variables: Record<VariableId, CompareVariableInfo>
+}
+
+export const COMPARE_COLUMNS = ['n', 'diff_decade', 'ci_low', 'ci_high', 'p', 'status'] as const
+
+export interface CompareFile {
+  schema_version: number
+  variable: VariableId
+  /** Región del archivo: la primera del par. La diferencia es siempre `region − asociada`. */
+  region: string
+  basis: CompareBasis
+  unit: string
+  end: number
+  starts: number[]
+  columns: string[]
+  /** `partners[id][i]` es la fila de la ventana `starts[i]`–`end`. Solo regiones con id posterior a `region`. */
+  partners: Record<string, unknown[][]>
+  not_comparable?: Record<string, NotComparableReason>
+}
+
+/** Fila de la prueba de la diferencia ya convertida en objeto. Los nulos significan «no evaluable». */
+export interface DifferenceRow {
+  start: number
+  end: number
+  /** Años completos comunes de la ventana. */
+  n: number
+  diff_decade: number | null
+  ci_low: number | null
+  ci_high: number | null
+  p: number | null
+  status: DifferenceStatus
 }
 
 // ---------- Errores ----------
@@ -272,6 +332,100 @@ export function loadSeries(variableId: VariableId, regionId: string): Promise<Se
 
 export function loadMap(variableId: VariableId): Promise<MapFile> {
   return load(`data/trends/map/${variableId}.json`, validateMap)
+}
+
+// ---------- Comparación (007) ----------
+
+function validateCompareIndex(raw: unknown, url: string): CompareIndex {
+  const c = checkHeader(raw, url, ['alpha', 'method', 'variables'])
+  if (!isObj(c.variables)) throw new DataError('invalid', url, `${url}: «variables» debe ser un objeto`)
+  for (const [id, v] of Object.entries(c.variables)) {
+    if (!isObj(v) || !Array.isArray(v.starts) || typeof v.end !== 'number' || typeof v.unit !== 'string') {
+      throw new DataError('invalid', url, `${url}: la variable ${id} está mal formada`)
+    }
+  }
+  return c as unknown as CompareIndex
+}
+
+function validateCompareFile(raw: unknown, url: string): CompareFile {
+  const c = checkHeader(raw, url, ['variable', 'region', 'basis', 'unit', 'end', 'starts', 'columns', 'partners'])
+  if (!Array.isArray(c.starts) || !Array.isArray(c.columns) || !isObj(c.partners)) {
+    throw new DataError('invalid', url, `${url}: «starts», «columns» o «partners» mal formados`)
+  }
+  const missing = COMPARE_COLUMNS.filter(col => !(c.columns as string[]).includes(col))
+  if (missing.length) throw new DataError('invalid', url, `${url}: faltan columnas ${missing.join(', ')}`)
+  for (const [id, rows] of Object.entries(c.partners)) {
+    if (!Array.isArray(rows) || rows.length !== c.starts.length) {
+      throw new DataError('invalid', url, `${url}: ${id} no tiene una fila por año inicial`)
+    }
+  }
+  return c as unknown as CompareFile
+}
+
+/** «No existe» significa «aún no publicado», no un error: se devuelve `null`. */
+const nullIfMissing = <T>(pending: Promise<T>): Promise<T | null> =>
+  pending.catch((e: unknown) => {
+    if (isDataError(e) && e.kind === 'not_found') return null
+    throw e
+  })
+
+/** Qué variables tienen publicada la prueba de la diferencia; `null` si no se ha publicado ninguna. */
+export function loadCompareIndex(): Promise<CompareIndex | null> {
+  return nullIfMissing(load('data/trends/compare/index.json', validateCompareIndex))
+}
+
+/** Orden en que se guarda un par: primero el id que va antes alfabéticamente (ids ASCII). */
+export function pairOrder(a: string, b: string): [first: string, second: string] {
+  return a < b ? [a, b] : [b, a]
+}
+
+/** Archivo que contiene el par, sea cual sea el orden en que se pidan las regiones; `null` si no está publicado. */
+export function loadComparison(variableId: VariableId, regionA: string, regionB: string): Promise<CompareFile | null> {
+  const [first] = pairOrder(regionA, regionB)
+  return nullIfMissing(load(`data/trends/compare/${variableId}/${encodeURIComponent(first)}.json`, validateCompareFile))
+}
+
+export type PairLookup =
+  /** Hay fila para el periodo. La diferencia es `first − second`, en el orden del archivo; no se invierte. */
+  | { kind: 'row'; first: string; second: string; row: DifferenceRow }
+  | { kind: 'not_comparable'; first: string; second: string; reason: NotComparableReason }
+  /** El par existe, pero ese periodo no tiene prueba publicada (solo `starts`–`end`). */
+  | { kind: 'no_window'; first: string; second: string }
+  /** El par no figura en el archivo (p. ej. una región sin serie). */
+  | { kind: 'missing' }
+
+/**
+ * Busca la fila ya calculada del par para `from`–`to`. No calcula nada ni cambia el signo:
+ * `second` es la región asociada dentro del archivo de `first`.
+ */
+export function pickComparison(file: CompareFile, regionA: string, regionB: string, from: number, to: number): PairLookup {
+  const [first, second] = pairOrder(regionA, regionB)
+  if (file.region !== first) return { kind: 'missing' }
+  const reason = file.not_comparable?.[second]
+  if (reason) return { kind: 'not_comparable', first, second, reason }
+  const rows = file.partners[second]
+  if (!rows) return { kind: 'missing' }
+  const i = to === file.end ? file.starts.indexOf(from) : -1
+  if (i < 0) return { kind: 'no_window', first, second }
+  const raw = rows[i]
+  const cell = (col: (typeof COMPARE_COLUMNS)[number]) => raw[file.columns.indexOf(col)] ?? null
+  return {
+    kind: 'row', first, second,
+    row: {
+      start: from, end: to,
+      n: cell('n') as number,
+      diff_decade: cell('diff_decade') as number | null,
+      ci_low: cell('ci_low') as number | null,
+      ci_high: cell('ci_high') as number | null,
+      p: cell('p') as number | null,
+      status: cell('status') as DifferenceStatus,
+    },
+  }
+}
+
+/** Periodo de cada variable del catálogo, para `configureState`. */
+export function variablePeriods(catalog: Catalog): Record<VariableId, { firstYear: number; lastYear: number }> {
+  return Object.fromEntries(catalog.variables.map(v => [v.id, variablePeriod(catalog, v.id)]))
 }
 
 // ---------- Selección de ventana ----------

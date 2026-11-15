@@ -1,0 +1,40 @@
+{
+ "region": "US-TX",
+ "variable": "dust_optical_depth",
+ "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "M2TMNXAER_5_12_4_DUEXTTAU",
+ "shape": "tl_2014_us_state/shp_25 (Texas)",
+ "units_giovanni": "1",
+ "url_to_reproduce": [
+  "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2003-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_25&data=M2TMNXAER_5_12_4_DUEXTTAU"
+ ],
+ "retrieved": "2026-11-15",
+ "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+ "months": 276,
+ "annual_method": "media de 12 meses ponderada por días, adimensional",
+ "annual": {
+  "2003": 0.02213,
+  "2004": 0.02044,
+  "2005": 0.018717,
+  "2006": 0.019916,
+  "2007": 0.021661,
+  "2008": 0.02457,
+  "2009": 0.021013,
+  "2010": 0.018279,
+  "2011": 0.019605,
+  "2012": 0.019259,
+  "2013": 0.020387,
+  "2014": 0.020546,
+  "2015": 0.019397,
+  "2016": 0.013901,
+  "2017": 0.016953,
+  "2018": 0.023655,
+  "2019": 0.017662,
+  "2020": 0.020894,
+  "2021": 0.018237,
+  "2022": 0.022296,
+  "2023": 0.014818,
+  "2024": 0.017234,
+  "2025": 0.015956
+ }
+}

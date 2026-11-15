@@ -1,0 +1,95 @@
+{
+ "check": "T041: tendencia del polvo de MERRA-2 frente a MODIS Aqua Deep Blue (no asimilado por MERRA-2 sobre tierra)",
+ "period": "2003–2025",
+ "sources": {
+  "merra2_dust": "M2TMNXAER_5_12_4_DUEXTTAU (Giovanni ArAvTs, forma del estado)",
+  "merra2_total_aod": "serie publicada aerosol_optical_depth (TOTEXTTAU)",
+  "modis": "MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean (Giovanni ArAvTs)"
+ },
+ "caveat": "MODIS mide todos los aerosoles; el signo común apoya la bajada del polvo, no la aísla.",
+ "regions": [
+  {
+   "region": "US-AZ",
+   "merra2_dust": {
+    "n_years": 23,
+    "mean": 0.0232,
+    "sen_per_decade": -0.00308,
+    "pct_per_decade": -13.25,
+    "ci_pct_per_decade": [
+     -20.79,
+     -6.17
+    ],
+    "p_value": 0.0026,
+    "verdict": "decreasing"
+   },
+   "merra2_total_aod": {
+    "n_years": 23,
+    "mean": 0.0901,
+    "sen_per_decade": -0.00537,
+    "pct_per_decade": -5.97,
+    "ci_pct_per_decade": [
+     -13.32,
+     4.44
+    ],
+    "p_value": 0.2117,
+    "verdict": "inconclusive"
+   },
+   "modis_aqua_deep_blue_aod": {
+    "n_years": 23,
+    "mean": 0.0404,
+    "sen_per_decade": -0.00167,
+    "pct_per_decade": -4.13,
+    "ci_pct_per_decade": [
+     -17.11,
+     10.75
+    ],
+    "p_value": 0.5947,
+    "verdict": "inconclusive"
+   },
+   "same_sign_dust_vs_modis": true,
+   "interannual_corr_dust_vs_modis": 0.44
+  },
+  {
+   "region": "US-TX",
+   "merra2_dust": {
+    "n_years": 23,
+    "mean": 0.0195,
+    "sen_per_decade": -0.00185,
+    "pct_per_decade": -9.52,
+    "ci_pct_per_decade": [
+     -16.65,
+     -0.56
+    ],
+    "p_value": 0.0346,
+    "verdict": "decreasing"
+   },
+   "merra2_total_aod": {
+    "n_years": 23,
+    "mean": 0.1533,
+    "sen_per_decade": -0.01167,
+    "pct_per_decade": -7.61,
+    "ci_pct_per_decade": [
+     -11.51,
+     -3.7
+    ],
+    "p_value": 0.0006,
+    "verdict": "decreasing"
+   },
+   "modis_aqua_deep_blue_aod": {
+    "n_years": 23,
+    "mean": 0.1109,
+    "sen_per_decade": 0.00046,
+    "pct_per_decade": 0.42,
+    "ci_pct_per_decade": [
+     -7.27,
+     7.08
+    ],
+    "p_value": 0.966,
+    "verdict": "inconclusive"
+   },
+   "same_sign_dust_vs_modis": false,
+   "interannual_corr_dust_vs_modis": 0.244
+  }
+ ],
+ "checked_at_utc": "2026-11-15T16:09:46Z"
+}

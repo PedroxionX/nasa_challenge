@@ -12,7 +12,7 @@ import * as THREE from 'three'
 import { buildBorderLines } from './borders'
 import { altitudeFactor, readInsets, viewOffsetFor } from './camera'
 import { GLOBE_COPY } from './copy'
-import { COUNTRY_NAMES, viewForGeometry, type GlobeFeature, type View } from './geo'
+import { COUNTRY_NAMES, viewForGeometry, viewForPair, type GlobeFeature, type View } from './geo'
 import { dropTinyParts } from './simplify'
 import { textureUrls } from './textures'
 import './globe.css'
@@ -20,6 +20,8 @@ import './globe.css'
 export interface EarthGlobeHandle {
   flyTo: (view: View, ms?: number) => void
   flyToRegion: (id: string, ms?: number) => void
+  /** Deja a la vista dos regiones a la vez (comparación). */
+  flyToPair: (a: string, b: string, ms?: number) => void
 }
 
 type RegionFeature = Extract<GlobeFeature, { kind: 'region' }>
@@ -28,6 +30,8 @@ interface Props {
   ref?: Ref<EarthGlobeHandle>
   features: GlobeFeature[]
   selectedId: string | null
+  /** Segunda región de la comparación (007): mismo contorno y elevación, y rótulos «A» y «B» para distinguirlas. */
+  compareId?: string | null
   onSelect: (id: string | null) => void
   /** Relleno por región según los datos. `undefined` ⇒ relleno neutro. */
   regionFill?: (id: string) => string | undefined
@@ -98,6 +102,7 @@ export default function EarthGlobe({
   ref,
   features,
   selectedId,
+  compareId = null,
   onSelect,
   regionFill,
   regionNote,
@@ -166,6 +171,18 @@ export default function EarthGlobe({
     wake(duration + IDLE_MS)
   }, [regions, reducedMotion, wake])
 
+  const flyPair = useCallback((a: string, b: string, ms: number) => {
+    const fa = regions.find(r => r.properties.id === a)
+    const fb = regions.find(r => r.properties.id === b)
+    const globe = globeRef.current
+    if (!fa || !fb || !globe) return
+    const view = viewForPair(fa.geometry, fb.geometry)
+    const factor = altitudeFactor(sizeRef.current.w, sizeRef.current.h, readInsets())
+    const duration = reducedMotion ? 0 : ms
+    globe.pointOfView({ ...view, altitude: Math.min(MAX_ALTITUDE, view.altitude * factor) }, duration)
+    wake(duration + IDLE_MS)
+  }, [regions, reducedMotion, wake])
+
   useImperativeHandle(ref, () => ({
     flyTo: (view, ms = FLY_MS) => {
       const duration = reducedMotion ? 0 : ms
@@ -173,7 +190,8 @@ export default function EarthGlobe({
       wake(duration + IDLE_MS)
     },
     flyToRegion: (id, ms = FLY_MS) => flyRegion(id, ms),
-  }), [flyRegion, reducedMotion, wake])
+    flyToPair: (a, b, ms = FLY_MS) => flyPair(a, b, ms),
+  }), [flyRegion, flyPair, reducedMotion, wake])
 
   /** Centra la escena en la zona que el panel deja libre (sin cambiar el tamaño del lienzo). */
   const syncInsets = useCallback((animate: boolean) => {
@@ -373,20 +391,25 @@ export default function EarthGlobe({
   }, [])
 
   // El relleno queda para los datos; la selección se marca con contorno, elevación y etiqueta (FR-G01).
+  const isMarked = useCallback((id: string) => id === selectedId || id === compareId, [selectedId, compareId])
   const capMaterial = useCallback(
     (obj: object) => materialFor(regionFill?.(regionId(obj)) ?? COLORS.neutral),
     [regionFill, materialFor],
   )
   const sideMaterial = useCallback(
-    (obj: object) => materialFor(regionId(obj) === selectedId ? selectedColor : COLORS.side),
-    [selectedId, selectedColor, materialFor],
+    (obj: object) => materialFor(isMarked(regionId(obj)) ? selectedColor : COLORS.side),
+    [isMarked, selectedColor, materialFor],
   )
+  // Con comparación, cada etiqueta lleva su letra («A · …», «B · …»): las dos regiones se distinguen por texto.
   const pins = useMemo(() => {
-    const f = regions.find(r => r.properties.id === selectedId)
-    if (!f) return []
-    const { lat, lng } = viewForGeometry(f.geometry)
-    return [{ lat, lng, name: f.properties.name }]
-  }, [regions, selectedId])
+    const pin = (id: string | null, tag: string | null) => {
+      const f = regions.find(r => r.properties.id === id)
+      if (!f) return []
+      const { lat, lng } = viewForGeometry(f.geometry)
+      return [{ lat, lng, name: tag ? `${tag} · ${f.properties.name}` : f.properties.name }]
+    }
+    return compareId ? [...pin(selectedId, 'A'), ...pin(compareId, 'B')] : pin(selectedId, null)
+  }, [regions, selectedId, compareId])
   const pinElement = useCallback((d: object) => {
     const el = document.createElement('div')
     el.className = 'globe-pin'
@@ -395,20 +418,20 @@ export default function EarthGlobe({
   }, [])
   const strokeColor = useCallback((obj: object) => {
     const id = regionId(obj)
-    return id === selectedId || id === hoverId ? selectedColor : COLORS.stroke
-  }, [selectedId, hoverId, selectedColor])
+    return isMarked(id) || id === hoverId ? selectedColor : COLORS.stroke
+  }, [isMarked, hoverId, selectedColor])
   const altitude = useCallback((obj: object) => {
     const id = regionId(obj)
-    return id === selectedId ? ALT_SELECTED : id === hoverId ? ALT_HOVER : ALT_BASE
-  }, [selectedId, hoverId])
+    return isMarked(id) ? ALT_SELECTED : id === hoverId ? ALT_HOVER : ALT_BASE
+  }, [isMarked, hoverId])
   const label = useCallback((obj: object) => {
     if (touch) return '' // en táctil no hay puntero: un tooltip se quedaría fijo
     const { id, name, country } = (obj as RegionFeature).properties
     const note = regionNote?.(id)
     return `<div class="globe-tooltip"><b>${escapeHtml(name)}</b>`
       + (note ? `<span class="globe-tooltip-value">${escapeHtml(note)}</span>` : '')
-      + `<span>${escapeHtml(COUNTRY_NAMES[country])} · ${GLOBE_COPY.tooltipHint}</span></div>`
-  }, [touch, regionNote])
+      + `<span>${escapeHtml(COUNTRY_NAMES[country])} · ${compareId ? GLOBE_COPY.tooltipCompareHint : GLOBE_COPY.tooltipHint}</span></div>`
+  }, [touch, regionNote, compareId])
 
   // Cualquier cambio visible necesita cuadros para dibujarse.
   useEffect(() => {

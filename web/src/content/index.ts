@@ -8,7 +8,9 @@
  * - Nunca «X años para ser significativo».
  * - Solo cifras que provienen del archivo calculado por 003.
  */
-import type { TrendRow, TrendStatus, VariableId, VariableInfo } from '../lib/data'
+import type {
+  CompareBasis, DifferenceRow, NotComparableReason, TrendRow, TrendStatus, VariableId, VariableInfo,
+} from '../lib/data'
 
 // ---------- Tipos públicos (firma fijada por 002) ----------
 
@@ -230,6 +232,14 @@ export function variableCopy(id: VariableId, info?: Pick<VariableInfo, 'label' |
   return { label, short: label, definition: 'Variable del catálogo de datos de la NASA.' }
 }
 
+// ---------- Citas (FR-C04) ----------
+
+/** Cita de un producto; si no se conoce, solo su nombre y versión, sin inventar autores ni DOI. */
+export function productCitation(shortName: string | undefined, version: string | undefined): string {
+  if (!shortName) return 'Producto no declarado en el catálogo.'
+  return PRODUCT_CITATIONS[shortName] ?? `${shortName}${version ? ` versión ${version}` : ''}.`
+}
+
 // ---------- GLOSARIO (FR-C03) ----------
 // Definiciones de los términos que aparecen en la frase del análisis.
 // Definiciones tomadas de research.md D6. El panel (004) debe ofrecerlas junto a la primera cifra.
@@ -303,16 +313,49 @@ const VERDICT_LABEL: Record<TrendStatus, string> = {
 
 const NBSP = '\u00a0'
 
-/** Formatea un número con signo y dos decimales: «+1,23» o «−0,45». */
-function fmt(n: number): string {
-  const abs = Math.abs(n).toFixed(2)
-  return n >= 0 ? `+${abs}` : `\u2212${abs}` // − es U+2212, no guion
+/**
+ * Decimales según la unidad, igual que el panel (004, `digitsFor`): dos en °C, uno en mm y %.
+ * Así la frase y las tarjetas muestran la misma cifra.
+ */
+function digitsFor(unit: string): number {
+  return unit.includes('°') ? 2 : 1
 }
 
-/** «p = 0.012»; los valores menores que 0,001 se muestran como «p < 0.001», nunca como «0.000». */
+/**
+ * Formatea un número con signo en es-MX (punto decimal, FR-A08): «+1.23» o «−0.45».
+ * El menos es U+2212, no guion. Un valor que redondea a cero se muestra sin signo.
+ */
+function fmt(n: number, digits: number): string {
+  const abs = Math.abs(n).toFixed(digits)
+  if (Number(abs) === 0) return abs
+  return n >= 0 ? `+${abs}` : `−${abs}`
+}
+
+/** «p = 0.012»; los valores menores que 0.001 se muestran como «p < 0.001», nunca como «0.000». */
 function fmtP(p: number): string {
   if (p < 0.001) return `p${NBSP}<${NBSP}0.001`
   return `p${NBSP}=${NBSP}${p.toFixed(3)}`
+}
+
+/**
+ * Sujeto de la frase, con su artículo (género y número no se deducen de la etiqueta).
+ * Una variable sin entrada se nombra como «la variable «…»».
+ */
+const SUBJECT: Readonly<Record<VariableId, string>> = {
+  air_temperature: 'la temperatura del aire',
+  precipitation: 'la precipitación',
+  soil_moisture: 'la humedad del suelo',
+  evapotranspiration: 'la evapotranspiración',
+  soil_temperature: 'la temperatura del suelo',
+  runoff: 'la escorrentía',
+  snow_water_equivalent: 'la nieve acumulada',
+  specific_humidity: 'la humedad del aire',
+  total_precipitable_water: 'el vapor de agua total',
+  total_ozone: 'el ozono total',
+  max_air_temperature: 'la temperatura máxima',
+  min_air_temperature: 'la temperatura mínima',
+  aerosol_optical_depth: 'los aerosoles',
+  dust_optical_depth: 'el polvo en el aire',
 }
 
 // ---------- explainTrend — cuatro variantes (SC-C02) ----------
@@ -370,24 +413,217 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
   }
 
   // Variantes 1 y 2: increasing / decreasing — con cifras completas.
-  // La unidad ya trae «/década»; no se repite.
+  // La unidad ya trae «/década»; no se repite. El veredicto («Sube»/«Baja») va aparte:
+  // la frase no lo repite, la cuenta en palabras.
+  const digits = digitsFor(ctx.unit)
   const level = Math.round((1 - ctx.alpha) * 100)
   const slopeStr =
-    slope_decade !== null ? `${fmt(slope_decade)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
+    slope_decade !== null ? `${fmt(slope_decade, digits)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
   const ciStr =
     ci_low !== null && ci_high !== null
-      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low)} a ${fmt(ci_high)}${NBSP}${ctx.unit})`
+      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low, digits)} a ${fmt(ci_high, digits)}${NBSP}${ctx.unit})`
       : ''
   const pStr = p !== null ? `; ${fmtP(p)}` : ''
 
+  const subject = SUBJECT[ctx.variableId] ?? `la variable «${variableCopy(ctx.variableId).label}»`
+  const plural = subject.startsWith('los ') || subject.startsWith('las ')
+  const verb = (status === 'increasing' ? 'sube' : 'baja') + (plural ? 'n' : '')
   const sentence =
-    `${slopeStr}${ciStr}` +
+    `En ${ctx.regionName}, ${subject} ${verb} ${slopeStr}${ciStr}` +
     ` entre ${ctx.from} y ${ctx.to} (${n}${NBSP}años)${pStr}. ` +
     `Un patrón así sería muy raro si no hubiera tendencia.`
 
   return {
     verdict: VERDICT_LABEL[status],
     sentence,
+    caveats,
+  }
+}
+
+// ---------- Comparación de dos regiones (007, FR-K08) ----------
+//
+// Reglas propias, además de las de arriba:
+// - «Sin evidencia de que difieran» NUNCA se redacta como que las tendencias coinciden.
+// - Ninguna frase ordena las regiones ni valora cuál está en mejor situación.
+// - Signos opuestos no bastan para afirmar que las tendencias difieren: lo dice la prueba de la diferencia.
+// Nada de esto depende de la variable: sirve para cualquiera que publique el catálogo.
+
+export const COMPARE_COPY = {
+  entryLabel: 'Comparar con otro estado',
+  entryPlaceholder: 'Elige un estado…',
+  title: (a: string, b: string) => `${a} frente a ${b}`,
+  remove: 'Quitar comparación',
+  differenceHeading: 'Diferencia entre las tendencias',
+  eachHeading: 'Cada estado por separado',
+  chartHeading: 'Valores anuales',
+  startLabel: 'Desde',
+  until: (end: number) => `hasta ${end}`,
+  /** El par se guarda una sola vez y la diferencia se lee en ese orden; no se invierte. */
+  order: (first: string, second: string) => `${first} − ${second}`,
+  commonYears: (n: number) => `${n} años completos comunes`,
+  notPublished:
+    'La prueba de la diferencia todavía no está publicada para esta variable. ' +
+    'Puedes leer el resultado de cada estado por separado.',
+  noWindow: (end: number) =>
+    `La prueba de la diferencia solo está publicada para periodos que terminan en ${end}. ` +
+    'Abajo tienes el resultado de cada estado en el periodo elegido.',
+  showWindow: (from: number, to: number) => `Ver ${from}–${to}`,
+  missingPair: 'No hay prueba de la diferencia para este par de estados.',
+  noData: (name: string) => `No hay datos de ${name} para esta variable.`,
+  loadError: 'No pudimos cargar los datos de la comparación.',
+  notComparable: {
+    different_unit: 'No se comparan: las dos series están en unidades distintas.',
+    different_product: 'No se comparan: las dos series vienen de productos o versiones distintos.',
+    mixed_synthetic: 'No se comparan: una serie es de ejemplo (sintética) y la otra es real.',
+    identical_series: 'No se comparan: las dos series tienen exactamente los mismos valores.',
+  } satisfies Record<NotComparableReason, string>,
+  relativeBasis:
+    'La diferencia va en puntos porcentuales: cada serie se expresa como porcentaje de su propia media ' +
+    'en el periodo, para que un estado con valores altos no pese más que otro con valores bajos.',
+  absoluteBasis: 'La diferencia se mide restando, año por año, el valor de un estado al del otro.',
+  oppositeSigns:
+    'Que una pendiente sea positiva y la otra negativa no demuestra, por sí solo, que las tendencias difieran: ' +
+    'eso lo dice la prueba de la diferencia.',
+  manyPairs: 'Con tantos pares de estados posibles, algunos mostrarán diferencias por azar.',
+  notCause: 'Una diferencia entre tendencias no dice por qué ocurre ni si continuará.',
+  method:
+    'Se resta una serie de la otra en los años completos que tienen en común y se analiza esa serie de diferencias ' +
+    'con el mismo método que cada estado: pendiente de Theil-Sen, intervalo de Sen y prueba de Mann-Kendall ' +
+    'corregida por autocorrelación. Así se tiene en cuenta que dos estados cercanos comparten buena parte de su clima.',
+} as const
+
+export interface CompareContext {
+  /** Nombres en el orden del archivo: la diferencia es `firstName − secondName`. */
+  firstName: string
+  secondName: string
+  /** Unidad de la diferencia, ya con la base temporal: «°C/década», «puntos porcentuales/década». */
+  unit: string
+  basis: CompareBasis
+  from: number
+  to: number
+  alpha: number
+  /** Mínimo de años comunes para comparar (`catalog.period.min_window_years`). */
+  minYears: number
+  /** Resultado individual de cada región en el mismo periodo, si se conoce: solo para describir el patrón. */
+  first: { status: TrendStatus; slope: number | null } | null
+  second: { status: TrendStatus; slope: number | null } | null
+  smallRegion: boolean
+  isSynthetic: boolean
+}
+
+export interface ComparisonExplanation {
+  /** Frase corta del veredicto de la diferencia. */
+  verdict: string
+  /** Frase en lenguaje llano, solo con cifras del archivo. */
+  sentence: string
+  /** Descripción de los dos resultados individuales (mismo signo u opuesto; con evidencia o no), o `null`. */
+  pattern: string | null
+  caveats: string[]
+}
+
+const DIFFERENCE_VERDICT: Record<DifferenceRow['status'], string> = {
+  differ: 'Las tendencias difieren',
+  inconclusive: 'Sin evidencia suficiente de que difieran',
+  insufficient: 'Datos insuficientes para comparar',
+  invalid: 'Comparación no válida',
+}
+
+const HAS_EVIDENCE: ReadonlySet<TrendStatus> = new Set(['increasing', 'decreasing'])
+const DIRECTION: Partial<Record<TrendStatus, string>> = { increasing: 'sube', decreasing: 'baja' }
+
+/**
+ * Patrón de los dos resultados individuales. Solo lee su estado y el signo de su pendiente: no calcula nada.
+ * `opposite` indica signos opuestos, para añadir el aviso de que eso no basta.
+ */
+function describePattern(ctx: CompareContext): { text: string; opposite: boolean } | null {
+  const { first, second } = ctx
+  if (!first || !second || first.slope === null || second.slope === null) return null
+  const signs = [Math.sign(first.slope), Math.sign(second.slope)]
+  if (signs[0] === 0 || signs[1] === 0) return null
+  const opposite = signs[0] !== signs[1]
+  const both = HAS_EVIDENCE.has(first.status) && HAS_EVIDENCE.has(second.status)
+  if (both && opposite) {
+    return {
+      opposite,
+      text: `${ctx.firstName} ${DIRECTION[first.status]} y ${ctx.secondName} ${DIRECTION[second.status]}, ` +
+        'cada uno con evidencia de tendencia.',
+    }
+  }
+  if (both) {
+    return { opposite, text: `${ctx.firstName} y ${ctx.secondName}: en los dos ${DIRECTION[first.status]}, con evidencia de tendencia.` }
+  }
+  return {
+    opposite,
+    text: opposite
+      ? 'Las pendientes estimadas tienen signo opuesto, pero al menos una no tiene evidencia suficiente de tendencia.'
+      : 'Las pendientes estimadas tienen el mismo signo, pero al menos una no tiene evidencia suficiente de tendencia.',
+  }
+}
+
+/**
+ * Explicación de la prueba de la diferencia entre las tendencias de dos regiones.
+ * `row` es la fila ya calculada por el pipeline (`pickComparison`); aquí solo se redacta.
+ */
+export function explainComparison(row: DifferenceRow, ctx: CompareContext): ComparisonExplanation {
+  const caveats: string[] = []
+  if (ctx.isSynthetic) caveats.push(UI_COPY.synthetic)
+  if (ctx.smallRegion) caveats.push(UI_COPY.smallRegion)
+
+  const verdict = DIFFERENCE_VERDICT[row.status]
+  const pair = COMPARE_COPY.order(ctx.firstName, ctx.secondName)
+
+  if (row.status === 'insufficient') {
+    return {
+      verdict,
+      sentence:
+        `Faltan años en común: ${ctx.firstName} y ${ctx.secondName} comparten ${row.n}${NBSP}años completos ` +
+        `entre ${ctx.from} y ${ctx.to}. Con menos de ${ctx.minYears} no comparamos tendencias.`,
+      pattern: null,
+      caveats,
+    }
+  }
+  if (row.status === 'invalid') {
+    return {
+      verdict,
+      sentence: 'No mostramos la diferencia en este periodo: las dos series no cumplen las condiciones del método.',
+      pattern: null,
+      caveats,
+    }
+  }
+
+  const pattern = describePattern(ctx)
+  const period = `${ctx.from}–${ctx.to}, ${COMPARE_COPY.commonYears(row.n)}`
+  caveats.unshift(ctx.basis === 'relative' ? COMPARE_COPY.relativeBasis : COMPARE_COPY.absoluteBasis)
+
+  if (row.status === 'inconclusive') {
+    if (pattern?.opposite) caveats.push(COMPARE_COPY.oppositeSigns)
+    caveats.push(COMPARE_COPY.manyPairs)
+    const pStr = row.p !== null ? ` (${fmtP(row.p)})` : ''
+    return {
+      verdict,
+      sentence:
+        `Sin evidencia suficiente de que las tendencias de ${ctx.firstName} y ${ctx.secondName} difieran ` +
+        `(${period})${pStr}. Esto no demuestra que cambien igual.`,
+      pattern: pattern?.text ?? null,
+      caveats,
+    }
+  }
+
+  const level = Math.round((1 - ctx.alpha) * 100)
+  // Dos decimales, como las cifras de la vista de comparación (features/compare/format.ts).
+  const digits = 2
+  const diffStr = row.diff_decade !== null ? `${fmt(row.diff_decade, digits)}${NBSP}${ctx.unit}` : '(diferencia no disponible)'
+  const ciStr = row.ci_low !== null && row.ci_high !== null
+    ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(row.ci_low, digits)} a ${fmt(row.ci_high, digits)})`
+    : ''
+  const pStr = row.p !== null ? `; ${fmtP(row.p)}` : ''
+  caveats.push(COMPARE_COPY.manyPairs, COMPARE_COPY.notCause)
+  return {
+    verdict,
+    sentence:
+      `Diferencia (${pair}): ${diffStr}${ciStr}; ${period}${pStr}. ` +
+      'Una divergencia así sería muy rara si las dos tendencias fueran iguales.',
+    pattern: pattern?.text ?? null,
     caveats,
   }
 }

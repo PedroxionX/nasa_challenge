@@ -8,11 +8,11 @@ import { useAppState } from '../../app/state'
 import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
 import { variableCopy } from '../../content'
 
-const KIND: Record<VariableInfo['kind'], string> = {
+const KIND: Record<string, string> = {
   reanalysis: 'reanálisis (un modelo que combina observaciones)',
   observation: 'observación',
 }
-const AGGREGATION: Record<VariableInfo['aggregation'], string> = {
+const AGGREGATION: Record<string, string> = {
   mean_day_weighted: 'promedio anual',
   sum_from_rate: 'acumulado anual',
 }
@@ -25,8 +25,8 @@ function VariableFacts({ catalog, info }: { catalog: Catalog; info: VariableInfo
     : null
   return (
     <dl className="variable-picker-facts">
-      <dt>Unidad</dt><dd>{`${info.unit_annual} (${AGGREGATION[info.aggregation]})`}</dd>
-      <dt>Origen</dt><dd>{product ? `${KIND[info.kind]} · ${product}` : KIND[info.kind]}</dd>
+      <dt>Unidad</dt><dd>{AGGREGATION[info.aggregation] ? `${info.unit_annual} (${AGGREGATION[info.aggregation]})` : info.unit_annual}</dd>
+      <dt>Origen</dt><dd>{product ? `${KIND[info.kind] ?? info.kind} · ${product}` : KIND[info.kind] ?? info.kind}</dd>
       <dt>Años</dt><dd>{`${firstYear}–${lastYear}`}</dd>
     </dl>
   )

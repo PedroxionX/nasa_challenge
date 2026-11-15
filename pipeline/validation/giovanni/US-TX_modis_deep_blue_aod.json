@@ -1,0 +1,40 @@
+{
+ "region": "US-TX",
+ "variable": "modis_deep_blue_aod",
+ "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean",
+ "shape": "tl_2014_us_state/shp_25 (Texas)",
+ "units_giovanni": "1",
+ "url_to_reproduce": [
+  "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2003-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_25&data=MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean"
+ ],
+ "retrieved": "2026-11-15",
+ "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+ "months": 276,
+ "annual_method": "media de 12 meses ponderada por días, adimensional",
+ "annual": {
+  "2003": 0.120454,
+  "2004": 0.105771,
+  "2005": 0.111574,
+  "2006": 0.104666,
+  "2007": 0.114445,
+  "2008": 0.105188,
+  "2009": 0.106871,
+  "2010": 0.097174,
+  "2011": 0.138563,
+  "2012": 0.130358,
+  "2013": 0.114336,
+  "2014": 0.111992,
+  "2015": 0.100735,
+  "2016": 0.094938,
+  "2017": 0.103012,
+  "2018": 0.108778,
+  "2019": 0.104489,
+  "2020": 0.109103,
+  "2021": 0.118115,
+  "2022": 0.117292,
+  "2023": 0.106269,
+  "2024": 0.118793,
+  "2025": 0.107961
+ }
+}

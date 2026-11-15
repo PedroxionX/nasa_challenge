@@ -191,7 +191,7 @@ def giovanni(region_id: str, var_id: str, giovanni_file: Path) -> dict:
     from trendlens.stats.engine import trend_core
 
     for name, cw in rules.items():
-        ours = annual(var, data.months, regional_monthly(data, cw))
+        ours = annual(var, data.months, regional_monthly(data, cw, var.min_valid_fraction))
         years = sorted(y for y in gv if y in ours and fy <= y <= ly)
         d = np.array([ours[y] - gv[y] for y in years])
         gmean = float(np.mean([gv[y] for y in years]))
