@@ -1,0 +1,40 @@
+{
+ "region": "US-AZ",
+ "variable": "modis_deep_blue_aod",
+ "service": "Time Series, Area-Averaged (ArAvTs)",
+ "giovanni_variable": "MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean",
+ "shape": "tl_2014_us_state/shp_55 (Arizona)",
+ "units_giovanni": "1",
+ "url_to_reproduce": [
+  "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2003-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_55&data=MYD08_M3_6_1_Deep_Blue_Aerosol_Optical_Depth_550_Land_Mean_Mean"
+ ],
+ "retrieved": "2026-11-15",
+ "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+ "months": 276,
+ "annual_method": "media de 12 meses ponderada por días, adimensional",
+ "annual": {
+  "2003": 0.043653,
+  "2004": 0.040295,
+  "2005": 0.028433,
+  "2006": 0.036449,
+  "2007": 0.049676,
+  "2008": 0.042199,
+  "2009": 0.044458,
+  "2010": 0.035663,
+  "2011": 0.044454,
+  "2012": 0.050925,
+  "2013": 0.050299,
+  "2014": 0.040296,
+  "2015": 0.034557,
+  "2016": 0.038713,
+  "2017": 0.034504,
+  "2018": 0.044582,
+  "2019": 0.029915,
+  "2020": 0.033455,
+  "2021": 0.047678,
+  "2022": 0.047181,
+  "2023": 0.036135,
+  "2024": 0.035468,
+  "2025": 0.039979
+ }
+}

@@ -1,0 +1,47 @@
+{
+ "check": "Giovanni frente al pipeline con dos reglas espaciales",
+ "region": "US-AZ",
+ "variable": "dust_optical_depth",
+ "unit": "adimensional",
+ "giovanni": {
+  "region": "US-AZ",
+  "variable": "dust_optical_depth",
+  "service": "Time Series, Area-Averaged (ArAvTs)",
+  "giovanni_variable": "M2TMNXAER_5_12_4_DUEXTTAU",
+  "shape": "tl_2014_us_state/shp_55 (Arizona)",
+  "units_giovanni": "1",
+  "url_to_reproduce": [
+   "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2003-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_55&data=M2TMNXAER_5_12_4_DUEXTTAU"
+  ],
+  "retrieved": "2026-11-15",
+  "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+  "months": 276,
+  "annual_method": "media de 12 meses ponderada por días, adimensional"
+ },
+ "rules": {
+  "fraccion_cubierta": {
+   "n_cells": 119,
+   "n_years": 23,
+   "mean_diff": -0.0,
+   "max_abs_diff": 0.0001,
+   "max_abs_diff_rel": 0.00307,
+   "slope_decade_pipeline": -0.0031,
+   "slope_decade_giovanni": -0.0031,
+   "tolerance": 0.0005,
+   "within_tolerance": true
+  },
+  "centro_dentro": {
+   "n_cells": 98,
+   "n_years": 23,
+   "mean_diff": -0.0,
+   "max_abs_diff": 0.0001,
+   "max_abs_diff_rel": 0.00263,
+   "slope_decade_pipeline": -0.0031,
+   "slope_decade_giovanni": -0.0031,
+   "tolerance": 0.0005,
+   "within_tolerance": true
+  }
+ },
+ "pass_with_giovanni_rule": true,
+ "checked_at_utc": "2026-11-15T15:55:24Z"
+}

@@ -1,0 +1,41 @@
+{
+ "check": "T040: escorrentía de D.C. (celda frente a Giovanni y balance hídrico)",
+ "cell": {
+  "cell_center": [
+   38.875,
+   -77.125
+  ],
+  "giovanni_bbox": "bbox -77.2,38.8,-77.05,38.95",
+  "n_years": 26,
+  "mean_pipeline": 1156.8,
+  "mean_giovanni": 1156.4,
+  "max_abs_diff": 12.339,
+  "tolerance": 23.1,
+  "within_tolerance": true
+ },
+ "water_balance_2000_2025": {
+  "US-DC": {
+   "precipitation_mm": 1230.3,
+   "evapotranspiration_mm": 128.6,
+   "runoff_mm": 1081.3,
+   "residual_p_minus_et_minus_q_mm": 20.4,
+   "runoff_over_precip": 0.88
+  },
+  "US-MD": {
+   "precipitation_mm": 1256.4,
+   "evapotranspiration_mm": 818.3,
+   "runoff_mm": 400.7,
+   "residual_p_minus_et_minus_q_mm": 37.4,
+   "runoff_over_precip": 0.32
+  },
+  "US-VA": {
+   "precipitation_mm": 1243.4,
+   "evapotranspiration_mm": 887.6,
+   "runoff_mm": 314.1,
+   "residual_p_minus_et_minus_q_mm": 41.7,
+   "runoff_over_precip": 0.25
+  }
+ },
+ "reading": "La celda coincide con Giovanni: el valor viene de GLDAS, no del pipeline. En D.C. la ET es ~10 % de la precipitación y casi toda el agua escurre, lo propio de una celda urbana en Noah.",
+ "checked_at_utc": "2026-11-15T16:10:47Z"
+}

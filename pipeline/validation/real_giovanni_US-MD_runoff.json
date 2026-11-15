@@ -1,0 +1,48 @@
+{
+ "check": "Giovanni frente al pipeline con dos reglas espaciales",
+ "region": "US-MD",
+ "variable": "runoff",
+ "unit": "mm",
+ "giovanni": {
+  "region": "US-MD",
+  "variable": "runoff",
+  "service": "Time Series, Area-Averaged (ArAvTs)",
+  "giovanni_variable": "GLDAS_NOAH025_M_2_1_Qs_acc + GLDAS_NOAH025_M_2_1_Qsb_acc",
+  "shape": "tl_2014_us_state/shp_4 (Maryland)",
+  "units_giovanni": "kg m-2 (acumulado medio por paso de 3 h)",
+  "url_to_reproduce": [
+   "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2000-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_4&data=GLDAS_NOAH025_M_2_1_Qs_acc",
+   "https://giovanni.gsfc.nasa.gov/giovanni/#service=ArAvTs&starttime=2000-01-01T00:00:00Z&endtime=2025-12-31T23:59:59Z&shape=tl_2014_us_state/shp_4&data=GLDAS_NOAH025_M_2_1_Qsb_acc"
+  ],
+  "retrieved": "2026-11-15",
+  "retrieved_by": "giovanni_fetch.py (service_manager.pl + CSV)",
+  "months": 312,
+  "annual_method": "(Qs_acc + Qsb_acc) × 8 pasos/día × días del mes, sumado en 12 meses, mm"
+ },
+ "rules": {
+  "fraccion_cubierta": {
+   "n_cells": 70,
+   "n_years": 26,
+   "mean_diff": 8.275,
+   "max_abs_diff": 12.8062,
+   "max_abs_diff_rel": 0.03264,
+   "slope_decade_pipeline": -46.215,
+   "slope_decade_giovanni": -50.033,
+   "tolerance": 7.8477,
+   "within_tolerance": false
+  },
+  "centro_dentro": {
+   "n_cells": 48,
+   "n_years": 26,
+   "mean_diff": 0.7191,
+   "max_abs_diff": 6.5216,
+   "max_abs_diff_rel": 0.01662,
+   "slope_decade_pipeline": -47.8769,
+   "slope_decade_giovanni": -50.033,
+   "tolerance": 7.8477,
+   "within_tolerance": true
+  }
+ },
+ "pass_with_giovanni_rule": true,
+ "checked_at_utc": "2026-11-15T16:04:48Z"
+}
