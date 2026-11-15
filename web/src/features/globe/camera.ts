@@ -5,6 +5,7 @@
 export interface Insets {
   right: number
   bottom: number
+  top?: number
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
@@ -13,7 +14,7 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v
 export function readInsets(): Insets {
   const s = getComputedStyle(document.documentElement)
   const px = (name: string) => Number.parseFloat(s.getPropertyValue(name)) || 0
-  return { right: px('--panel-inset-right'), bottom: px('--panel-inset-bottom') }
+  return { right: px('--panel-inset-right'), bottom: px('--panel-inset-bottom'), top: px('--globe-inset-top') }
 }
 
 /**
@@ -24,7 +25,7 @@ export function viewOffsetFor(w: number, h: number, insets: Insets): { x: number
   if (w <= 0 || h <= 0) return { x: 0, y: 0 }
   return {
     x: clamp(insets.right, 0, w * 0.8) / 2,
-    y: clamp(insets.bottom, 0, h * 0.8) / 2,
+    y: (clamp(insets.bottom, 0, h * 0.8) - clamp(insets.top ?? 0, 0, h * 0.8)) / 2,
   }
 }
 
@@ -35,6 +36,6 @@ export function viewOffsetFor(w: number, h: number, insets: Insets): { x: number
 export function altitudeFactor(w: number, h: number, insets: Insets): number {
   if (w <= 0 || h <= 0) return 1
   const freeW = clamp(w - insets.right, w * 0.2, w) / w
-  const freeH = clamp(h - insets.bottom, h * 0.2, h) / h
+  const freeH = clamp(h - insets.bottom - (insets.top ?? 0), h * 0.2, h) / h
   return clamp(1 / Math.min(freeW, freeH), 1, 1.8)
 }

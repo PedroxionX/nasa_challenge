@@ -1,0 +1,2110 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": {
+        "x": 16,
+        "y": 442,
+        "width": 288,
+        "height": 110,
+        "clientWidth": 286,
+        "scrollWidth": 286,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "126px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": {
+        "x": 0,
+        "y": 453.75,
+        "width": 320,
+        "height": 114.25,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 114,
+        "scrollHeight": 1567
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "159px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 320,
+        "height": 410,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 410,
+        "scrollHeight": 2696
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "455px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 320,
+        "height": 410,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 410,
+        "scrollHeight": 1732
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "455px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": {
+        "x": 0,
+        "y": 453.75,
+        "width": 320,
+        "height": 114.25,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 114,
+        "scrollHeight": 1763
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "159px"
+      }
+    }
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 360,
+        "height": 527,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 527,
+        "scrollHeight": 527
+      },
+      "welcome": {
+        "x": 16,
+        "y": 514,
+        "width": 328,
+        "height": 110,
+        "clientWidth": 326,
+        "scrollWidth": 326,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 113,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "126px"
+      }
+    }
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "panel": {
+        "x": 0,
+        "y": 509,
+        "width": 360,
+        "height": 131,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 131,
+        "scrollHeight": 1485
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 360,
+        "height": 527,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 527,
+        "scrollHeight": 527
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 113,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "176px"
+      }
+    }
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 360,
+        "height": 482,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 482,
+        "scrollHeight": 2595
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 360,
+        "height": 527,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 527,
+        "scrollHeight": 527
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 113,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "527px"
+      }
+    }
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 360,
+        "height": 482,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 482,
+        "scrollHeight": 1689
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 360,
+        "height": 527,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 527,
+        "scrollHeight": 527
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 113,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "527px"
+      }
+    }
+  },
+  {
+    "width": 360,
+    "height": 640,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 640,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 640,
+        "scrollHeight": 640
+      },
+      "panel": {
+        "x": 0,
+        "y": 509,
+        "width": 360,
+        "height": 131,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 131,
+        "scrollHeight": 1679
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 360,
+        "height": 527,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 527,
+        "scrollHeight": 527
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 360,
+        "height": 113,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "176px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": {
+        "x": 16,
+        "y": 718,
+        "width": 358,
+        "height": 110,
+        "clientWidth": 356,
+        "scrollWidth": 356,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "126px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": {
+        "x": 0,
+        "y": 713,
+        "width": 390,
+        "height": 131,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 131,
+        "scrollHeight": 1463
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "176px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 390,
+        "height": 686,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 686,
+        "scrollHeight": 2504
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "731px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": {
+        "x": 0,
+        "y": 158,
+        "width": 390,
+        "height": 686,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 686,
+        "scrollHeight": 1714
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "731px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": {
+        "x": 0,
+        "y": 713,
+        "width": 390,
+        "height": 131,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 131,
+        "scrollHeight": 1638
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "176px"
+      }
+    }
+  },
+  {
+    "width": 700,
+    "height": 500,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 700,
+        "height": 439,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 439,
+        "scrollHeight": 439
+      },
+      "welcome": {
+        "x": 364,
+        "y": 374,
+        "width": 320,
+        "height": 110,
+        "clientWidth": 318,
+        "scrollWidth": 318,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 61,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "336px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 700,
+    "height": 500,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "panel": {
+        "x": 365,
+        "y": 61,
+        "width": 335,
+        "height": 439,
+        "clientWidth": 335,
+        "scrollWidth": 335,
+        "clientHeight": 439,
+        "scrollHeight": 1481
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 700,
+        "height": 439,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 439,
+        "scrollHeight": 439
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 61,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "336px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 700,
+    "height": 500,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "panel": {
+        "x": 365,
+        "y": 61,
+        "width": 335,
+        "height": 439,
+        "clientWidth": 335,
+        "scrollWidth": 335,
+        "clientHeight": 439,
+        "scrollHeight": 2516
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 700,
+        "height": 439,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 439,
+        "scrollHeight": 439
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 61,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "336px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 700,
+    "height": 500,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "panel": {
+        "x": 365,
+        "y": 61,
+        "width": 335,
+        "height": 439,
+        "clientWidth": 335,
+        "scrollWidth": 335,
+        "clientHeight": 439,
+        "scrollHeight": 1679
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 700,
+        "height": 439,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 439,
+        "scrollHeight": 439
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 61,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "336px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 700,
+    "height": 500,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 500,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 500,
+        "scrollHeight": 500
+      },
+      "panel": {
+        "x": 365,
+        "y": 61,
+        "width": 335,
+        "height": 439,
+        "clientWidth": 335,
+        "scrollWidth": 335,
+        "clientHeight": 439,
+        "scrollHeight": 1691
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 700,
+        "height": 439,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 439,
+        "scrollHeight": 439
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 700,
+        "height": 61,
+        "clientWidth": 700,
+        "scrollWidth": 700,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "336px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": {
+        "x": 438.890625,
+        "y": 264,
+        "width": 389.109375,
+        "height": 110,
+        "clientWidth": 387,
+        "scrollWidth": 387,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "clientWidth": 404,
+        "scrollWidth": 404,
+        "clientHeight": 329,
+        "scrollHeight": 1320
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "clientWidth": 404,
+        "scrollWidth": 404,
+        "clientHeight": 329,
+        "scrollHeight": 2318
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "clientWidth": 404,
+        "scrollWidth": 404,
+        "clientHeight": 329,
+        "scrollHeight": 1678
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "clientWidth": 404,
+        "scrollWidth": 404,
+        "clientHeight": 329,
+        "scrollHeight": 1495
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "label": "welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 1440,
+        "height": 839,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 839,
+        "scrollHeight": 839
+      },
+      "welcome": {
+        "x": 16,
+        "y": 451,
+        "width": 416,
+        "height": 433,
+        "clientWidth": 414,
+        "scrollWidth": 414,
+        "clientHeight": 431,
+        "scrollHeight": 431
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 61,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "label": "analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "panel": {
+        "x": 1021,
+        "y": 61,
+        "width": 419,
+        "height": 839,
+        "clientWidth": 419,
+        "scrollWidth": 419,
+        "clientHeight": 839,
+        "scrollHeight": 1367
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 1440,
+        "height": 839,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 839,
+        "scrollHeight": 839
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 61,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "420px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "label": "analysis-tables",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "panel": {
+        "x": 1021,
+        "y": 61,
+        "width": 419,
+        "height": 839,
+        "clientWidth": 419,
+        "scrollWidth": 419,
+        "clientHeight": 839,
+        "scrollHeight": 2365
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 1440,
+        "height": 839,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 839,
+        "scrollHeight": 839
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 61,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "420px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "label": "compare",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "panel": {
+        "x": 1021,
+        "y": 61,
+        "width": 419,
+        "height": 839,
+        "clientWidth": 419,
+        "scrollWidth": 419,
+        "clientHeight": 839,
+        "scrollHeight": 1698
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 1440,
+        "height": 839,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 839,
+        "scrollHeight": 839
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 61,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "420px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "label": "precipitation",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 900,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 900,
+        "scrollHeight": 900
+      },
+      "panel": {
+        "x": 1021,
+        "y": 61,
+        "width": 419,
+        "height": 839,
+        "clientWidth": 419,
+        "scrollWidth": 419,
+        "clientHeight": 839,
+        "scrollHeight": 1539
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 1440,
+        "height": 839,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 839,
+        "scrollHeight": 839
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 1440,
+        "height": 61,
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "420px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "label": "rotated",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 390,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "panel": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "clientWidth": 404,
+        "scrollWidth": 404,
+        "clientHeight": 329,
+        "scrollHeight": 1783
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 329,
+        "scrollHeight": 329
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 60,
+        "scrollHeight": 60
+      },
+      "insets": {
+        "right": "405px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "rotated-back",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 844,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "panel": {
+        "x": 0,
+        "y": 713,
+        "width": 390,
+        "height": 131,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 131,
+        "scrollHeight": 1786
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 390,
+        "height": 731,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 731,
+        "scrollHeight": 731
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 113,
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "176px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "fallback-welcome",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": null,
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 4811
+      },
+      "welcome": {
+        "x": 16,
+        "y": 129,
+        "width": 288,
+        "height": 110,
+        "clientWidth": 286,
+        "scrollWidth": 286,
+        "clientHeight": 108,
+        "scrollHeight": 108
+      },
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "0px"
+      }
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "fallback-analysis",
+    "metrics": {
+      "document": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 568,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 568,
+        "scrollHeight": 568
+      },
+      "panel": {
+        "x": 0,
+        "y": 453.75,
+        "width": 320,
+        "height": 114.25,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 114,
+        "scrollHeight": 1570
+      },
+      "stage": {
+        "x": 0,
+        "y": 113,
+        "width": 320,
+        "height": 455,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 455,
+        "scrollHeight": 455
+      },
+      "welcome": null,
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 113,
+        "clientWidth": 320,
+        "scrollWidth": 320,
+        "clientHeight": 112,
+        "scrollHeight": 112
+      },
+      "insets": {
+        "right": "0px",
+        "bottom": "159px"
+      }
+    }
+  }
+]

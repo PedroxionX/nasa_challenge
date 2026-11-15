@@ -97,7 +97,7 @@ export default function PairChart({ items, unit, from, to }: { items: ChartItem[
       <button type="button" className="compare-link" aria-expanded={showTable} aria-controls={tableId} onClick={() => setShowTable(s => !s)}>
         {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
       </button>
-      <div id={tableId} className="compare-table-wrap" hidden={!showTable}>
+      <div id={tableId} className="compare-table-wrap" hidden={!showTable} role="region" aria-label="Tabla anual de las dos regiones" tabIndex={0}>
         <table className="compare-table">
           <caption className="compare-vh">{`Valores anuales (${unit})`}</caption>
           <thead>

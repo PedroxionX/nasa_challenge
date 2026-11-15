@@ -18,6 +18,7 @@ export default function RegionSearch() {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const pointerType = useRef('')
   const uid = useId()
   const listId = `${uid}-list`
   const optionId = (id: string) => `${uid}-opt-${id}`
@@ -49,10 +50,11 @@ export default function RegionSearch() {
     document.getElementById(`${uid}-opt-${activeRegion.id}`)?.scrollIntoView?.({ block: 'nearest' })
   }, [activeRegion, uid])
 
-  const choose = (region: RegionInfo) => {
+  const choose = (region: RegionInfo, touch = false) => {
     setRegion(region.id)
     setQuery(null)
     setOpen(false)
+    if (touch) inputRef.current?.blur()
     // Deja el nombre seleccionado: si se sigue escribiendo, se reemplaza en vez de añadirse.
     requestAnimationFrame(() => {
       const input = inputRef.current
@@ -143,8 +145,9 @@ export default function RegionSearch() {
                   aria-selected={r.id === activeRegion?.id}
                   data-current={r.id === regionId || undefined}
                   className="region-search-option"
+                  onPointerDown={e => { pointerType.current = e.pointerType }}
                   // mousedown en vez de click: así el campo no pierde el foco antes de elegir.
-                  onMouseDown={e => { e.preventDefault(); choose(r) }}
+                  onMouseDown={e => { e.preventDefault(); choose(r, pointerType.current === 'touch' || pointerType.current === 'pen') }}
                   onMouseMove={() => setActive(visible.indexOf(r))}
                 >
                   {r.name}

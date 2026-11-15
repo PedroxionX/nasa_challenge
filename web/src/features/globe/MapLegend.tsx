@@ -2,7 +2,7 @@
  * Leyenda del mapa de tendencias (005 T005). Dice qué significa el color (cambio estimado,
  * no significancia), distingue «sin datos» con trama y texto, y da acceso a la tabla.
  */
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { UI_COPY } from '../../content'
 import { GLOBE_COPY } from './copy'
 import { formatBreak } from './format'
@@ -30,10 +30,32 @@ const startsOpen = () =>
 
 export default function MapLegend(p: Props) {
   const [open, setOpen] = useState(startsOpen)
+  const toolsRef = useRef<HTMLDivElement>(null)
   const ranges = classRanges(p.breaks, formatBreak)
 
+  useEffect(() => {
+    const el = toolsRef.current
+    if (!el) return
+    const measure = () => {
+      const compact = window.matchMedia?.('(max-width: 899px), (max-height: 500px)').matches
+      const top = compact ? el.offsetTop + el.offsetHeight + 8 : 0
+      const value = `${top}px`
+      const style = document.documentElement.style
+      if (style.getPropertyValue('--globe-inset-top') !== value) style.setProperty('--globe-inset-top', value)
+    }
+    measure()
+    const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
+    ro?.observe(el)
+    window.addEventListener('resize', measure)
+    return () => {
+      ro?.disconnect()
+      window.removeEventListener('resize', measure)
+      document.documentElement.style.setProperty('--globe-inset-top', '0px')
+    }
+  }, [])
+
   return (
-    <div className="globe-tools">
+    <div className="globe-tools" ref={toolsRef}>
       <details className="globe-legend" open={open} onToggle={e => setOpen(e.currentTarget.open)}>
         <summary>
           <span className="globe-legend-title">{GLOBE_COPY.legendTitle}</span>
@@ -83,7 +105,10 @@ export default function MapLegend(p: Props) {
 
       <div className="globe-actions">
         <button type="button" onClick={p.onOpenTable}>{GLOBE_COPY.showTable}</button>
-        <button type="button" onClick={p.onGlobalView}>{GLOBE_COPY.globalView}</button>
+        <button type="button" onClick={p.onGlobalView} aria-label={GLOBE_COPY.globalView}>
+          <span className="globe-global-text">{GLOBE_COPY.globalView}</span>
+          <svg className="globe-global-icon" aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="9" /><ellipse cx="12" cy="12" rx="4" ry="9" /><path d="M3 12h18" /></svg>
+        </button>
       </div>
     </div>
   )

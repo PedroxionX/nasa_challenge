@@ -7,9 +7,11 @@
 import { useAppState } from '../../app/state'
 import { variableCopy, UI_COPY } from '../../content'
 import type { VariableId } from '../../lib/data'
+import { useState } from 'react'
 import './guide.css'
 
 export default function WelcomeCard() {
+  const [showIntro, setShowIntro] = useState(() => window.matchMedia?.('(min-width: 900px) and (min-height: 640px)').matches ?? false)
   const { setRegion, setVariable, resetPeriod } = useAppState()
 
   function openExample(regionId: string, variableId: VariableId) {
@@ -21,18 +23,25 @@ export default function WelcomeCard() {
   return (
     // Sin landmark propio: el armazón (002) ya envuelve esto en <section aria-label="Bienvenida">.
     <div className="welcome-card">
+      <details className="welcome-intro" open={showIntro} onToggle={e => setShowIntro(e.currentTarget.open)}>
+      <summary>Explora el clima de un estado</summary>
+      <div className="welcome-intro-body">
       <h2 className="welcome-title">Trend Detective</h2>
       <p className="welcome-lead">{UI_COPY.welcome}</p>
 
       <p className="welcome-hint">
         O empieza con uno de estos ejemplos:
       </p>
+      <p className="welcome-note">{UI_COPY.notCause}</p>
+      </div>
+      </details>
 
       <div className="welcome-examples">
         {/* Ejemplo 1: Baja California · Temperatura */}
         <button
           type="button"
           className="welcome-example-btn"
+          aria-label="Ver un ejemplo: Baja California, temperatura"
           onClick={() => openExample('MX-BCN', 'air_temperature')}
         >
           <span className="example-label">Ver un ejemplo</span>
@@ -49,6 +58,7 @@ export default function WelcomeCard() {
         <button
           type="button"
           className="welcome-example-btn"
+          aria-label="Ver un ejemplo: Chihuahua, temperatura"
           onClick={() => openExample('MX-CHH', 'air_temperature')}
         >
           <span className="example-label">Ver un ejemplo</span>
@@ -57,7 +67,6 @@ export default function WelcomeCard() {
         </button>
       </div>
 
-      <p className="welcome-note">{UI_COPY.notCause}</p>
     </div>
   )
 }

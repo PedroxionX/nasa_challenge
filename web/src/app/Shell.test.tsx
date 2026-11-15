@@ -59,14 +59,34 @@ describe('Shell', () => {
     expect(screen.queryByText(/no existe|no es válido/)).toBeNull()
   })
 
-  it('la hoja inferior cambia de altura con su asa: media → completa → asomada', async () => {
+  it('abre un resumen y vuelve directamente al globo desde la lectura sin perder la región', async () => {
     const { container } = await renderShell('?region=MX-BCN')
     const shell = container.querySelector('.shell')!
-    expect(shell.getAttribute('data-sheet')).toBe('half')
-    fireEvent.click(screen.getByRole('button', { name: 'Ampliar' }))
-    expect(shell.getAttribute('data-sheet')).toBe('full')
-    fireEvent.click(screen.getByRole('button', { name: 'Reducir' }))
     expect(shell.getAttribute('data-sheet')).toBe('peek')
+    fireEvent.click(screen.getByRole('button', { name: 'Ver análisis' }))
+    expect(shell.getAttribute('data-sheet')).toBe('half')
+    fireEvent.click(screen.getByRole('button', { name: 'Ver globo' }))
+    expect(shell.getAttribute('data-sheet')).toBe('peek')
+    expect(window.location.search).toContain('region=MX-BCN')
+    fireEvent.click(screen.getByRole('button', { name: 'Ver análisis' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Ampliar análisis' }))
+    expect(shell.getAttribute('data-sheet')).toBe('full')
+    container.querySelector<HTMLDivElement>('.shell-panel-body')!.scrollTop = 900
+    fireEvent.click(screen.getByRole('button', { name: 'Ver globo' }))
+    expect(shell.getAttribute('data-sheet')).toBe('peek')
+    expect(container.querySelector<HTMLDivElement>('.shell-panel-body')!.scrollTop).toBe(0)
+  })
+
+  it('una región nueva vuelve al resumen y muestra el resultado desde el principio', async () => {
+    const { container } = await renderShell('?region=MX-BCN')
+    const body = container.querySelector<HTMLDivElement>('.shell-panel-body')!
+    fireEvent.click(screen.getByRole('button', { name: 'Ver análisis' }))
+    body.scrollTop = 900
+    fireEvent.change(screen.getByRole('combobox', { name: 'Buscar un estado' }), { target: { value: 'Texas' } })
+    fireEvent.keyDown(screen.getByRole('combobox', { name: 'Buscar un estado' }), { key: 'Enter' })
+    expect(container.querySelector('.shell')!.getAttribute('data-sheet')).toBe('peek')
+    expect(body.scrollTop).toBe(0)
+    expect(window.location.search).toContain('region=US-TX')
   })
 
   it('una región sin archivo muestra «sin datos» sin romper el armazón', async () => {

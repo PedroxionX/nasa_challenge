@@ -12,7 +12,8 @@
   border: 0;
 }
 
-.compare, .compare-result { display: grid; gap: var(--space-4); font-variant-numeric: tabular-nums; }
+.compare, .compare-result { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-4); min-width: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.compare > *, .compare-result > * { min-width: 0; }
 .compare p { margin: 0; }
 .compare-muted { color: var(--muted); }
 .compare-heading { margin: 0 0 var(--space-2); font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--muted); }
@@ -112,7 +113,7 @@
 .compare-verdict-icon { flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .compare-verdict-word { font-size: var(--text-lg); font-weight: var(--weight-bold); line-height: 1.25; }
 .compare-verdict-figure { margin-top: var(--space-2); }
-.compare-verdict-number { font-size: var(--text-xl); font-weight: var(--weight-bold); white-space: nowrap; }
+.compare-verdict-number { font-size: var(--text-xl); font-weight: var(--weight-bold); }
 
 .compare-facts { display: grid; gap: var(--space-2); margin: var(--space-3) 0 0; }
 .compare-facts dt { font-size: var(--text-xs); color: var(--muted); }
@@ -122,7 +123,7 @@
 .compare-period { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
 
 /* ---------- Tablas ---------- */
-.compare-table-wrap { overflow-x: auto; }
+.compare-table-wrap { min-width: 0; max-width: 100%; overflow-x: auto; overscroll-behavior-x: contain; }
 .compare-table-wrap[hidden] { display: none; }
 .compare-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
 .compare-table th, .compare-table td { padding: var(--space-2); text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -131,7 +132,7 @@
 .compare-table tr.is-outside { color: var(--muted); }
 
 /* ---------- Gráficas ---------- */
-.compare-chart { display: grid; gap: var(--space-2); margin: 0; }
+.compare-chart { display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: var(--space-2); margin: 0; }
 .compare-chart-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .compare-chart-title { font-size: 11px; font-weight: 600; fill: var(--text); }
 .compare-chart-tag { font-weight: 700; }

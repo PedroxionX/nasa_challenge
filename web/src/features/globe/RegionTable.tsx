@@ -40,6 +40,7 @@ export default function RegionTable({ rows, unit, caption, selectedId, compareId
   }
 
   return (
+    <div className="globe-table-wrap" role="region" aria-label={caption} tabIndex={0}>
     <table className="globe-table">
       <caption>{caption}</caption>
       <thead>
@@ -74,5 +75,6 @@ export default function RegionTable({ rows, unit, caption, selectedId, compareId
         ))}
       </tbody>
     </table>
+    </div>
   )
 }

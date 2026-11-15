@@ -1,0 +1,882 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "state": "initial",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 165,
+        "right": 320,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "welcome": {
+        "x": 16,
+        "y": 306.0625,
+        "width": 288,
+        "height": 245.9375,
+        "right": 304,
+        "bottom": 552
+      },
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 296,
+        "height": 114,
+        "right": 308,
+        "bottom": 291
+      },
+      "panel": null,
+      "body": null,
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 160,
+        "y": 366.5,
+        "topElement": "welcome-lead",
+        "coveredBy": "shell-welcome"
+      },
+      "panelFraction": 0,
+      "clearBand": 15.0625,
+      "pins": []
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "state": "selected",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 165,
+        "right": 320,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 296,
+        "height": 114,
+        "right": 308,
+        "bottom": 291
+      },
+      "panel": {
+        "x": 0,
+        "y": 326.203125,
+        "width": 320,
+        "height": 241.796875,
+        "right": 320,
+        "bottom": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 371.203125,
+        "width": 320,
+        "height": 196.796875,
+        "right": 320,
+        "bottom": 568
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "insets": {
+        "bottom": 242,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 160,
+        "y": 245.5,
+        "topElement": "globe-tools",
+        "coveredBy": "globe-tools"
+      },
+      "panelFraction": 0.5999922456575683,
+      "clearBand": 35.203125,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 132.7109375,
+          "y": 235.5,
+          "width": 54.578125,
+          "height": 20,
+          "right": 187.2890625,
+          "bottom": 255.5
+        }
+      ]
+    }
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "state": "expanded",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 320,
+        "height": 165,
+        "right": 320,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 296,
+        "height": 0,
+        "right": 308,
+        "bottom": 177
+      },
+      "panel": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "body": {
+        "x": 0,
+        "y": 210,
+        "width": 320,
+        "height": 358,
+        "right": 320,
+        "bottom": 568
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 320,
+        "height": 403,
+        "right": 320,
+        "bottom": 568
+      },
+      "insets": {
+        "bottom": 403,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 160,
+        "y": 165,
+        "topElement": "shell-panel",
+        "coveredBy": "shell-panel"
+      },
+      "panelFraction": 1,
+      "clearBand": 0,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 132.7109375,
+          "y": 195.3000030517578,
+          "width": 54.578125,
+          "height": 20,
+          "right": 187.2890625,
+          "bottom": 215.3000030517578
+        }
+      ]
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "initial",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 165,
+        "right": 390,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "welcome": {
+        "x": 16,
+        "y": 533,
+        "width": 358,
+        "height": 295,
+        "right": 374,
+        "bottom": 828
+      },
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 291
+      },
+      "panel": null,
+      "body": null,
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 195,
+        "y": 504.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 0,
+      "clearBand": 242,
+      "pins": []
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "selected",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 165,
+        "right": 390,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 291
+      },
+      "panel": {
+        "x": 0,
+        "y": 436.609375,
+        "width": 390,
+        "height": 407.390625,
+        "right": 390,
+        "bottom": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 481.609375,
+        "width": 390,
+        "height": 362.390625,
+        "right": 390,
+        "bottom": 844
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "insets": {
+        "bottom": 407,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 195,
+        "y": 301,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 0.5999861929307806,
+      "clearBand": 145.609375,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 167.7109375,
+          "y": 291,
+          "width": 54.578125,
+          "height": 20,
+          "right": 222.2890625,
+          "bottom": 311
+        }
+      ]
+    }
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "state": "expanded",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 390,
+        "height": 165,
+        "right": 390,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 0,
+        "right": 316,
+        "bottom": 177
+      },
+      "panel": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "body": {
+        "x": 0,
+        "y": 210,
+        "width": 390,
+        "height": 634,
+        "right": 390,
+        "bottom": 844
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 390,
+        "height": 679,
+        "right": 390,
+        "bottom": 844
+      },
+      "insets": {
+        "bottom": 679,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 195,
+        "y": 165,
+        "topElement": "shell-panel",
+        "coveredBy": "shell-panel"
+      },
+      "panelFraction": 1,
+      "clearBand": 0,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 167.7109375,
+          "y": 222.89999389648438,
+          "width": 54.578125,
+          "height": 20,
+          "right": 222.2890625,
+          "bottom": 242.89999389648438
+        }
+      ]
+    }
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "state": "initial",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 165,
+        "right": 430,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "welcome": {
+        "x": 16,
+        "y": 645,
+        "width": 398,
+        "height": 271,
+        "right": 414,
+        "bottom": 916
+      },
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 291
+      },
+      "panel": null,
+      "body": null,
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 215,
+        "y": 548.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 0,
+      "clearBand": 354,
+      "pins": []
+    }
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "state": "selected",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 165,
+        "right": 430,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 291
+      },
+      "panel": {
+        "x": 0,
+        "y": 471.8125,
+        "width": 430,
+        "height": 460.1875,
+        "right": 430,
+        "bottom": 932
+      },
+      "body": {
+        "x": 0,
+        "y": 516.8125,
+        "width": 430,
+        "height": 415.1875,
+        "right": 430,
+        "bottom": 932
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "insets": {
+        "bottom": 460,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 215,
+        "y": 318.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 0.59998370273794,
+      "clearBand": 180.8125,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 187.7109375,
+          "y": 308.5,
+          "width": 54.578125,
+          "height": 20,
+          "right": 242.2890625,
+          "bottom": 328.5
+        }
+      ]
+    }
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "state": "expanded",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 430,
+        "height": 165,
+        "right": 430,
+        "bottom": 165
+      },
+      "stage": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 177,
+        "width": 304,
+        "height": 0,
+        "right": 316,
+        "bottom": 177
+      },
+      "panel": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "body": {
+        "x": 0,
+        "y": 210,
+        "width": 430,
+        "height": 722,
+        "right": 430,
+        "bottom": 932
+      },
+      "canvas": {
+        "x": 0,
+        "y": 165,
+        "width": 430,
+        "height": 767,
+        "right": 430,
+        "bottom": 932
+      },
+      "insets": {
+        "bottom": 767,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 215,
+        "y": 165,
+        "topElement": "shell-panel",
+        "coveredBy": "shell-panel"
+      },
+      "panelFraction": 1,
+      "clearBand": 0,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 187.7109375,
+          "y": 231.6999969482422,
+          "width": 54.578125,
+          "height": 20,
+          "right": 242.2890625,
+          "bottom": 251.6999969482422
+        }
+      ]
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "state": "initial",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "right": 844,
+        "bottom": 61
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "welcome": {
+        "x": 438.890625,
+        "y": 103,
+        "width": 389.109375,
+        "height": 271,
+        "right": 828,
+        "bottom": 374
+      },
+      "tools": {
+        "x": 12,
+        "y": 73,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 187
+      },
+      "panel": null,
+      "body": null,
+      "canvas": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 0
+      },
+      "projectedCenter": {
+        "x": 422,
+        "y": 225.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 0,
+      "clearBand": 0,
+      "pins": []
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "state": "selected",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "right": 844,
+        "bottom": 61
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 73,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 187
+      },
+      "panel": {
+        "x": 438.890625,
+        "y": 61,
+        "width": 405.109375,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "body": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "canvas": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 405
+      },
+      "projectedCenter": {
+        "x": 219.5,
+        "y": 225.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 1,
+      "clearBand": 0,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 192.2109375,
+          "y": 215.5,
+          "width": 54.578125,
+          "height": 20,
+          "right": 246.7890625,
+          "bottom": 235.5
+        }
+      ]
+    }
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "state": "expanded",
+    "metrics": {
+      "header": {
+        "x": 0,
+        "y": 0,
+        "width": 844,
+        "height": 61,
+        "right": 844,
+        "bottom": 61
+      },
+      "stage": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "welcome": null,
+      "tools": {
+        "x": 12,
+        "y": 73,
+        "width": 304,
+        "height": 114,
+        "right": 316,
+        "bottom": 187
+      },
+      "panel": {
+        "x": 438.890625,
+        "y": 61,
+        "width": 405.109375,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "body": {
+        "x": 439.890625,
+        "y": 61,
+        "width": 404.109375,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "canvas": {
+        "x": 0,
+        "y": 61,
+        "width": 844,
+        "height": 329,
+        "right": 844,
+        "bottom": 390
+      },
+      "insets": {
+        "bottom": 0,
+        "right": 405
+      },
+      "projectedCenter": {
+        "x": 219.5,
+        "y": 225.5,
+        "topElement": "",
+        "coveredBy": null
+      },
+      "panelFraction": 1,
+      "clearBand": 0,
+      "pins": [
+        {
+          "label": "Sonora",
+          "x": 192.2109375,
+          "y": 215.5,
+          "width": 54.578125,
+          "height": 20,
+          "right": 246.7890625,
+          "bottom": 235.5
+        }
+      ]
+    }
+  }
+]

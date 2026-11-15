@@ -54,7 +54,7 @@ export default function AnalysisPanel() {
   const regionName = region?.name ?? regionId
   const variable = variableCopy(variableId, catalog?.variables.find(v => v.id === variableId))
 
-  const close = () => { setRegion(null); focusSearch() }
+  const close = (restoreFocus: boolean) => { setRegion(null); if (restoreFocus) focusSearch() }
 
   return (
     <article className="analysis" aria-busy={load.kind === 'loading'}>
@@ -65,7 +65,7 @@ export default function AnalysisPanel() {
             {region && `${COUNTRY[region.country]} · `}{variable.label} · {fmtYears(from, to)}
           </p>
         </div>
-        <button type="button" className="analysis-close" onClick={close} aria-label="Cerrar análisis">
+        <button type="button" className="analysis-close" onClick={e => close(e.detail === 0)} aria-label="Cerrar análisis">
           <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
         </button>
       </div>

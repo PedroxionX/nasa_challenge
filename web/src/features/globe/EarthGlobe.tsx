@@ -137,6 +137,8 @@ export default function EarthGlobe({
   const sizeRef = useRef({ w, h })
   const rotatingRef = useRef(rotating)
   const selectedRef = useRef(selectedId)
+  const comparedRef = useRef(compareId)
+  const userMovedRef = useRef(userMoved)
   const contextLostRef = useRef(onContextLost)
   const sleepTimer = useRef<number | undefined>(undefined)
   const offsetRef = useRef({ x: 0, y: 0 })
@@ -145,6 +147,8 @@ export default function EarthGlobe({
 
   useEffect(() => { contextLostRef.current = onContextLost }, [onContextLost])
   useEffect(() => { selectedRef.current = selectedId }, [selectedId])
+  useEffect(() => { comparedRef.current = compareId }, [compareId])
+  useEffect(() => { userMovedRef.current = userMoved }, [userMoved])
 
   // ---------- Pausa en reposo ----------
   /** Reanuda el dibujo y programa la pausa. Mientras rota (modo decorativo) no se pausa. */
@@ -186,7 +190,10 @@ export default function EarthGlobe({
   useImperativeHandle(ref, () => ({
     flyTo: (view, ms = FLY_MS) => {
       const duration = reducedMotion ? 0 : ms
-      globeRef.current?.pointOfView(view, duration)
+      setUserMoved(false)
+      userMovedRef.current = false
+      const factor = altitudeFactor(sizeRef.current.w, sizeRef.current.h, readInsets())
+      globeRef.current?.pointOfView({ ...view, altitude: Math.min(4.8, view.altitude * factor) }, duration)
       wake(duration + IDLE_MS)
     },
     flyToRegion: (id, ms = FLY_MS) => flyRegion(id, ms),
@@ -200,7 +207,7 @@ export default function EarthGlobe({
     const { w: width, h: height } = sizeRef.current
     const camera = globe.camera() as THREE.PerspectiveCamera
     const apply = (x: number, y: number) => {
-      if (x < 0.5 && y < 0.5) camera.clearViewOffset()
+      if (Math.abs(x) < 0.5 && Math.abs(y) < 0.5) camera.clearViewOffset()
       else camera.setViewOffset(width, height, x, y, width, height)
       offsetRef.current = { x, y }
     }
@@ -209,7 +216,7 @@ export default function EarthGlobe({
     const from = offsetRef.current
     cancelAnimationFrame(offsetFrame.current)
 
-    const key = `${insets.right}|${insets.bottom}|${width}|${height}`
+    const key = `${insets.right}|${insets.bottom}|${insets.top}|${width}|${height}`
     const changed = key !== lastInsets.current
     lastInsets.current = key
 
@@ -229,8 +236,14 @@ export default function EarthGlobe({
       offsetFrame.current = requestAnimationFrame(step)
     }
     // La zona libre cambió con una región abierta: reajustar la distancia.
-    if (changed && animate && selectedRef.current) flyRegion(selectedRef.current, 400)
-  }, [flyRegion, reducedMotion, wake])
+    if (changed && animate && selectedRef.current) {
+      if (comparedRef.current) flyPair(selectedRef.current, comparedRef.current, 400)
+      else flyRegion(selectedRef.current, 400)
+    } else if (changed && !selectedRef.current && !userMovedRef.current) {
+      const view = initialViewRef.current
+      globe.pointOfView({ ...view, altitude: Math.min(4.8, view.altitude * altitudeFactor(width, height, insets)) }, 0)
+    }
+  }, [flyRegion, flyPair, reducedMotion, wake])
 
   useEffect(() => {
     sizeRef.current = { w, h }
@@ -250,7 +263,9 @@ export default function EarthGlobe({
     const globe = globeRef.current
     if (!ready || !globe) return
 
-    globe.pointOfView(initialViewRef.current, 0)
+    const initial = initialViewRef.current
+    const insets = readInsets()
+    globe.pointOfView({ ...initial, altitude: Math.min(4.8, initial.altitude * altitudeFactor(sizeRef.current.w, sizeRef.current.h, insets)) }, 0)
     const controls = globe.controls()
     controls.autoRotateSpeed = 0.35
     controls.minDistance = globe.getGlobeRadius() * 1.15
