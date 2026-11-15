@@ -2,7 +2,7 @@
  * WelcomeCard — 006-guide-content T004
  * Se muestra en la primera visita (sin región seleccionada).
  * Ofrece dos ejemplos que abren un análisis completo con un toque.
- * El segundo ejemplo queda como marcador hasta que 003 publique datos reales.
+ * Los dos ejemplos se eligieron con los datos reales de 003 (ver docs/demo.md §2 y §3).
  */
 import { useAppState } from '../../app/state'
 import { variableCopy, UI_COPY } from '../../content'
@@ -19,8 +19,8 @@ export default function WelcomeCard() {
   }
 
   return (
+    // Sin landmark propio: el armazón (002) ya envuelve esto en <section aria-label="Bienvenida">.
     <div className="welcome-card">
-      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="welcome-title">Trend Detective</h2>
       <p className="welcome-lead">{UI_COPY.welcome}</p>
 
@@ -41,19 +41,19 @@ export default function WelcomeCard() {
         </button>
 
         {/*
-          TODO(003): segundo ejemplo — elegir región y variable cuando 003 publique datos reales.
-          Se busca un caso con evidencia insuficiente o dirección opuesta para ilustrar el contraste.
-          T004 se marca terminada con este marcador declarado (clarification 2026-11-14).
+          Ejemplo 2: Chihuahua · Temperatura (T013, elegido con los datos reales de 003 del 2026-11-14).
+          Contrasta con el primero: Baja California no tiene evidencia suficiente en 1980–2025 y su
+          veredicto cambia según el año inicial; Chihuahua sube con evidencia en casi cualquier periodo.
+          No es Sonora a propósito: «Encuentra Sonora» es la tarea 1 de la prueba con usuarios.
         */}
         <button
           type="button"
-          className="welcome-example-btn welcome-example-btn--pending"
-          disabled
-          aria-disabled="true"
+          className="welcome-example-btn"
+          onClick={() => openExample('MX-CHH', 'air_temperature')}
         >
-          <span className="example-label">Próximamente</span>
-          <span className="example-place">Segundo ejemplo</span>
-          <span className="example-variable">Por definir con datos reales</span>
+          <span className="example-label">Ver un ejemplo</span>
+          <span className="example-place">Chihuahua</span>
+          <span className="example-variable">{VARIABLE_COPY.air_temperature.short}</span>
         </button>
       </div>
 

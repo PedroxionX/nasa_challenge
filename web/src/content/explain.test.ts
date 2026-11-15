@@ -3,7 +3,7 @@
  * Cubre el 100 % de las cuatro variantes (SC-C02) y verifica las reglas de la constitución.
  */
 import { describe, it, expect } from 'vitest'
-import { explainTrend, GLOSSARY, UI_COPY, type ExplainContext } from './index'
+import { explainTrend, GLOSSARY, UI_COPY, productCitation, type ExplainContext } from './index'
 import type { TrendRow } from '../lib/data'
 
 // ---------- Fixtures ----------
@@ -73,7 +73,7 @@ describe('increasing', () => {
     expect(result.caveats).toHaveLength(0)
   })
 
-  // Regresión: «+0,32 °C/década por década»
+  // Regresión: «+0.32 °C/década por década»
   it('no repite la base temporal: la unidad ya trae «/década»', () => {
     expect(result.sentence).not.toMatch(/década por década/)
     expect(result.sentence).not.toMatch(/por década/)
@@ -84,7 +84,7 @@ describe('increasing', () => {
   // Regresión: «fuerte» / «moderada» no estaban definidos en ningún spec
   it('no gradúa la evidencia con niveles inventados', () => {
     expect(result.sentence.toLowerCase()).not.toMatch(/fuerte|moderada|débil/)
-    expect(result.sentence).toContain('Un patrón así sería muy raro si no hubiera tendencia.')
+    expect(result.sentence).toContain('sería muy raro si no hubiera tendencia')
   })
 
   it('el nivel del IC sale de alpha, no es fijo', () => {
@@ -107,6 +107,34 @@ describe('increasing', () => {
   it('todas las cifras con signo del texto son las del archivo (SC-C02)', () => {
     const fromText = (result.sentence.match(/[+\u2212]\d+\.\d+/g) ?? []).sort()
     expect(fromText).toEqual(['+0.18', '+0.32', '+0.46'])
+  })
+})
+
+describe('formato y redacción (FR-A08, coherencia con el panel)', () => {
+  const row = makeRow({ status: 'increasing', slope_decade: 0.32, ci_low: 0.18, ci_high: 0.46, p: 0.012 })
+
+  it('punto decimal es-MX, nunca coma decimal', () => {
+    const r = explainTrend(row, baseCtx)
+    expect(r.sentence).not.toMatch(/\d,\d/)
+    expect(r.sentence).toContain('p = 0.012')
+  })
+
+  it('en mm usa un decimal, como las tarjetas del panel', () => {
+    const r = explainTrend(makeRow({ status: 'decreasing', slope_decade: -30.15, ci_low: -40.35, ci_high: -15.93 }),
+      { ...baseCtx, variableId: 'precipitation', unit: 'mm/década' })
+    expect(r.sentence).toContain('−30.1 mm/década')
+    expect(r.sentence).toContain('de −40.4 a −15.9')
+  })
+
+  it('la frase no repite el veredicto al inicio y nombra lugar y variable', () => {
+    const r = explainTrend(row, baseCtx)
+    expect(r.sentence).not.toMatch(/^(Sube|Baja)\b/)
+    expect(r.sentence).toMatch(/^En Baja California, la temperatura del aire sube /)
+  })
+
+  it('un valor que redondea a cero no lleva signo', () => {
+    const r = explainTrend(makeRow({ status: 'increasing', slope_decade: 0.32, ci_low: 0.001, ci_high: 0.46 }), baseCtx)
+    expect(r.sentence).toContain('de 0.00 a +0.46')
   })
 })
 
@@ -136,7 +164,7 @@ describe('decreasing', () => {
 
   it('con precipitación relativa, la unidad que pasa quien llama se respeta', () => {
     const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/década' })
-    expect(r.sentence).toContain('\u22120.15\u00a0%/década')
+    expect(r.sentence).toContain('\u22120.1\u00a0%/década') // un decimal fuera de °C, como el panel
     expect(r.sentence).not.toContain('°C')
   })
 })
@@ -154,7 +182,7 @@ describe('inconclusive', () => {
   it('NO menciona la dirección estimada (clarification 2026-11-14)', () => {
     const lower = result.sentence.toLowerCase()
     expect(lower).not.toContain('sube')
-    expect(lower).not.toContain('+0,05')
+    expect(lower).not.toContain('+0.05')
     expect(result.sentence).not.toMatch(/^Baja[.,]/)
   })
 
@@ -300,5 +328,23 @@ describe('textos fijos', () => {
       UI_COPY.legendNote, UI_COPY.smallRegion, UI_COPY.significanceNote,
     ]
     for (const t of fixed) expect(t.toLowerCase()).not.toMatch(/porque|provoca|continuará|seguirá|predic/)
+  })
+})
+// ---------- Citas (FR-C04) ----------
+
+describe('productCitation', () => {
+  it('cita MERRA-2 e IMERG con su DOI', () => {
+    expect(productCitation('M2TMNXSLV', '5.12.4')).toContain('doi:10.5067/AP1B0BA5PD2K')
+    expect(productCitation('GPM_3IMERGM', '07')).toContain('doi:10.5067/GPM/IMERG/3B-MONTH/07')
+  })
+
+  it('un producto desconocido se nombra tal cual, sin inventar autores ni DOI', () => {
+    const c = productCitation('OTRO_PRODUCTO', '3')
+    expect(c).toBe('OTRO_PRODUCTO versión 3.')
+    expect(c).not.toMatch(/doi/i)
+  })
+
+  it('sin producto lo dice', () => {
+    expect(productCitation(undefined, undefined)).toMatch(/no declarado/)
   })
 })
