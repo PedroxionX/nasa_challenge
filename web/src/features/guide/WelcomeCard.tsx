@@ -5,13 +5,13 @@
  * El segundo ejemplo queda como marcador hasta que 003 publique datos reales.
  */
 import { useAppState } from '../../app/state'
-import { VARIABLE_COPY, UI_COPY } from '../../content'
+import { variableCopy, UI_COPY } from '../../content'
 import './guide.css'
 
 export default function WelcomeCard() {
   const { setRegion, setVariable, resetPeriod } = useAppState()
 
-  function openExample(regionId: string, variableId: 'air_temperature' | 'precipitation') {
+  function openExample(regionId: string, variableId: string) {
     setVariable(variableId)
     resetPeriod()
     setRegion(regionId)
@@ -36,7 +36,7 @@ export default function WelcomeCard() {
         >
           <span className="example-label">Ver un ejemplo</span>
           <span className="example-place">Baja California</span>
-          <span className="example-variable">{VARIABLE_COPY.air_temperature.short}</span>
+          <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>
 
         {/*

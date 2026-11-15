@@ -15,7 +15,8 @@ export function configureLikeShell(
     firstYear: catalog.period.first_year,
     lastYear: catalog.period.last_complete_year,
     regionIds: catalog.regions.map(r => r.id),
-    periods: Object.fromEntries(data.VARIABLE_IDS.map(id => [id, data.variablePeriod(catalog, id)])),
+    periods: data.variablePeriods(catalog),
+    variableIds: catalog.variables.map(v => v.id),
   })
 }
 

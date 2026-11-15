@@ -9,8 +9,8 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, VARIABLE_IDS, type Catalog } from '../../lib/data'
-import { VARIABLE_COPY, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY } from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -162,10 +162,11 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Variables disponibles</h3>
         <dl className="methods-variables">
-          {VARIABLE_IDS.map(id => (
-            <div key={id} className="methods-variable-item">
-              <dt>{VARIABLE_COPY[id].label}</dt>
-              <dd>{VARIABLE_COPY[id].definition}</dd>
+          {/* Las variables son las del catálogo (007 FR-K14); sin textos propios se usan los que publica el pipeline. */}
+          {(catalog?.variables ?? []).map(v => (
+            <div key={v.id} className="methods-variable-item">
+              <dt>{variableCopy(v.id, v).label}</dt>
+              <dd>{variableCopy(v.id, v).definition}</dd>
             </div>
           ))}
         </dl>

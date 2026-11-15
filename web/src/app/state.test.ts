@@ -7,13 +7,13 @@ const LIMITS: StateLimits = { firstYear: 1981, lastYear: 2025, regionIds: null }
 describe('parseSearch', () => {
   it('lee una URL válida', () => {
     const { state, notices } = parseSearch('?region=MX-BCN&var=precipitation&from=1990&to=2020', LIMITS)
-    expect(state).toEqual({ regionId: 'MX-BCN', variableId: 'precipitation', from: 1990, to: 2020 })
+    expect(state).toEqual({ regionId: 'MX-BCN', compareId: null, variableId: 'precipitation', from: 1990, to: 2020 })
     expect(notices).toEqual([])
   })
 
   it('sin parámetros usa los predeterminados sin avisar', () => {
     expect(parseSearch('', LIMITS)).toEqual({
-      state: { regionId: null, variableId: 'air_temperature', from: 1981, to: 2025 }, notices: [],
+      state: { regionId: null, compareId: null, variableId: 'air_temperature', from: 1981, to: 2025 }, notices: [],
     })
   })
 
@@ -144,6 +144,67 @@ describe('useAppState', () => {
     expect(result.current).toMatchObject({ from: 2001, to: 2015 })
     act(() => result.current.resetPeriod())
     expect(result.current).toMatchObject({ from: 2001, to: 2025 })
+  })
+
+  it('las variables válidas son las del catálogo (007 FR-K14)', async () => {
+    const mod = await freshState('?var=soil_moisture')
+    const { result } = renderHook(() => mod.useAppState())
+    // Antes del catálogo se acepta por formato.
+    expect(result.current.variableId).toBe('soil_moisture')
+    act(() => mod.configureState({
+      firstYear: 1980, lastYear: 2025, regionIds: ['MX-BCN'], variableIds: ['air_temperature', 'soil_moisture'],
+      periods: { air_temperature: { firstYear: 1980, lastYear: 2025 }, soil_moisture: { firstYear: 2000, lastYear: 2025 } },
+    }))
+    expect(result.current).toMatchObject({ variableId: 'soil_moisture', from: 2000, to: 2025 })
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    act(() => result.current.setVariable('inventada'))
+    expect(result.current.variableId).toBe('soil_moisture')
+  })
+
+  it('una variable con buen formato que el catálogo no tiene vuelve a la predeterminada con aviso', async () => {
+    const mod = await freshState('?var=inventada')
+    const notice = renderHook(() => mod.useStateNotice())
+    const { result } = renderHook(() => mod.useAppState())
+    expect(notice.result.current).toBeNull()
+    act(() => mod.configureState({ firstYear: 1980, lastYear: 2025, regionIds: [], variableIds: ['precipitation', 'air_temperature'] }))
+    expect(result.current.variableId).toBe('air_temperature')
+    expect(notice.result.current).toMatch(/inventada/)
+  })
+
+  it('si el catálogo no trae la variable del contrato, la predeterminada es su primera variable', async () => {
+    const mod = await freshState('')
+    const { result } = renderHook(() => mod.useAppState())
+    act(() => mod.configureState({ firstYear: 2000, lastYear: 2025, regionIds: [], variableIds: ['soil_moisture'] }))
+    expect(result.current.variableId).toBe('soil_moisture')
+  })
+
+  it('vs: segunda región en la URL, con sus reglas (007 FR-K01)', async () => {
+    const mod = await freshState('?region=MX-BCN&vs=US-TX')
+    const { result } = renderHook(() => mod.useAppState())
+    expect(result.current).toMatchObject({ regionId: 'MX-BCN', compareId: 'US-TX' })
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    act(() => result.current.setCompare('MX-BCN')) // la misma: se ignora
+    expect(result.current.compareId).toBe('US-TX')
+    act(() => result.current.setCompare('MX-SON'))
+    expect(window.location.search).toContain('vs=MX-SON')
+    act(() => result.current.setRegion('MX-SON')) // la principal pasa a ser la comparada: se quita la comparación
+    expect(result.current).toMatchObject({ regionId: 'MX-SON', compareId: null })
+    expect(window.location.search).not.toContain('vs=')
+    act(() => result.current.setCompare('US-TX'))
+    act(() => result.current.setRegion(null)) // sin principal no hay comparación
+    expect(result.current).toMatchObject({ regionId: null, compareId: null })
+    act(() => result.current.setCompare('US-TX'))
+    expect(result.current.compareId).toBeNull()
+  })
+
+  it.each([
+    ['?region=MX-BCN&vs=MX-BCN', 1],
+    ['?region=MX-BCN&vs=zzz', 1],
+    ['?vs=US-TX', 0],
+  ])('%s → sin comparación', (search, notices) => {
+    const parsed = parseSearch(search, LIMITS)
+    expect(parsed.state.compareId).toBeNull()
+    expect(parsed.notices).toHaveLength(notices)
   })
 
   it('sin WebGL el estado lo refleja (jsdom no tiene WebGL)', async () => {

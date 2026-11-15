@@ -6,6 +6,7 @@ export const GLOBE_COPY = {
   loading: 'Cargando la Tierra…',
   mapsError: 'No se pudieron cargar los mapas.',
   tooltipHint: 'Clic para investigar',
+  tooltipCompareHint: 'Clic para comparar con este estado',
   globalView: 'Vista global',
   legendTitle: 'Cambio por década',
   noData: 'Sin datos',
@@ -19,6 +20,8 @@ export const GLOBE_COPY = {
   close: 'Cerrar',
   tableTitle: 'Cambio por década en cada estado',
   colRegion: 'Estado',
+  /** Marca en texto de las dos regiones comparadas (007 FR-K15): la misma letra que en el panel. */
+  compared: (tag: string) => `${tag} · en comparación`,
   colCountry: 'País',
   colValue: 'Cambio por década',
   colClass: 'Clase',

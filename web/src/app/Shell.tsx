@@ -1,16 +1,17 @@
 /**
  * Armazón adaptable (002 T005): cabecera, escenario y panel (escritorio) u hoja inferior (móvil).
- * Coloca las cinco entradas de features/ sin props; cada una lee useAppState().
+ * Coloca las entradas de features/ sin props; cada una lee useAppState().
  * Expone en :root --panel-inset-right y --panel-inset-bottom (px) para que el globo sepa qué zona queda libre.
  * Solo 002 edita este archivo.
  */
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnalysisPanel } from '../features/analysis'
+import { CompareEntry, ComparePanel } from '../features/compare'
 import { GlobeStage } from '../features/globe'
 import { MethodsSheet, WelcomeCard } from '../features/guide'
 import { QueryBar } from '../features/query'
 import { UI_COPY } from '../content'
-import { loadCatalog, variablePeriod, VARIABLE_IDS } from '../lib/data'
+import { loadCatalog, variablePeriods } from '../lib/data'
 import ErrorBoundary from './ErrorBoundary'
 import { configureState, dismissStateNotice, markWebglUnavailable, useAppState, useStateNotice } from './state'
 import './shell.css'
@@ -29,7 +30,7 @@ function setInsets(right: number, bottom: number) {
 }
 
 export default function Shell() {
-  const { regionId, webgl } = useAppState()
+  const { regionId, compareId, webgl } = useAppState()
   const notice = useStateNotice()
   const [catalogFailed, setCatalogFailed] = useState(false)
   const [catalogAttempt, setCatalogAttempt] = useState(0)
@@ -52,7 +53,8 @@ export default function Shell() {
           firstYear: c.period.first_year,
           lastYear: c.period.last_complete_year,
           regionIds: c.regions.map(r => r.id),
-          periods: Object.fromEntries(VARIABLE_IDS.map(id => [id, variablePeriod(c, id)])),
+          periods: variablePeriods(c),
+          variableIds: c.variables.map(v => v.id),
         })
       })
       .catch(() => live && setCatalogFailed(true))
@@ -150,7 +152,15 @@ export default function Shell() {
             <span aria-hidden="true" />
           </button>
           <div className="shell-panel-body">
-            <ErrorBoundary zone="análisis" resetKeys={[regionId]}><AnalysisPanel /></ErrorBoundary>
+            {/* 007: con una segunda región (vs=) el panel muestra la comparación; sin ella, el análisis y su entrada. */}
+            {compareId ? (
+              <ErrorBoundary zone="comparación" resetKeys={[regionId, compareId]}><ComparePanel /></ErrorBoundary>
+            ) : (
+              <>
+                <ErrorBoundary zone="análisis" resetKeys={[regionId]}><AnalysisPanel /></ErrorBoundary>
+                <ErrorBoundary zone="comparación" resetKeys={[regionId]}><CompareEntry /></ErrorBoundary>
+              </>
+            )}
           </div>
         </aside>
       )}

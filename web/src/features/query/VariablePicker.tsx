@@ -1,17 +1,22 @@
 /**
- * Selector de variable (004 T002): dos radios nativos con forma de control segmentado
+ * Selector de variable (004 T002): radios nativos con forma de control segmentado
  * (las flechas cambian de opción sin código extra) y su definición desplegable en la misma pantalla.
+ * Las opciones son las variables del catálogo (007 FR-K14). Con más de tres, el control segmentado no cabe
+ * a 360 px y se usa una lista desplegable nativa.
  */
 import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 import { useAppState } from '../../app/state'
-import { loadCatalog, VARIABLE_IDS, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
-import { VARIABLE_COPY } from '../../content'
+import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
+import { variableCopy } from '../../content'
 
-const KIND: Record<VariableInfo['kind'], string> = {
+/** A partir de cuántas variables se pasa del control segmentado a la lista desplegable. */
+const MAX_SEGMENTS = 3
+
+const KIND: Record<string, string> = {
   reanalysis: 'reanálisis (un modelo que combina observaciones)',
   observation: 'observación',
 }
-const AGGREGATION: Record<VariableInfo['aggregation'], string> = {
+const AGGREGATION: Record<string, string> = {
   mean_day_weighted: 'promedio anual',
   sum_from_rate: 'acumulado anual',
 }
@@ -24,8 +29,8 @@ function VariableFacts({ catalog, info }: { catalog: Catalog; info: VariableInfo
     : null
   return (
     <dl className="variable-picker-facts">
-      <dt>Unidad</dt><dd>{`${info.unit_annual} (${AGGREGATION[info.aggregation]})`}</dd>
-      <dt>Origen</dt><dd>{product ? `${KIND[info.kind]} · ${product}` : KIND[info.kind]}</dd>
+      <dt>Unidad</dt><dd>{AGGREGATION[info.aggregation] ? `${info.unit_annual} (${AGGREGATION[info.aggregation]})` : info.unit_annual}</dd>
+      <dt>Origen</dt><dd>{product ? `${KIND[info.kind] ?? info.kind} · ${product}` : KIND[info.kind] ?? info.kind}</dd>
       <dt>Años</dt><dd>{`${firstYear}–${lastYear}`}</dd>
     </dl>
   )
@@ -44,7 +49,12 @@ export default function VariablePicker() {
   }, [])
   const info = catalog?.variables.find(v => v.id === variableId)
   const definitionId = `${uid}-definition`
-  const copy = VARIABLE_COPY[variableId]
+  const copy = variableCopy(variableId, info)
+  // Sin catálogo todavía: solo la variable activa. La activa siempre figura, aunque el catálogo aún no la confirme.
+  const listed = catalog?.variables ?? []
+  const options = listed.some(v => v.id === variableId) || info
+    ? listed
+    : [...listed, { id: variableId, label: copy.label, definition: copy.definition }]
 
   const closeOnEscape = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && showDefinition) {
@@ -55,21 +65,32 @@ export default function VariablePicker() {
 
   return (
     <div className="variable-picker" onKeyDown={closeOnEscape}>
-      <fieldset className="variable-picker-options">
-        <legend className="query-vh">Variable</legend>
-        {VARIABLE_IDS.map(id => (
-          <label key={id} className="variable-picker-option">
-            <input
-              type="radio"
-              name={`${uid}-variable`}
-              value={id}
-              checked={variableId === id}
-              onChange={() => setVariable(id)}
-            />
-            <span>{VARIABLE_COPY[id].short}</span>
-          </label>
-        ))}
-      </fieldset>
+      {options.length > MAX_SEGMENTS ? (
+        <label className="variable-picker-select">
+          <span className="query-vh">Variable</span>
+          <select value={variableId} onChange={e => setVariable(e.target.value)}>
+            {options.map(v => (
+              <option key={v.id} value={v.id}>{variableCopy(v.id, v).label}</option>
+            ))}
+          </select>
+        </label>
+      ) : (
+        <fieldset className="variable-picker-options">
+          <legend className="query-vh">Variable</legend>
+          {options.map(v => (
+            <label key={v.id} className="variable-picker-option">
+              <input
+                type="radio"
+                name={`${uid}-variable`}
+                value={v.id}
+                checked={variableId === v.id}
+                onChange={() => setVariable(v.id)}
+              />
+              <span>{variableCopy(v.id, v).short}</span>
+            </label>
+          ))}
+        </fieldset>
+      )}
       <button
         type="button"
         className="variable-picker-info"

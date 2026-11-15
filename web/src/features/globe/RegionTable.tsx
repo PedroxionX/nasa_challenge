@@ -9,12 +9,15 @@ interface Props {
   unit: string | null
   caption: string
   selectedId: string | null
+  /** Segunda región de la comparación (007): las dos filas llevan su letra en texto. */
+  compareId?: string | null
   onPick: (id: string) => void
   /** URL de la región (permite abrir en otra pestaña y copiar el enlace). */
   hrefFor: (id: string) => string
 }
 
-export default function RegionTable({ rows, unit, caption, selectedId, onPick, hrefFor }: Props) {
+export default function RegionTable({ rows, unit, caption, selectedId, compareId = null, onPick, hrefFor }: Props) {
+  const tagOf = (id: string) => (!compareId ? null : id === selectedId ? 'A' : id === compareId ? 'B' : null)
   const [sort, setSort] = useState<{ key: SortKey; dir: 1 | -1 }>({ key: 'name', dir: 1 })
   const sorted = useMemo(() => sortRows(rows, sort.key, sort.dir), [rows, sort])
   const hasValues = unit !== null
@@ -49,7 +52,7 @@ export default function RegionTable({ rows, unit, caption, selectedId, onPick, h
       </thead>
       <tbody>
         {sorted.map(r => (
-          <tr key={r.id} aria-current={r.id === selectedId ? 'true' : undefined}>
+          <tr key={r.id} aria-current={r.id === selectedId || r.id === compareId ? 'true' : undefined}>
             <th scope="row">
               <a
                 className="globe-table-pick"
@@ -62,6 +65,7 @@ export default function RegionTable({ rows, unit, caption, selectedId, onPick, h
               >
                 {r.name}
               </a>
+              {tagOf(r.id) && <span className="globe-table-compared">{GLOBE_COPY.compared(tagOf(r.id)!)}</span>}
             </th>
             <td>{r.country}</td>
             {hasValues && <td className="globe-table-num">{r.value === null ? GLOBE_COPY.noData : formatSlope(r.value)}</td>}

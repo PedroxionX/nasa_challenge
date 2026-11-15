@@ -3,10 +3,13 @@
 // No se lee web/public/data/trends/: es de 003 y tiene datos reales.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  OPTIONAL_WINDOW_COLUMNS, VARIABLE_IDS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
+  OPTIONAL_WINDOW_COLUMNS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
   windowKey,
 } from './data'
 import { TREND_FIXTURES, fixtureFetch } from './testing/fixtures'
+
+/** Variables de los fixtures (el código ya no tiene una lista fija: salen del catálogo). */
+const VARIABLE_IDS = ['air_temperature', 'precipitation']
 
 const seriesFiles = Object.keys(TREND_FIXTURES)
   .map(k => k.match(/series\/([^/]+)\/([^/]+)\.json$/))
@@ -40,7 +43,7 @@ describe('fixtures sintéticos', () => {
 
   it.each(seriesFiles)('series/$variable/$region carga, está rotulada como sintética y cubre el periodo de su variable', async ({ variable, region }) => {
     const c = await loadCatalog()
-    const id = variable as (typeof VARIABLE_IDS)[number]
+    const id = variable
     const s = await loadSeries(id, region)
     const { firstYear, lastYear } = variablePeriod(c, id)
     expect(s.provenance.is_synthetic).toBe(true)

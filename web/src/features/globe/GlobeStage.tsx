@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { markWebglUnavailable, toSearch, useAppState } from '../../app/state'
-import { UI_COPY, VARIABLE_COPY } from '../../content'
+import { UI_COPY, variableCopy } from '../../content'
 import { loadCatalog, loadMap, windowKey, type Catalog, type MapFile } from '../../lib/data'
 import { GLOBE_COPY } from './copy'
 import EarthGlobe, { type EarthGlobeHandle } from './EarthGlobe'
@@ -51,7 +51,7 @@ function useLoaded<T>(key: string, load: () => Promise<T>): { value: T | null | 
 }
 
 export default function GlobeStage() {
-  const { regionId, variableId, from, to, webgl, setRegion } = useAppState()
+  const { regionId, compareId, variableId, from, to, webgl, setRegion, setCompare } = useAppState()
   const globe = useRef<EarthGlobeHandle>(null)
   const tableDialog = useRef<HTMLDialogElement>(null)
   const [ready, setReady] = useState(false)
@@ -109,14 +109,24 @@ export default function GlobeStage() {
     })
   }, [catalog.value, geo.value, values, labels])
 
-  const variableLabel = VARIABLE_COPY[variableId].short
+  const variableLabel = variableCopy(variableId, catalog.value?.variables.find(v => v.id === variableId)).short
   const caption = `${GLOBE_COPY.tableTitle} · ${variableLabel} · ${from}–${to}`
   const tableUnit = values ? unit : null
 
   // ---------- Cámara ----------
   useEffect(() => {
-    if (ready && regionId) globe.current?.flyToRegion(regionId)
-  }, [ready, regionId])
+    if (!ready || !regionId) return
+    // Comparando (007): la cámara deja a la vista las dos regiones.
+    if (compareId) globe.current?.flyToPair(regionId, compareId)
+    else globe.current?.flyToRegion(regionId)
+  }, [ready, regionId, compareId])
+
+  // Comparando, un clic en otra región cambia la segunda; la principal y el fondo no hacen nada,
+  // para no perder la comparación por un toque accidental. Sin comparación, el clic elige la región.
+  const selectOnGlobe = (id: string | null) => {
+    if (!compareId) setRegion(id)
+    else if (id && id !== regionId) setCompare(id)
+  }
 
   const globalView = () => {
     setRegion(null)
@@ -159,6 +169,7 @@ export default function GlobeStage() {
         unit={tableUnit}
         caption={caption}
         selectedId={regionId}
+        compareId={compareId}
         onPick={setRegion}
         hrefFor={hrefFor}
         failed={catalog.value === null}
@@ -173,7 +184,8 @@ export default function GlobeStage() {
           ref={globe}
           features={geo.value}
           selectedId={regionId}
-          onSelect={setRegion}
+          compareId={compareId}
+          onSelect={selectOnGlobe}
           regionFill={regionFill}
           regionNote={regionNote}
           selectedColor={palette.selected}
@@ -214,7 +226,7 @@ export default function GlobeStage() {
 
       <dialog className="globe-table-dialog" ref={tableDialog} aria-label={GLOBE_COPY.tableTitle}>
         <button type="button" className="globe-table-close" onClick={closeTable}>{GLOBE_COPY.close}</button>
-        <RegionTable rows={rows} unit={tableUnit} caption={caption} selectedId={regionId} onPick={pick} hrefFor={hrefFor} />
+        <RegionTable rows={rows} unit={tableUnit} caption={caption} selectedId={regionId} compareId={compareId} onPick={pick} hrefFor={hrefFor} />
       </dialog>
     </>
   )
