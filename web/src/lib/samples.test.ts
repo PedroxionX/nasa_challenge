@@ -1,23 +1,24 @@
-// Los archivos de web/public/data/trends/ cargan con los lectores reales y cumplen las reglas del contrato
-// (revisión 2026-11-14): periodo por variable, ventanas ≥ 10 años, mapa coherente con las series.
+// Los fixtures sintéticos (lib/__fixtures__/trends/) cargan con los lectores reales y cumplen las reglas del
+// contrato (revisión 2026-11-14): periodo por variable, ventanas ≥ 10 años, mapa coherente con las series.
+// No se lee web/public/data/trends/: es de 003 y tiene datos reales.
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  OPTIONAL_WINDOW_COLUMNS, VARIABLE_IDS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
+  OPTIONAL_WINDOW_COLUMNS, clearDataCache, loadCatalog, loadMap, loadSeries, pickWindow, variablePeriod,
   windowKey,
 } from './data'
+import { TREND_FIXTURES, fixtureFetch } from './testing/fixtures'
 
-const FILES = import.meta.glob('../../public/data/trends/**/*.json', { query: '?raw', import: 'default', eager: true }) as Record<string, string>
-const seriesFiles = Object.keys(FILES)
+/** Variables que declaran los fixtures (la web no tiene lista propia: la lee del catálogo). */
+const FIXTURE_VARIABLES = ['air_temperature', 'precipitation']
+
+const seriesFiles = Object.keys(TREND_FIXTURES)
   .map(k => k.match(/series\/([^/]+)\/([^/]+)\.json$/))
   .filter((m): m is RegExpMatchArray => m !== null)
   .map(m => ({ variable: m[1], region: m[2] }))
 
 beforeEach(() => {
   clearDataCache()
-  vi.stubGlobal('fetch', vi.fn(async (input: string) => {
-    const body = FILES[`../../public/${String(input).replace(/^\/+/, '')}`]
-    return body === undefined ? new Response('', { status: 404 }) : new Response(body, { status: 200 })
-  }))
+  vi.stubGlobal('fetch', vi.fn(fixtureFetch()))
 })
 afterEach(() => vi.unstubAllGlobals())
 
@@ -26,10 +27,10 @@ const windowsBetween = (first: number, last: number) => {
   return n > 0 ? (n * (n + 1)) / 2 : 0
 }
 
-describe('datos de ejemplo', () => {
+describe('fixtures sintéticos', () => {
   it('el catálogo declara las dos variables con su periodo y producto', async () => {
     const c = await loadCatalog()
-    expect(c.variables.map(v => v.id).sort()).toEqual([...VARIABLE_IDS].sort())
+    expect(c.variables.map(v => v.id).sort()).toEqual([...FIXTURE_VARIABLES].sort())
     expect(variablePeriod(c, 'air_temperature')).toEqual({ firstYear: 1980, lastYear: 2025 })
     expect(variablePeriod(c, 'precipitation')).toEqual({ firstYear: 2001, lastYear: 2025 })
     for (const v of c.variables) expect(v.product_short_name && v.product_version).toBeTruthy()
@@ -37,12 +38,12 @@ describe('datos de ejemplo', () => {
   })
 
   it('hay series de ambas variables', () => {
-    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(VARIABLE_IDS))
+    expect(new Set(seriesFiles.map(s => s.variable))).toEqual(new Set(FIXTURE_VARIABLES))
   })
 
   it.each(seriesFiles)('series/$variable/$region carga, está rotulada como sintética y cubre el periodo de su variable', async ({ variable, region }) => {
     const c = await loadCatalog()
-    const id = variable as (typeof VARIABLE_IDS)[number]
+    const id = variable
     const s = await loadSeries(id, region)
     const { firstYear, lastYear } = variablePeriod(c, id)
     expect(s.provenance.is_synthetic).toBe(true)
@@ -57,7 +58,7 @@ describe('datos de ejemplo', () => {
     expect(pickWindow(s, firstYear - 1, lastYear)).toBeNull()
   })
 
-  it.each([...VARIABLE_IDS])('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
+  it.each(FIXTURE_VARIABLES)('map/%s tiene las ventanas de su variable y coincide con las series', async id => {
     const c = await loadCatalog()
     const m = await loadMap(id)
     const { firstYear, lastYear } = variablePeriod(c, id)
@@ -71,7 +72,11 @@ describe('datos de ejemplo', () => {
     }
   })
 
-  it('ningún archivo publica «años para detectar»', () => {
-    for (const [name, body] of Object.entries(FILES)) expect(body, name).not.toMatch(/detect/i)
+  it('una región sin archivo responde como Vite y da not_found', async () => {
+    await expect(loadSeries('air_temperature', 'MX-JAL')).rejects.toMatchObject({ kind: 'not_found' })
+  })
+
+  it('ningún fixture publica «años para detectar»', () => {
+    for (const [name, body] of Object.entries(TREND_FIXTURES)) expect(body, name).not.toMatch(/detect/i)
   })
 })

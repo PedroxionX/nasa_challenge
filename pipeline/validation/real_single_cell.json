@@ -1,0 +1,125 @@
+{
+ "check": "serie regional de una celda = valor de la celda en el gránulo (≤ 0,01)",
+ "earthaccess": "0.19.0",
+ "checked_at_utc": "2026-11-15T02:19:18Z",
+ "checks": [
+  {
+   "variable": "air_temperature",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 2.77755,
+   "granule": 2.77755,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "air_temperature",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 26.1849,
+   "granule": 26.1849,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "air_temperature",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 28.02151,
+   "granule": 28.02151,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "precipitation",
+   "month": "2005-07",
+   "cell": [
+    38.75,
+    -77.05
+   ],
+   "pipeline": 4.704,
+   "granule": 4.704,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "precipitation",
+   "month": "2024-07",
+   "cell": [
+    38.75,
+    -77.05
+   ],
+   "pipeline": 4.2,
+   "granule": 4.2,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "soil_moisture",
+   "month": "2005-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 32.69406,
+   "granule": 32.69406,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "soil_moisture",
+   "month": "2024-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 31.91657,
+   "granule": 31.91657,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "evapotranspiration",
+   "month": "2005-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 0.18222,
+   "granule": 0.18222,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "evapotranspiration",
+   "month": "2024-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 0.14699,
+   "granule": 0.14699,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  }
+ ],
+ "all_pass": true
+}

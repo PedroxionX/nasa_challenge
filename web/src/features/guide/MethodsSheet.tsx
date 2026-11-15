@@ -9,8 +9,8 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, VARIABLE_IDS, type Catalog } from '../../lib/data'
-import { VARIABLE_COPY, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, loadSeries, type Catalog } from '../../lib/data'
+import { variableCopy, UI_COPY, GLOSSARY, PRODUCT_CITATIONS } from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -40,6 +40,50 @@ function describe(table: Record<string, string>, code: string): string {
   return table[code] ?? `método «${code}»`
 }
 
+interface ProductSource {
+  shortName: string
+  version: string
+  /** Una variable del producto, para leer la fecha de consulta de una de sus series. */
+  variableId: string
+}
+
+/** Productos distintos que publica el catálogo, en el orden de sus variables. */
+function catalogProducts(catalog: Catalog): ProductSource[] {
+  const seen = new Map<string, ProductSource>()
+  for (const v of catalog.variables) {
+    if (v.product_short_name && !seen.has(v.product_short_name)) {
+      seen.set(v.product_short_name, {
+        shortName: v.product_short_name, version: v.product_version ?? '', variableId: v.id,
+      })
+    }
+  }
+  return [...seen.values()]
+}
+
+/**
+ * Fecha de consulta (AAAA-MM-DD) de cada producto: `provenance.retrieved_at_utc` de una serie suya
+ * (la de la primera región del catálogo). Si la serie no carga, el producto queda sin fecha.
+ */
+function useRetrievedDates(catalog: Catalog | null): Record<string, string> {
+  const [dates, setDates] = useState<Record<string, string>>({})
+  useEffect(() => {
+    const region = catalog?.regions[0]?.id
+    if (!catalog || !region) return
+    let alive = true
+    Promise.all(
+      catalogProducts(catalog).map(p =>
+        loadSeries(p.variableId, region)
+          .then(s => [p.shortName, s.provenance.retrieved_at_utc.slice(0, 10)] as const)
+          .catch(() => null),
+      ),
+    ).then(rows => {
+      if (alive) setDates(Object.fromEntries(rows.filter(r => r !== null)))
+    })
+    return () => { alive = false }
+  }, [catalog])
+  return dates
+}
+
 export default function MethodsSheet() {
   const [catalog, setCatalog] = useState<Catalog | null>(null)
   const [error, setError] = useState(false)
@@ -56,9 +100,12 @@ export default function MethodsSheet() {
   const lastYear = catalog?.period.last_complete_year ?? 2025
   const minWindow = catalog?.period.min_window_years ?? 10
   const method = catalog?.method ?? DEFAULT_METHOD
+  const products = catalog ? catalogProducts(catalog) : []
+  const retrieved = useRetrievedDates(catalog)
 
   return (
     <article className="methods-sheet" aria-label="Métodos y fuentes">
+      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="methods-title">Métodos y fuentes</h2>
 
       {error && (
@@ -161,12 +208,15 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Variables disponibles</h3>
         <dl className="methods-variables">
-          {VARIABLE_IDS.map(id => (
-            <div key={id} className="methods-variable-item">
-              <dt>{VARIABLE_COPY[id].label}</dt>
-              <dd>{VARIABLE_COPY[id].definition}</dd>
-            </div>
-          ))}
+          {(catalog?.variables ?? []).map(v => {
+            const copy = variableCopy(v.id, v)
+            return (
+              <div key={v.id} className="methods-variable-item">
+                <dt>{copy.label}</dt>
+                <dd>{copy.definition}</dd>
+              </div>
+            )
+          })}
         </dl>
       </section>
 
@@ -174,16 +224,25 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Cómo citar</h3>
         <p>
-          Los datos proceden de MERRA-2 (Modern-Era Retrospective analysis for
-          Research and Applications, Version 2), distribuido por el Goddard
-          Earth Sciences Data and Information Services Center (GES DISC) de la
-          NASA.
+          Los datos proceden de productos de la NASA distribuidos por el Goddard
+          Earth Sciences Data and Information Services Center (GES DISC): el
+          reanálisis MERRA-2 (Modern-Era Retrospective analysis for Research and
+          Applications, Version 2), GPM IMERG y el modelo GLDAS Noah. El promedio
+          de cada estado lo calcula Trend Detective.
         </p>
+        <ul className="methods-citations">
+          {products.map(p => (
+            <li key={p.shortName}>
+              {PRODUCT_CITATIONS[p.shortName] ?? `${p.shortName} ${p.version} (NASA GES DISC).`}
+              {retrieved[p.shortName] && <> Fecha de consulta: {retrieved[p.shortName]}.</>}
+            </li>
+          ))}
+        </ul>
         <p>
           Para citar esta herramienta:{' '}
           <em>
-            Trend Detective, NASA Space Apps Challenge 2026. Datos: MERRA-2 /
-            NASA GES DISC.
+            Trend Detective, NASA Space Apps Challenge 2026. Datos: MERRA-2, GPM
+            IMERG y GLDAS / NASA GES DISC.
           </em>
         </p>
       </section>

@@ -5,20 +5,22 @@
  * El segundo ejemplo queda como marcador hasta que 003 publique datos reales.
  */
 import { useAppState } from '../../app/state'
-import { VARIABLE_COPY, UI_COPY } from '../../content'
+import { variableCopy, UI_COPY } from '../../content'
+import type { VariableId } from '../../lib/data'
 import './guide.css'
 
 export default function WelcomeCard() {
   const { setRegion, setVariable, resetPeriod } = useAppState()
 
-  function openExample(regionId: string, variableId: 'air_temperature' | 'precipitation') {
+  function openExample(regionId: string, variableId: VariableId) {
     setVariable(variableId)
     resetPeriod()
     setRegion(regionId)
   }
 
   return (
-    <section className="welcome-card" aria-label="Bienvenida">
+    <div className="welcome-card">
+      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="welcome-title">Trend Detective</h2>
       <p className="welcome-lead">{UI_COPY.welcome}</p>
 
@@ -35,7 +37,7 @@ export default function WelcomeCard() {
         >
           <span className="example-label">Ver un ejemplo</span>
           <span className="example-place">Baja California</span>
-          <span className="example-variable">{VARIABLE_COPY.air_temperature.short}</span>
+          <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>
 
         {/*
@@ -56,6 +58,6 @@ export default function WelcomeCard() {
       </div>
 
       <p className="welcome-note">{UI_COPY.notCause}</p>
-    </section>
+    </div>
   )
 }

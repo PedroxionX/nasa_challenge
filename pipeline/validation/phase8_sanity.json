@@ -1,0 +1,9877 @@
+{
+ "check": "sanidad física de las 84 regiones",
+ "out": "../web/public/data/trends",
+ "checked_at_utc": "2026-11-15T09:24:00Z",
+ "n_checks": 1176,
+ "failed": [],
+ "jumps_to_review": [
+  {
+   "variable": "air_temperature",
+   "region": "US-AK",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    -5.5,
+    -2.74
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-AK",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    -1.55,
+    -4.06
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    11.8,
+    8.54
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-IL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    13.34,
+    10.54
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-KS",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    15.14,
+    12.58
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    6.19,
+    8.87
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.85,
+    4.44
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    3.75,
+    6.64
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MN",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    7.27,
+    4.67
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.82,
+    11.82
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-MT",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    6.8,
+    4.12
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    6.9,
+    3.95
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.89,
+    4.79
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    4.35,
+    7.02
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    7.94,
+    5.09
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-NE",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    10.09,
+    12.81
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-NE",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    12.81,
+    10.01
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-OK",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    17.59,
+    15.08
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-SD",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    8.1,
+    10.84
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-SD",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    10.84,
+    7.88
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    5.63,
+    8.33
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    8.68,
+    5.36
+   ]
+  },
+  {
+   "variable": "air_temperature",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    4.27,
+    6.88
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-AGU",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    935.34,
+    518.81
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCN",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    68.93,
+    180.9
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCN",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    112.82,
+    209.93
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    198.36,
+    88.94
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    88.94,
+    291.56
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    200.31,
+    77.74
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    81.32,
+    250.8
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-BCS",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    270.71,
+    114.18
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    587.49,
+    201.31
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-DUR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    944.68,
+    539.75
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-NLE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    479.69,
+    910.03
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    910.03,
+    318.6
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    1088.54,
+    569.34
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    569.34,
+    1070.6
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-TAM",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    1070.6,
+    545.2
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "MX-YUC",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    1107.05,
+    1881.25
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-AR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    1914.32,
+    1053.5
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-AZ",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    185.08,
+    365.23
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-CA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    424.83,
+    765.07
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-NM",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    258.31,
+    495.45
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-OK",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    807.02,
+    1405.81
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-SD",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    830.85,
+    445.88
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-TX",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    1118.88,
+    626.78
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-TX",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    625.41,
+    1099.03
+   ]
+  },
+  {
+   "variable": "precipitation",
+   "region": "US-UT",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    408.13,
+    202.14
+   ]
+  },
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-BCN",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    73.18,
+    163.28
+   ]
+  },
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    507.28,
+    258.43
+   ]
+  },
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    701.65,
+    361.33
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-AK",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    -3.17,
+    -5.77
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    11.28,
+    8.16
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-IL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    13.12,
+    10.41
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-KS",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    15.4,
+    12.8
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.32,
+    3.79
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    3.13,
+    6.72
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-MN",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    6.6,
+    3.74
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-MO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.59,
+    11.66
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-ND",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    5.1,
+    7.87
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.87,
+    4.37
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    4.14,
+    7.57
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-ND",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    3.8,
+    6.38
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    7.89,
+    4.35
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-NE",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    9.91,
+    12.65
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-NE",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    12.65,
+    10.02
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-SD",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    7.74,
+    10.75
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-SD",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    10.75,
+    7.65
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-SD",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    7.28,
+    9.96
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-SD",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    6.33,
+    9.11
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-UT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    8.43,
+    11.31
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    8.14,
+    4.76
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    3.82,
+    6.71
+   ]
+  },
+  {
+   "variable": "soil_temperature",
+   "region": "US-WY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    4.53,
+    7.78
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    51.73,
+    152.4
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    138.03,
+    26.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    36.22,
+    84.84
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    84.84,
+    117.26
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    117.26,
+    27.37
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    27.37,
+    57.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    57.6,
+    18.68
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    40.45,
+    78.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-AGU",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    78.66,
+    23.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCN",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    2.32,
+    8.25
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCN",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    8.25,
+    3.32
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    2.39,
+    9.19
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    9.19,
+    2.71
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    2.71,
+    8.16
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    8.16,
+    5.46
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    3.88,
+    10.4
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-BCS",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    10.4,
+    3.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    291.94,
+    151.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    72.19,
+    352.56
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    352.56,
+    237.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    195.64,
+    55.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    55.9,
+    235.58
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    235.58,
+    89.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    152.07,
+    360.58
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    360.58,
+    201.78
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    201.78,
+    52.25
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    175.0,
+    62.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    63.58,
+    230.74
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    230.74,
+    84.06
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    84.06,
+    218.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CAM",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    218.98,
+    95.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    7.05,
+    24.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    21.34,
+    36.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    27.14,
+    64.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    64.6,
+    18.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    22.58,
+    8.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    9.2,
+    22.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    29.66,
+    14.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHH",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    4.93,
+    16.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHP",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    612.24,
+    1082.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHP",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    919.06,
+    442.14
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHP",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    442.14,
+    1212.26
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHP",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    1212.26,
+    748.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-CHP",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    777.06,
+    339.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    9.25,
+    34.28
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    45.47,
+    23.19
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    23.19,
+    9.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    9.98,
+    33.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    27.58,
+    12.24
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    12.24,
+    63.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    63.05,
+    12.53
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COA",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    34.11,
+    20.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    308.92,
+    113.12
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    113.12,
+    227.16
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    198.27,
+    79.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    79.41,
+    183.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    212.39,
+    104.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    104.88,
+    296.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-COL",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    296.72,
+    191.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    20.56,
+    103.59
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    112.31,
+    29.85
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    29.85,
+    64.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    52.78,
+    100.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    100.47,
+    23.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    23.87,
+    50.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    50.51,
+    11.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    12.82,
+    38.8
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    29.89,
+    61.93
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-DUR",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    61.93,
+    30.64
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GRO",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    212.99,
+    508.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GRO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    192.46,
+    565.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GRO",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    392.37,
+    178.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GRO",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    362.67,
+    137.61
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GRO",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    137.61,
+    395.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    76.47,
+    203.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    203.51,
+    112.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    112.02,
+    26.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    49.01,
+    118.81
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    118.81,
+    170.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    170.41,
+    29.93
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    29.93,
+    121.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    121.0,
+    24.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    83.68,
+    30.92
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    24.4,
+    106.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-GUA",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    106.65,
+    22.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    118.82,
+    194.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    194.98,
+    94.12
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    68.84,
+    184.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    207.57,
+    54.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    54.34,
+    272.11
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    272.11,
+    158.04
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    158.04,
+    68.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    164.33,
+    80.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    35.96,
+    146.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    146.88,
+    20.69
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-HID",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    66.98,
+    222.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    185.6,
+    305.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    336.77,
+    115.85
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    271.87,
+    93.7
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    93.7,
+    234.37
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    108.36,
+    224.69
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-JAL",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    239.42,
+    131.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MEX",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    224.98,
+    384.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MEX",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    223.85,
+    391.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MEX",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    391.95,
+    214.24
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    277.29,
+    125.84
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    125.84,
+    362.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    140.12,
+    395.14
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    395.14,
+    206.74
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    167.94,
+    313.39
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MIC",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    82.25,
+    225.74
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    320.49,
+    167.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    167.45,
+    443.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    443.51,
+    239.11
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    221.07,
+    372.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    345.09,
+    115.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    115.05,
+    294.2
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    294.2,
+    444.1
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    444.1,
+    176.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    237.79,
+    86.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-MOR",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    86.21,
+    268.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    132.08,
+    319.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    280.43,
+    87.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    238.25,
+    67.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    67.15,
+    195.32
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    195.32,
+    78.77
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    85.37,
+    183.42
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    61.69,
+    156.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    208.84,
+    75.13
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    106.09,
+    229.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NAY",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    229.21,
+    118.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    20.18,
+    90.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    90.72,
+    38.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    38.88,
+    19.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    50.33,
+    13.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    13.0,
+    81.92
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    81.92,
+    12.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    49.62,
+    29.81
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    14.29,
+    42.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-NLE",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    42.03,
+    21.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    267.58,
+    493.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    279.87,
+    814.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    814.89,
+    415.06
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    390.92,
+    176.93
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    247.38,
+    527.76
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    527.76,
+    222.04
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-OAX",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    93.13,
+    368.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-PUE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    167.91,
+    511.25
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-PUE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    511.25,
+    252.8
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-PUE",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    339.08,
+    125.2
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-PUE",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    366.3,
+    138.91
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-PUE",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    44.02,
+    222.46
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    39.31,
+    101.09
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    88.12,
+    185.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    185.88,
+    80.06
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    50.35,
+    135.29
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    135.29,
+    185.04
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    185.04,
+    33.53
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    33.53,
+    203.81
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    203.81,
+    68.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    31.59,
+    132.69
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    132.69,
+    28.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-QUE",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    56.03,
+    118.18
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    65.79,
+    27.94
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    23.38,
+    58.67
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    57.78,
+    12.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    53.52,
+    144.56
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    144.56,
+    37.77
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    12.46,
+    157.84
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    157.84,
+    32.1
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    21.7,
+    137.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ROO",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    137.31,
+    32.23
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    25.76,
+    86.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    91.26,
+    39.67
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    39.67,
+    102.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    102.0,
+    64.23
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    64.23,
+    134.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    134.97,
+    33.55
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    59.94,
+    105.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    60.27,
+    101.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SIN",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    101.66,
+    53.75
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    26.75,
+    73.71
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    73.71,
+    42.36
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    42.36,
+    18.18
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    14.38,
+    57.96
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    57.96,
+    88.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    88.72,
+    16.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    16.54,
+    101.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    101.62,
+    27.93
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    13.58,
+    39.06
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    40.29,
+    18.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    14.04,
+    35.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    35.86,
+    12.37
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SLP",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    5.5,
+    31.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SON",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    18.28,
+    34.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SON",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    34.99,
+    13.16
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-SON",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    20.29,
+    9.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    711.49,
+    343.28
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    343.28,
+    888.64
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    684.67,
+    258.59
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    258.59,
+    1021.3
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    1021.3,
+    599.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    489.63,
+    977.28
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    977.28,
+    505.38
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    541.78,
+    218.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    257.24,
+    726.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAB",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    726.44,
+    218.55
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    27.56,
+    78.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    78.03,
+    30.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    19.63,
+    41.59
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    56.18,
+    14.78
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    14.78,
+    82.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    82.02,
+    23.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.62,
+    47.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    13.63,
+    73.79
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TAM",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    73.79,
+    36.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    288.07,
+    430.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    351.08,
+    186.77
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    186.77,
+    369.56
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    369.56,
+    186.17
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    288.44,
+    117.26
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-TLA",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    39.76,
+    190.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-VER",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    276.97,
+    599.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-VER",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    350.64,
+    879.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-VER",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    879.41,
+    434.81
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-VER",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    589.0,
+    319.33
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-VER",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    200.7,
+    570.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    16.39,
+    61.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    61.95,
+    16.71
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    32.75,
+    15.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    17.78,
+    47.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    47.0,
+    15.23
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    11.21,
+    177.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    177.89,
+    26.42
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    14.18,
+    85.53
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-YUC",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    85.53,
+    19.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    40.84,
+    118.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    99.08,
+    25.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    34.75,
+    63.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    63.43,
+    94.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    94.47,
+    24.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    24.5,
+    54.3
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    54.3,
+    16.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "MX-ZAC",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    49.98,
+    22.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    221.56,
+    553.84
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    571.51,
+    859.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    344.73,
+    785.76
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    785.76,
+    428.22
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    288.73,
+    593.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AL",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    690.19,
+    332.91
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AR",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    132.6,
+    520.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    531.78,
+    273.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AR",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    295.88,
+    517.49
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    714.13,
+    292.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AR",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    364.53,
+    611.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AZ",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    12.36,
+    52.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AZ",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    52.97,
+    13.55
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AZ",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    7.53,
+    16.7
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-AZ",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    14.66,
+    6.75
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    134.45,
+    227.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    278.67,
+    60.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    53.29,
+    132.18
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    132.18,
+    199.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    199.6,
+    65.75
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    47.21,
+    119.2
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    119.2,
+    234.05
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    234.05,
+    42.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    42.99,
+    137.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    137.66,
+    49.06
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CA",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    55.85,
+    145.37
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CO",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    8.78,
+    17.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CO",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    6.45,
+    16.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CO",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    16.9,
+    10.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-CT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    769.33,
+    279.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-DE",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    337.35,
+    887.22
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-DE",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    887.22,
+    602.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-DE",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    310.61,
+    670.7
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-FL",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    708.01,
+    319.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-FL",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    605.76,
+    290.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    423.07,
+    808.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    808.57,
+    538.78
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    595.02,
+    255.32
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    308.75,
+    645.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    645.95,
+    379.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    143.95,
+    540.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-GA",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    478.57,
+    237.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    184.82,
+    27.79
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    27.79,
+    337.01
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    337.01,
+    179.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    179.9,
+    364.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    364.86,
+    109.56
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    160.66,
+    37.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    55.1,
+    134.84
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-HI",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    134.84,
+    28.68
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    35.44,
+    268.68
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    268.68,
+    146.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    190.44,
+    56.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    56.99,
+    236.64
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    236.64,
+    389.96
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    389.96,
+    270.85
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    270.85,
+    460.17
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    460.17,
+    224.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    224.47,
+    71.52
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    71.52,
+    225.64
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    146.79,
+    417.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IA",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    417.95,
+    164.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    25.17,
+    70.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    70.48,
+    24.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    21.85,
+    86.58
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    86.58,
+    29.24
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    27.28,
+    81.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ID",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    81.87,
+    32.77
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IL",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    120.28,
+    318.26
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IL",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    427.95,
+    253.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IL",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    346.74,
+    137.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    137.66,
+    329.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IL",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    221.67,
+    448.79
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IN",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    234.34,
+    502.23
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-IN",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    502.23,
+    215.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KS",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    47.39,
+    19.1
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KS",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    19.1,
+    76.94
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KS",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    59.44,
+    22.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KS",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    35.83,
+    116.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KS",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    116.44,
+    46.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KY",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    602.8,
+    341.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    504.0,
+    247.17
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-KY",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    278.73,
+    534.92
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-LA",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    119.88,
+    746.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-LA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    478.75,
+    805.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-LA",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    805.5,
+    313.53
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-LA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    107.14,
+    355.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-LA",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    576.67,
+    197.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    745.9,
+    315.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MD",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    291.29,
+    850.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MD",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    850.6,
+    591.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MD",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    286.34,
+    601.09
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ME",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    383.53,
+    882.24
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ME",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    748.04,
+    440.94
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ME",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    440.94,
+    783.29
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ME",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    712.71,
+    381.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MI",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    158.05,
+    395.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MI",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    238.52,
+    395.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MI",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    339.85,
+    188.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MI",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    188.08,
+    339.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MI",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    339.95,
+    183.58
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    49.96,
+    175.33
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    175.33,
+    113.78
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    163.2,
+    48.19
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    111.88,
+    41.14
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    75.25,
+    140.68
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MN",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    140.68,
+    85.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MO",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    248.13,
+    92.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MO",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    209.48,
+    414.83
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MO",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    265.1,
+    108.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MO",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    134.35,
+    435.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MO",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    319.2,
+    171.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MS",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    164.14,
+    673.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MS",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    740.19,
+    394.39
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MS",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    365.69,
+    705.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MS",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    705.5,
+    361.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MS",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    617.75,
+    303.65
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    9.11,
+    16.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    13.08,
+    41.81
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    41.81,
+    10.11
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    9.3,
+    16.66
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    16.66,
+    9.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    7.35,
+    19.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-MT",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    19.87,
+    10.7
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    333.22,
+    855.55
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    855.55,
+    487.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    202.35,
+    447.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    266.64,
+    516.37
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    347.72,
+    615.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NC",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    615.95,
+    361.01
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    15.08,
+    5.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    9.78,
+    34.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    30.47,
+    49.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    49.9,
+    7.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    7.34,
+    17.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    17.34,
+    33.46
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    33.46,
+    6.42
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    7.36,
+    18.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    17.6,
+    3.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    3.51,
+    26.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-ND",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    26.57,
+    11.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    13.57,
+    65.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    65.31,
+    17.45
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    17.45,
+    52.86
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    27.78,
+    63.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    63.87,
+    20.13
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    20.13,
+    104.76
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    104.76,
+    75.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    62.45,
+    123.51
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    123.51,
+    40.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    35.11,
+    71.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    71.35,
+    22.04
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NE",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    44.5,
+    11.58
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NH",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    459.34,
+    781.18
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NH",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    775.08,
+    384.92
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NH",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    384.92,
+    713.67
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NH",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    645.71,
+    238.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NH",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    361.74,
+    651.53
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NJ",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    959.03,
+    512.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    6.68,
+    24.04
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    24.04,
+    31.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    31.44,
+    17.12
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    13.37,
+    6.74
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    6.74,
+    12.87
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    12.87,
+    6.13
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    6.84,
+    18.9
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NM",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    18.9,
+    11.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    38.04,
+    81.4
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    83.87,
+    12.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    37.82,
+    72.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    72.5,
+    23.0
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    19.05,
+    50.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    50.48,
+    97.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    97.47,
+    20.1
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    20.1,
+    47.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    42.53,
+    83.17
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NV",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    72.85,
+    45.49
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NY",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    428.03,
+    715.3
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-NY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    715.3,
+    277.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OH",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    230.48,
+    674.72
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OH",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    674.72,
+    261.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    76.92,
+    181.02
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    104.74,
+    34.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    34.34,
+    240.08
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    240.08,
+    152.83
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    49.68,
+    176.14
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    111.58,
+    248.29
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OK",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    248.29,
+    155.22
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OR",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    119.29,
+    276.19
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OR",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    195.07,
+    417.6
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OR",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    417.6,
+    220.22
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OR",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    330.81,
+    191.63
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-OR",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    370.65,
+    141.38
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    416.73,
+    782.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PA",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    721.78,
+    446.83
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    305.88,
+    805.32
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    805.32,
+    283.22
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    88.79,
+    431.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    431.15,
+    302.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    302.89,
+    506.96
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    506.96,
+    147.62
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    175.14,
+    315.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    315.97,
+    84.12
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    84.12,
+    589.54
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    589.54,
+    257.24
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    257.24,
+    71.26
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    47.77,
+    179.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-PR",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    250.9,
+    63.25
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-RI",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    816.19,
+    467.57
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-RI",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    831.7,
+    390.44
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SC",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    329.13,
+    830.33
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SC",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    830.33,
+    446.03
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SC",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    170.65,
+    462.19
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SC",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    321.85,
+    622.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SC",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    622.95,
+    395.79
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    7.33,
+    21.36
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    21.36,
+    5.83
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    7.82,
+    19.82
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    17.12,
+    29.55
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    27.82,
+    7.13
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    11.95,
+    26.21
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    26.21,
+    9.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    10.64,
+    27.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-SD",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    27.89,
+    12.27
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TN",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    654.78,
+    390.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    69.93,
+    160.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    112.42,
+    209.76
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    209.76,
+    89.75
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    57.87,
+    180.8
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    180.8,
+    70.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    103.89,
+    32.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    96.7,
+    160.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-TX",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    106.78,
+    45.11
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    18.25,
+    59.17
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    59.17,
+    26.41
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    26.41,
+    13.98
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    21.78,
+    39.35
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    39.35,
+    11.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    15.45,
+    37.23
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    37.23,
+    9.38
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    9.38,
+    24.31
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    24.31,
+    11.96
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    13.89,
+    42.15
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-UT",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    42.15,
+    22.89
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    233.66,
+    843.88
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    843.88,
+    506.18
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VA",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    237.98,
+    473.73
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VT",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    787.55,
+    404.5
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VT",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    404.5,
+    718.13
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-VT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    721.4,
+    271.47
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    82.08,
+    335.4
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    330.59,
+    142.79
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    142.79,
+    292.39
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    292.39,
+    165.71
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    161.15,
+    293.69
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    293.69,
+    168.25
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    264.27,
+    94.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    94.97,
+    230.39
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    102.72,
+    235.95
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    192.97,
+    375.32
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WI",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    375.32,
+    213.99
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WV",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    325.15,
+    779.43
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WV",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    624.5,
+    332.56
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WV",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    294.0,
+    504.1
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WV",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    504.1,
+    253.69
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    5.7,
+    17.11
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    9.67,
+    17.97
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    20.11,
+    6.4
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    4.97,
+    14.29
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    14.29,
+    5.34
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    7.42,
+    16.49
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    16.49,
+    5.48
+   ]
+  },
+  {
+   "variable": "runoff",
+   "region": "US-WY",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    5.19,
+    16.41
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    4.82,
+    22.32
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    22.32,
+    0.98
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    6.38,
+    1.33
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    1.33,
+    7.43
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    8.74,
+    4.01
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    4.01,
+    19.12
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    19.12,
+    6.45
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    6.45,
+    1.32
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    2.3,
+    6.67
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-IA",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    6.39,
+    3.02
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    23.28,
+    12.3
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    10.37,
+    20.02
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    20.02,
+    10.7
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    10.7,
+    19.79
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    25.1,
+    10.03
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    16.1,
+    26.5
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ID",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    26.5,
+    12.2
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    6.33,
+    14.6
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    14.6,
+    4.95
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    4.95,
+    17.66
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    17.66,
+    4.41
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    8.31,
+    2.19
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    2.19,
+    7.31
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    6.09,
+    10.83
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    9.66,
+    14.04
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    14.04,
+    2.79
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MA",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    12.2,
+    3.88
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    39.32,
+    22.48
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    27.39,
+    59.98
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    59.98,
+    38.16
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    38.16,
+    19.48
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    19.48,
+    40.1
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ME",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    40.1,
+    20.76
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    10.71,
+    21.09
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    21.09,
+    6.91
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2013,
+    2014
+   ],
+   "values": [
+    10.4,
+    17.33
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    17.33,
+    7.92
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    5.93,
+    14.51
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MI",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    14.51,
+    8.15
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    7.92,
+    25.05
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    25.05,
+    5.37
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    13.83,
+    20.47
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    18.69,
+    4.47
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    4.47,
+    12.66
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    14.27,
+    4.98
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    5.3,
+    12.47
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    6.23,
+    13.66
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    13.66,
+    23.66
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MN",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    23.66,
+    3.92
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MT",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    4.05,
+    9.09
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MT",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    9.39,
+    14.26
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    16.17,
+    6.51
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-MT",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    11.73,
+    5.53
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    7.37,
+    16.01
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    16.01,
+    1.73
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    3.91,
+    9.0
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    9.0,
+    16.71
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    15.62,
+    1.3
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    1.3,
+    4.99
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    2.79,
+    6.17
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    6.17,
+    2.78
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    2.78,
+    7.19
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    7.19,
+    2.94
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    1.22,
+    5.9
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    5.9,
+    10.49
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-ND",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    10.49,
+    2.55
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    19.19,
+    41.14
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    41.14,
+    18.13
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    18.13,
+    35.46
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    35.46,
+    17.59
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    20.44,
+    45.94
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    45.94,
+    30.8
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    32.9,
+    13.94
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    31.91,
+    10.7
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NH",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    28.46,
+    10.49
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    11.8,
+    25.92
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    25.92,
+    9.98
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    9.98,
+    28.19
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    28.19,
+    12.15
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    5.29,
+    15.49
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    17.82,
+    6.06
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-NY",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    15.0,
+    6.25
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    7.16,
+    2.6
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    2.6,
+    8.27
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2004,
+    2005
+   ],
+   "values": [
+    8.27,
+    3.68
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    4.61,
+    11.1
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    11.1,
+    4.33
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    2.35,
+    6.6
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2016,
+    2017
+   ],
+   "values": [
+    6.6,
+    15.14
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    15.14,
+    2.59
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-OR",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    7.45,
+    3.89
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    5.75,
+    16.74
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2003,
+    2004
+   ],
+   "values": [
+    16.74,
+    7.64
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    5.43,
+    1.51
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    1.51,
+    5.19
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    7.84,
+    2.66
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    2.66,
+    8.51
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    7.97,
+    3.61
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    6.65,
+    2.71
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    2.71,
+    9.12
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    6.27,
+    1.99
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-PA",
+   "years": [
+    2024,
+    2025
+   ],
+   "values": [
+    3.29,
+    8.22
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    20.15,
+    50.36
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    50.36,
+    19.27
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    19.27,
+    36.84
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    22.8,
+    49.03
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    49.03,
+    27.3
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    27.3,
+    50.5
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    38.94,
+    16.39
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    31.5,
+    14.07
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    20.07,
+    37.08
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-VT",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    37.08,
+    15.48
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WA",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    9.44,
+    23.52
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    16.55,
+    29.75
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2000,
+    2001
+   ],
+   "values": [
+    10.24,
+    30.82
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2001,
+    2002
+   ],
+   "values": [
+    30.82,
+    5.5
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2005,
+    2006
+   ],
+   "values": [
+    15.99,
+    8.65
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    11.25,
+    22.61
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    22.61,
+    13.19
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    17.47,
+    5.43
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    5.43,
+    14.71
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    18.08,
+    6.03
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    5.86,
+    17.5
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    17.5,
+    10.08
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WI",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    15.72,
+    4.74
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2007,
+    2008
+   ],
+   "values": [
+    5.34,
+    11.59
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2008,
+    2009
+   ],
+   "values": [
+    11.59,
+    6.89
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2009,
+    2010
+   ],
+   "values": [
+    6.89,
+    13.7
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    13.33,
+    2.8
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2020,
+    2021
+   ],
+   "values": [
+    7.01,
+    2.99
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2022,
+    2023
+   ],
+   "values": [
+    4.65,
+    17.07
+   ]
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "region": "US-WY",
+   "years": [
+    2023,
+    2024
+   ],
+   "values": [
+    17.07,
+    4.78
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    27.32,
+    29.92
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    27.72,
+    30.66
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "MX-TAB",
+   "years": [
+    1988,
+    1989
+   ],
+   "values": [
+    29.91,
+    32.72
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-AK",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    -1.47,
+    1.15
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-DC",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    19.61,
+    16.52
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-DE",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    19.24,
+    16.51
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-IA",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    16.1,
+    13.57
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-IA",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    15.57,
+    18.68
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    18.68,
+    14.62
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ID",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    13.61,
+    10.61
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ID",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    13.77,
+    11.09
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-IL",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    19.87,
+    16.34
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-IN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    19.03,
+    16.21
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-KS",
+   "years": [
+    1993,
+    1994
+   ],
+   "values": [
+    17.91,
+    20.43
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-KS",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    23.03,
+    20.11
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-KY",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    21.09,
+    18.19
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MD",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    19.06,
+    16.25
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    10.82,
+    13.65
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.05,
+    11.15
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MN",
+   "years": [
+    1986,
+    1987
+   ],
+   "values": [
+    10.88,
+    13.56
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    11.49,
+    14.25
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.25,
+    10.27
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    9.63,
+    12.76
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    13.51,
+    10.78
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MO",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    21.83,
+    18.21
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MT",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    13.99,
+    11.05
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-MT",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    13.61,
+    11.11
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    13.91,
+    10.8
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    12.12,
+    14.97
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.97,
+    11.28
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    11.08,
+    13.96
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    10.73,
+    13.3
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    15.01,
+    12.07
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-NE",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    17.54,
+    20.87
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-NE",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    20.87,
+    17.43
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-NJ",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    18.0,
+    15.46
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-NV",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    18.97,
+    16.02
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-OK",
+   "years": [
+    2006,
+    2007
+   ],
+   "values": [
+    24.61,
+    21.5
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-OK",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    25.16,
+    22.48
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-OR",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    16.61,
+    14.01
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-SD",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    16.89,
+    14.08
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-SD",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    15.19,
+    18.61
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-SD",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    18.61,
+    14.88
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-SD",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    13.17,
+    16.16
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-TN",
+   "years": [
+    1989,
+    1990
+   ],
+   "values": [
+    19.0,
+    21.6
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-TN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    22.22,
+    19.55
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-TX",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    25.84,
+    28.38
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-UT",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    17.6,
+    14.78
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-VA",
+   "years": [
+    1989,
+    1990
+   ],
+   "values": [
+    17.75,
+    20.26
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    10.99,
+    13.77
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WI",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    11.84,
+    14.67
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    14.67,
+    10.66
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    9.74,
+    12.56
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WY",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    14.27,
+    11.36
+   ]
+  },
+  {
+   "variable": "max_air_temperature",
+   "region": "US-WY",
+   "years": [
+    2011,
+    2012
+   ],
+   "values": [
+    12.31,
+    15.13
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-AK",
+   "years": [
+    1992,
+    1993
+   ],
+   "values": [
+    -8.76,
+    -5.95
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-AK",
+   "years": [
+    1998,
+    1999
+   ],
+   "values": [
+    -6.46,
+    -9.06
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-AK",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    -4.62,
+    -7.17
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-IA",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    6.25,
+    3.65
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-MI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    2.2,
+    4.78
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-MN",
+   "years": [
+    1987,
+    1988
+   ],
+   "values": [
+    2.34,
+    -0.25
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    2.7,
+    -0.47
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-MN",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    -1.19,
+    1.58
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-MT",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    1.25,
+    -1.27
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-ND",
+   "years": [
+    1981,
+    1982
+   ],
+   "values": [
+    1.41,
+    -1.49
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    2.44,
+    -0.35
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    -0.92,
+    1.67
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-ND",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    2.44,
+    -0.35
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-WI",
+   "years": [
+    1997,
+    1998
+   ],
+   "values": [
+    0.95,
+    3.69
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-WI",
+   "years": [
+    2012,
+    2013
+   ],
+   "values": [
+    3.66,
+    0.81
+   ]
+  },
+  {
+   "variable": "min_air_temperature",
+   "region": "US-WI",
+   "years": [
+    2014,
+    2015
+   ],
+   "values": [
+    -0.47,
+    2.06
+   ]
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "region": "US-CA",
+   "years": [
+    2019,
+    2020
+   ],
+   "values": [
+    0.08,
+    0.16
+   ]
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "region": "US-CA",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    0.15,
+    0.09
+   ]
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "region": "US-ID",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    0.16,
+    0.09
+   ]
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "region": "US-MT",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    0.19,
+    0.1
+   ]
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "region": "US-NV",
+   "years": [
+    2021,
+    2022
+   ],
+   "values": [
+    0.14,
+    0.08
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CAM",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CAM",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.02
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CAM",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CHP",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CHP",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-CHP",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-COL",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-GRO",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.01,
+    0.0
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-OAX",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-OAX",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-OAX",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.01,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-ROO",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-ROO",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.03
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-ROO",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.03,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-TAB",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-TAB",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.02
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-TAB",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-VER",
+   "years": [
+    2015,
+    2016
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-VER",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.02
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-VER",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-YUC",
+   "years": [
+    2017,
+    2018
+   ],
+   "values": [
+    0.01,
+    0.02
+   ]
+  },
+  {
+   "variable": "dust_optical_depth",
+   "region": "MX-YUC",
+   "years": [
+    2018,
+    2019
+   ],
+   "values": [
+    0.02,
+    0.01
+   ]
+  }
+ ],
+ "all_pass": true,
+ "examples": {
+  "MX-BCN": 19.852,
+  "MX-YUC": 26.253,
+  "US-AK": -3.949,
+  "US-HI": 21.667,
+  "US-TX": 18.922
+ },
+ "examples_precip_mm": {
+  "MX-BCS": 174.176,
+  "MX-SON": 415.647,
+  "MX-TAB": 2035.428,
+  "US-LA": 1565.099,
+  "US-NV": 246.713
+ },
+ "alaska_colder_than_texas": true
+}

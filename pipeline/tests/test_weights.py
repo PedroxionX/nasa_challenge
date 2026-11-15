@@ -78,3 +78,31 @@ def test_known_small_regions_are_flagged():
     regions = {r.id: r for r in load_regions(["US-DC", "MX-CMX", "US-TX"])}
     assert region_weights(regions["US-DC"].geometry).small_region
     assert not region_weights(regions["US-TX"].geometry).small_region
+
+
+# ---- malla de IMERG (0,1°, centros en ±0,05) ---------------------------------------------
+from weights import IMERG_GRID, MERRA2_GRID  # noqa: E402
+
+
+def test_imerg_single_cell_and_full_cell():
+    poly = box(-100.08, 30.02, -100.02, 30.08)  # dentro de la celda centrada en (30.05, -100.05)
+    w = region_weights(poly, IMERG_GRID)
+    assert w.n_cells == 1 and (w.lats[0], w.lons[0]) == pytest.approx((30.05, -100.05))
+    assert w.fractions[0] == pytest.approx(poly.area / 0.01)
+    full = box(-100.1, 30.0, -100.0, 30.1).buffer(0.001, join_style="mitre")
+    wf = region_weights(full, IMERG_GRID)
+    i = np.argmin(np.abs(wf.lats - 30.05) + np.abs(wf.lons + 100.05))
+    assert wf.fractions[i] == pytest.approx(1.0)
+
+
+def test_imerg_sum_of_area_and_more_cells_than_merra2():
+    poly = Polygon([(-110.2, 25.3), (-104.9, 26.1), (-106.3, 31.7), (-109.8, 30.2)])
+    wi = region_weights(poly, IMERG_GRID)
+    assert np.sum(wi.fractions) * 0.01 == pytest.approx(poly.area, rel=1e-9)
+    assert wi.n_cells > 20 * region_weights(poly, MERRA2_GRID).n_cells
+
+
+def test_real_alaska_imerg_cells_within_valid_longitudes():
+    (ak,) = load_regions(["US-AK"])
+    w = region_weights(ak.geometry, IMERG_GRID)
+    assert w.n_cells > 10000 and np.all(w.lons >= -180.0)

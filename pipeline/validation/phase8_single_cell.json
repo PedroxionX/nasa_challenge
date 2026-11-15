@@ -1,0 +1,203 @@
+{
+ "check": "serie regional de una celda = valor de la celda en el gránulo (≤ 0,01)",
+ "earthaccess": "0.19.0",
+ "checked_at_utc": "2026-11-15T08:51:40Z",
+ "checks": [
+  {
+   "variable": "soil_temperature",
+   "month": "2005-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 28.69616,
+   "granule": 28.69616,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "soil_temperature",
+   "month": "2024-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 31.31225,
+   "granule": 31.31225,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "runoff",
+   "month": "2005-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 3.50851,
+   "granule": 3.50851,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "runoff",
+   "month": "2024-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 2.26831,
+   "granule": 2.26831,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "month": "2005-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 0.0,
+   "granule": 0.0,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "snow_water_equivalent",
+   "month": "2024-07",
+   "cell": [
+    38.875,
+    -77.125
+   ],
+   "pipeline": 0.0,
+   "granule": 0.0,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC tiene 1 celda en MERRA-2; en IMERG se compara su primera celda"
+  },
+  {
+   "variable": "specific_humidity",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 4.09313,
+   "granule": 4.09313,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "specific_humidity",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 15.01164,
+   "granule": 15.01164,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "specific_humidity",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 14.08074,
+   "granule": 14.08073,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_precipitable_water",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 12.43762,
+   "granule": 12.43762,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_precipitable_water",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 40.42097,
+   "granule": 40.42097,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_precipitable_water",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 39.67886,
+   "granule": 39.67886,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_ozone",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 293.07907,
+   "granule": 293.07907,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_ozone",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 305.11633,
+   "granule": 305.11633,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "total_ozone",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 314.39587,
+   "granule": 314.39587,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  }
+ ],
+ "all_pass": true
+}

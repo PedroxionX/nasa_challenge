@@ -52,12 +52,12 @@ describe('increasing', () => {
   })
 
   it('la frase contiene la pendiente con signo', () => {
-    expect(result.sentence).toContain('+0,32')
+    expect(result.sentence).toContain('+0.32')
   })
 
   it('la frase contiene el intervalo de confianza', () => {
-    expect(result.sentence).toContain('+0,18')
-    expect(result.sentence).toContain('+0,46')
+    expect(result.sentence).toContain('+0.18')
+    expect(result.sentence).toContain('+0.46')
   })
 
   it('la frase contiene los años del periodo', () => {
@@ -84,7 +84,7 @@ describe('increasing', () => {
   // Regresión: «fuerte» / «moderada» no estaban definidos en ningún spec
   it('no gradúa la evidencia con niveles inventados', () => {
     expect(result.sentence.toLowerCase()).not.toMatch(/fuerte|moderada|débil/)
-    expect(result.sentence).toContain('Hay evidencia de tendencia')
+    expect(result.sentence).toContain('Un patrón así sería muy raro si no hubiera tendencia.')
   })
 
   it('el nivel del IC sale de alpha, no es fijo', () => {
@@ -94,10 +94,10 @@ describe('increasing', () => {
     expect(r90.sentence).toContain('IC\u00a090\u00a0%')
   })
 
-  it('p muy pequeño se muestra como «p < 0,001», no «0,000»', () => {
+  it('p muy pequeño se muestra como «p < 0.001», no «0.000»', () => {
     const tiny = explainTrend(makeRow({ p: 0.000016 }), baseCtx)
-    expect(tiny.sentence).toContain('p\u00a0<\u00a00,001')
-    expect(tiny.sentence).not.toContain('0,000')
+    expect(tiny.sentence).toContain('p\u00a0<\u00a00.001')
+    expect(tiny.sentence).not.toContain('0.000')
   })
 
   it('el número de años es el n del archivo', () => {
@@ -105,8 +105,8 @@ describe('increasing', () => {
   })
 
   it('todas las cifras con signo del texto son las del archivo (SC-C02)', () => {
-    const fromText = (result.sentence.match(/[+\u2212]\d+,\d+/g) ?? []).sort()
-    expect(fromText).toEqual(['+0,18', '+0,32', '+0,46'])
+    const fromText = (result.sentence.match(/[+\u2212]\d+\.\d+/g) ?? []).sort()
+    expect(fromText).toEqual(['+0.18', '+0.32', '+0.46'])
   })
 })
 
@@ -121,9 +121,9 @@ describe('decreasing', () => {
   })
 
   it('la frase contiene la pendiente negativa con el signo menos U+2212', () => {
-    expect(result.sentence).toContain('\u22120,15')
-    expect(result.sentence).toContain('\u22120,28')
-    expect(result.sentence).toContain('\u22120,02')
+    expect(result.sentence).toContain('\u22120.15')
+    expect(result.sentence).toContain('\u22120.28')
+    expect(result.sentence).toContain('\u22120.02')
   })
 
   it('no afirma causa', () => {
@@ -136,7 +136,7 @@ describe('decreasing', () => {
 
   it('con precipitación relativa, la unidad que pasa quien llama se respeta', () => {
     const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/década' })
-    expect(r.sentence).toContain('\u22120,15\u00a0%/década')
+    expect(r.sentence).toContain('\u22120.15\u00a0%/década')
     expect(r.sentence).not.toContain('°C')
   })
 })

@@ -1,6 +1,105 @@
 # Atribución y cómo citar los datos
 
 Texto para que 006 (Textos y validación) lo cite en la interfaz, la hoja de métodos y el guion.
+
+**Fuentes publicadas (desde el 2026-11-14):** los productos de GES DISC de la sección 1. NASA POWER (sección 2) solo
+se usa si alguien elige la alternativa a mano (`--source power`); en ese caso la procedencia de cada archivo lo dice.
+
+## 1. Productos de GES DISC (fuente principal)
+
+Citas comprobadas el 2026-11-14 en las páginas del catálogo de Earthdata a las que lleva cada DOI y en los metadatos
+de CMR. Las páginas de GES DISC (`disc.gsfc.nasa.gov/datasets/...`) no muestran texto sin JavaScript.
+
+### Temperatura del aire (`air_temperature`): MERRA-2 M2TMNXSLV v5.12.4
+
+| Campo | Valor |
+|---|---|
+| Producto | MERRA-2 tavgM_2d_slv_Nx (M2TMNXSLV), mensual, 0.5° × 0.625°, variable `T2M` (K → °C) |
+| DOI | 10.5067/AP1B0BA5PD2K |
+| Autoría | Global Modeling and Assimilation Office (GMAO); el catálogo añade a S. Pawson |
+| Publica | NASA Goddard Earth Sciences Data and Information Services Center (GES DISC) |
+| Año | 2015 |
+| De dónde sale | <https://www.earthdata.nasa.gov/data/catalog/ges-disc-m2tmnxslv-5.12.4> (destino del DOI) y <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=M2TMNXSLV&version=5.12.4> |
+
+Cita (estilo APA, como la ofrece el catálogo):
+> Global Modeling and Assimilation Office, & Pawson, S. (2015). *MERRA-2 tavgM_2d_slv_Nx: 2d,Monthly mean,Time-Averaged,Single-Level,Assimilation,Single-Level Diagnostics V5.12.4* [Data set]. NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/AP1B0BA5PD2K
+
+### Precipitación (`precipitation`): GPM IMERG Final mensual GPM_3IMERGM v07
+
+| Campo | Valor |
+|---|---|
+| Producto | GPM IMERG Final Precipitation L3 1 month 0.1° × 0.1° V07 (GPM_3IMERGM), variable `Grid/precipitation` (mm/h) |
+| DOI | 10.5067/GPM/IMERG/3B-MONTH/07 |
+| Autoría | Huffman, G. J.; Stocker, E. F.; Bolvin, D. T.; Nelkin, E. J.; Tan, J. |
+| Publica | NASA Goddard Earth Sciences Data and Information Services Center (GES DISC) |
+| Año | 2023 |
+| Cobertura | la colección está cerrada (CMR: «COMPLETE») y termina el **2025-09-30**; por eso el último año completo es 2024 |
+| De dónde sale | <https://www.earthdata.nasa.gov/data/catalog/ges-disc-gpm-3imergm-07> (destino del DOI) y <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=GPM_3IMERGM&version=07> |
+
+Cita (estilo APA, como la ofrece el catálogo):
+> Huffman, G. J., Stocker, E. F., Bolvin, D. T., Nelkin, E. J., & Tan, J. (2023). *GPM IMERG Final Precipitation L3 1 month 0.1 degree x 0.1 degree V07* [Data set]. NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/GPM/IMERG/3B-MONTH/07
+
+### Humedad del suelo (`soil_moisture`) y evapotranspiración (`evapotranspiration`): GLDAS Noah GLDAS_NOAH025_M v2.1
+
+| Campo | Valor |
+|---|---|
+| Producto | GLDAS Noah Land Surface Model L4 monthly 0.25 x 0.25 degree V2.1 (GLDAS_NOAH025_M); variables `SoilMoi0_10cm_inst` (kg m⁻²) y `Evap_tavg` (kg m⁻² s⁻¹) |
+| Qué es | Salida de un **modelo** de superficie terrestre (Noah) alimentado con observaciones; no es una medición directa. Solo hay datos sobre tierra |
+| DOI | 10.5067/SXAVCZFAQLNO |
+| Autoría | Beaudoing, H.; Rodell, M.; Hydrological Sciences Laboratory (HSL), NASA/GSFC |
+| Publica | NASA Goddard Earth Sciences Data and Information Services Center (GES DISC) |
+| Año | 2020 |
+| Cobertura | desde 2000-01, activa (en curso) |
+| De dónde sale | <https://www.earthdata.nasa.gov/data/catalog/ges-disc-gldas-noah025-m-2.1> (destino del DOI) y <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=GLDAS_NOAH025_M&version=2.1> (comprobados el 2026-11-14) |
+
+Cita (estilo APA, como la ofrece el catálogo):
+> Beaudoing, H., Rodell, M., & Hydrological Sciences Laboratory (HSL). (2020). *GLDAS Noah Land Surface Model L4 monthly 0.25 x 0.25 degree, Version 2.1* [Data set]. NASA Goddard Earth Sciences Data and Information Services Center. https://doi.org/10.5067/SXAVCZFAQLNO
+
+### Variables añadidas el 2026-11-15 (Phase 8)
+
+Todas son salidas de **modelo o reanálisis**, no mediciones directas. Seis salen de productos ya citados arriba:
+
+| Variable (`id`) | Producto y parámetro | Cita |
+|---|---|---|
+| Humedad del aire (`specific_humidity`) | MERRA-2 M2TMNXSLV, `QV2M` (kg kg⁻¹ → g/kg) | la de la temperatura del aire |
+| Vapor de agua total (`total_precipitable_water`) | MERRA-2 M2TMNXSLV, `TQV` (kg m⁻² = mm) | la de la temperatura del aire |
+| Ozono total (`total_ozone`) | MERRA-2 M2TMNXSLV, `TO3` (unidades Dobson) | la de la temperatura del aire |
+| Escorrentía (`runoff`) | GLDAS_NOAH025_M, `Qs_acc` + `Qsb_acc` (kg m⁻² → mm) | la de GLDAS |
+| Nieve acumulada (`snow_water_equivalent`) | GLDAS_NOAH025_M, `SWE_inst` (kg m⁻² = mm) | la de GLDAS |
+| Temperatura del suelo (`soil_temperature`) | GLDAS_NOAH025_M, `AvgSurfT_inst` (K → °C) | la de GLDAS |
+
+Cuatro salen de dos colecciones de MERRA-2 que no estaban citadas. Datos tomados de los metadatos de CMR el
+2026-11-15 (autoría, título, año y DOI); la cita se compuso con esos campos, no se copió de la página del catálogo.
+
+| Campo | Aerosoles (`aerosol_optical_depth`) y polvo (`dust_optical_depth`) | Temperatura máxima (`max_air_temperature`) y mínima (`min_air_temperature`) |
+|---|---|---|
+| Producto | MERRA-2 tavgM_2d_aer_Nx (M2TMNXAER) v5.12.4, mensual, 0.5° × 0.625°; `TOTEXTTAU` y `DUEXTTAU` (espesor óptico a 550 nm, sin unidad) | MERRA-2 statM_2d_slv_Nx (M2SMNXSLV) v5.12.4, mensual, 0.5° × 0.625°; `T2MMAX` y `T2MMIN` (K → °C) |
+| DOI | 10.5067/FH9A0MLJPC7N | 10.5067/KVIMOMCUO83U |
+| Autoría | Global Modeling and Assimilation Office (GMAO) | Global Modeling and Assimilation Office (GMAO) |
+| Publica | Goddard Earth Sciences Data and Information Services Center (GES DISC) | Goddard Earth Sciences Data and Information Services Center (GES DISC) |
+| Año | 2015 | 2015 |
+| De dónde sale | <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=M2TMNXAER&version=5.12.4> | <https://cmr.earthdata.nasa.gov/search/collections.umm_json?short_name=M2SMNXSLV&version=5.12.4> |
+
+> Global Modeling and Assimilation Office (GMAO). (2015). *MERRA-2 tavgM_2d_aer_Nx: 2d,Monthly mean,Time-averaged,Single-Level,Assimilation,Aerosol Diagnostics V5.12.4* [Data set]. Goddard Earth Sciences Data and Information Services Center (GES DISC). https://doi.org/10.5067/FH9A0MLJPC7N
+
+> Global Modeling and Assimilation Office (GMAO). (2015). *MERRA-2 statM_2d_slv_Nx: 2d,Monthly,Aggregated Statistics,Single-Level,Assimilation,Single-Level Diagnostics V5.12.4* [Data set]. Goddard Earth Sciences Data and Information Services Center (GES DISC). https://doi.org/10.5067/KVIMOMCUO83U
+
+Avisos que 006 debe poner junto a estas variables:
+
+- **Ozono:** MERRA-2 cambia de sensores asimilados en 2004; una tendencia que cruce ese año puede deberse en parte al cambio.
+- **Escorrentía:** es la del modelo Noah, no caudal medido en ríos. D.C. sale muy por encima de sus vecinos (celdas urbanas del modelo).
+- **Nieve:** vale cero en casi todo México; Campeche, Quintana Roo, Tabasco, Yucatán y Puerto Rico no tienen tendencia (sin dato).
+- **Aerosoles y polvo:** espesor óptico de toda la columna, no la contaminación a nivel del suelo.
+- **Temperatura máxima y mínima:** promedio mensual de la máxima y la mínima de cada día, no el récord del mes.
+
+Añadir «Fecha de consulta: AAAA-MM-DD» con la de `provenance.retrieved_at_utc` del archivo publicado.
+
+### Versión breve para la interfaz (traducción propia, no texto oficial)
+
+> Datos: temperatura del reanálisis MERRA-2 (GMAO, NASA) y precipitación de GPM IMERG Final v07 (NASA), obtenidos de GES DISC. Promedio de área por estado calculado por Trend Detective.
+
+## 2. NASA POWER (alternativa)
+
 Fuente de las indicaciones: guía oficial de NASA POWER, <https://power.larc.nasa.gov/docs/referencing/> (consultada el 2026-11-14).
 
 ## Qué datos usamos
@@ -36,7 +135,7 @@ Junto a la cita conviene recordar lo que ya exige la constitución: es un **rean
 
 - **Licencia:** la guía no declara licencia ni restricciones de uso formales.
 - **DOI:** no da DOI para los datos de POWER.
-- **MERRA-2:** no da cita para MERRA-2. Si se quiere citar el reanálisis, el artículo de referencia habitual es Gelaro et al. (2017), *Journal of Climate*, 30, 5419–5454, doi:10.1175/JCLI-D-16-0758.1. Esto no sale de la guía de POWER: verificar antes de publicar.
+- **MERRA-2:** no da cita para MERRA-2. La cita comprobada del producto está en la sección 1. Si además se quiere citar el artículo del reanálisis, el habitual es Gelaro et al. (2017), *Journal of Climate*, 30, 5419–5454, doi:10.1175/JCLI-D-16-0758.1; ese dato no está comprobado en una fuente oficial: verificar antes de publicar.
 
 ## Peticiones de POWER (no obligatorias)
 

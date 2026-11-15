@@ -36,6 +36,24 @@ describe('parseSearch', () => {
     expect(parseSearch('?region=MX-BCN', limits).state.regionId).toBe('MX-BCN')
   })
 
+  it('las variables salen del catálogo: una nueva se acepta y una ausente se rechaza', () => {
+    const limits = { ...LIMITS, variableIds: new Set(['air_temperature', 'precipitation', 'soil_moisture']) }
+    expect(parseSearch('?var=soil_moisture', limits)).toMatchObject({ state: { variableId: 'soil_moisture' }, notices: [] })
+    const missing = parseSearch('?var=total_ozone', limits)
+    expect(missing.state.variableId).toBe('air_temperature')
+    expect(missing.notices).toHaveLength(1)
+  })
+
+  it('sin catálogo solo se comprueba el formato del id de variable', () => {
+    expect(parseSearch('?var=total_ozone', LIMITS)).toMatchObject({ state: { variableId: 'total_ozone' }, notices: [] })
+    expect(parseSearch('?var=Ozone!', LIMITS).notices).toHaveLength(1)
+  })
+
+  it('si el catálogo no trae la predeterminada, se usa su primera variable', () => {
+    const limits = { ...LIMITS, variableIds: new Set(['soil_moisture', 'runoff']) }
+    expect(parseSearch('', limits).state.variableId).toBe('soil_moisture')
+  })
+
   it('traduce los ids anteriores de la URL sin avisar', () => {
     expect(parseSearch('?var=T2M', LIMITS)).toMatchObject({ state: { variableId: 'air_temperature' }, notices: [] })
     expect(parseSearch('?var=PRECTOTCORR', LIMITS)).toMatchObject({ state: { variableId: 'precipitation' }, notices: [] })

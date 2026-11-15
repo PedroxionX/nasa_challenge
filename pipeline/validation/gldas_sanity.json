@@ -1,0 +1,48 @@
+{
+ "check": "sanidad física de las 84 regiones",
+ "out": "out\\gldas",
+ "checked_at_utc": "2026-11-15T02:15:40Z",
+ "n_checks": 168,
+ "failed": [],
+ "jumps_to_review": [
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-BCN",
+   "years": [
+    2002,
+    2003
+   ],
+   "values": [
+    73.18,
+    163.28
+   ]
+  },
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-COA",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    507.28,
+    258.43
+   ]
+  },
+  {
+   "variable": "evapotranspiration",
+   "region": "MX-NLE",
+   "years": [
+    2010,
+    2011
+   ],
+   "values": [
+    701.65,
+    361.33
+   ]
+  }
+ ],
+ "all_pass": true,
+ "examples": {},
+ "examples_precip_mm": {}
+}
