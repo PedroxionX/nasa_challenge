@@ -1,0 +1,361 @@
+/*
+ * Piezas compartidas por todas las zonas (008). Una sola forma de: ocultar texto a la vista, cerrar,
+ * enlazar una acción secundaria, avisar, listar cifras, desplegar, tabular, abrir un diálogo, elegir un
+ * estado, elegir un periodo, mostrar un veredicto y trazar una gráfica.
+ * Los estilos de cada zona (features/…/*.css) solo colocan estas piezas.
+ */
+
+/* ---------- Solo para lectores de pantalla ---------- */
+.vh {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Botones ---------- */
+/* Icono solo (cerrar, información): 44 px, sin caja hasta que se pasa por encima. */
+.icon-button {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  padding: 0;
+  color: var(--color-text-muted);
+  background: transparent;
+  border-color: transparent;
+}
+.icon-button:hover, .icon-button[aria-expanded="true"] { color: var(--color-text); background: var(--color-panel-raised); border-color: var(--color-line); }
+.icon-button svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Acción secundaria en texto: «View as table», «Use full period»… */
+.link-button {
+  justify-self: start;
+  min-height: var(--tap);
+  padding: 0;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-sm);
+}
+.link-button:hover { text-decoration-color: currentColor; }
+.link-button:active { background: none; }
+
+/* ---------- Títulos de sección dentro de un panel ---------- */
+.section-title { margin: 0; font-size: var(--text-base); font-weight: var(--weight-medium); }
+.muted { color: var(--color-text-muted); }
+.small { font-size: var(--text-sm); }
+
+/* ---------- Aviso: icono opcional + texto + acción. Sin franja lateral. ---------- */
+.notice {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-2);
+  justify-items: start;
+  margin: 0;
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+.notice p { margin: 0; }
+.notice--icon { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.notice--icon > svg { margin-top: 1px; fill: none; stroke: var(--color-text-muted); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+/* Datos de ejemplo: borde discontinuo, para que no se confunda con un aviso corriente. */
+.notice--synthetic { border-style: dashed; border-color: var(--color-trend-up-weak); }
+.notice--synthetic > svg { stroke: var(--color-trend-up-weak); }
+.notice--error { border-color: var(--color-danger); }
+
+/* ---------- Lista de cifras (término · valor) ---------- */
+.facts {
+  display: grid;
+  grid-template-columns: minmax(7rem, 38%) minmax(0, 1fr);
+  gap: var(--space-2) var(--space-3);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.facts dt { color: var(--color-text-muted); }
+.facts dd { margin: 0; overflow-wrap: anywhere; }
+.facts-sub { display: block; color: var(--color-text-muted); }
+@media (max-width: 380px) {
+  .facts { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .facts dd { margin-bottom: var(--space-2); }
+}
+
+/* ---------- Desplegable ---------- */
+.disclosure { border-top: 1px solid var(--color-line); font-size: var(--text-sm); }
+.disclosure > summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--tap);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  list-style: none;
+  border-radius: var(--radius-sm);
+}
+.disclosure > summary::-webkit-details-marker { display: none; }
+.disclosure > summary::before {
+  content: '';
+  flex: 0 0 auto;
+  width: 0.45rem;
+  height: 0.45rem;
+  margin: 0 var(--space-1);
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform var(--dur-fast);
+}
+.disclosure[open] > summary::before { transform: rotate(45deg); }
+.disclosure > :not(summary) { margin-top: 0; margin-bottom: var(--space-3); }
+.disclosure p { margin: 0 0 var(--space-2); max-width: var(--measure); }
+.disclosure h4 { margin: var(--space-3) 0 var(--space-1); font-size: var(--text-sm); font-weight: var(--weight-medium); }
+.disclosure ul, .disclosure ol { display: grid; gap: var(--space-1); padding-left: 1.2rem; }
+
+/* ---------- Tabla de datos ---------- */
+.table-wrap { max-width: 100%; overflow: auto; border: 1px solid var(--color-line); border-radius: var(--radius); }
+.table-wrap[hidden] { display: none; }
+.table-wrap--tall { max-height: 18rem; }
+.data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+.data-table caption { padding: var(--space-2) var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); text-align: left; }
+.data-table th, .data-table td { padding: var(--space-2) var(--space-3); text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
+.data-table tbody tr:last-child > * { border-bottom: 0; }
+.data-table thead th { position: sticky; top: 0; z-index: 1; font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-muted); background: var(--color-panel); }
+.data-table tbody th { font-weight: var(--weight-regular); }
+.data-table .num { text-align: right; white-space: nowrap; }
+.data-table tr.is-dim > * { color: var(--color-text-muted); }
+.data-table tr[aria-current="true"] > * { font-weight: var(--weight-medium); background: var(--color-panel-raised); }
+
+/* ---------- Diálogo: barra fija con título y cierre; el cuerpo es lo que se desplaza ---------- */
+.dialog {
+  width: min(42rem, calc(100vw - 2 * var(--space-4)));
+  max-height: calc(100dvh - 2 * var(--space-5));
+  padding: 0;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+}
+.dialog[open] { display: flex; flex-direction: column; }
+.dialog::backdrop { background: var(--color-overlay); }
+.dialog-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border-bottom: 1px solid var(--color-line);
+}
+.dialog-title { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); }
+.dialog-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--space-4) var(--space-5) var(--space-5); }
+@media (max-width: 480px) {
+  .dialog { width: calc(100vw - 2 * var(--space-2)); max-height: calc(100dvh - 2 * var(--space-3)); }
+  .dialog-bar { padding-left: var(--space-4); }
+  .dialog-body { padding: var(--space-3) var(--space-4) var(--space-4); }
+}
+
+/* ---------- Marca «A» / «B» de la comparación (panel, globo y tabla) ---------- */
+.tag {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5em;
+  margin-right: var(--space-2);
+  padding: 0 0.3em;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1.5;
+  border: 1.5px solid currentColor;
+  border-radius: var(--radius-sm);
+}
+
+/* ---------- Esqueleto de carga ---------- */
+.skeleton { display: grid; gap: var(--space-3); }
+.sk {
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--color-panel-raised) 25%, var(--color-line) 50%, var(--color-panel-raised) 75%);
+  background-size: 200% 100%;
+  animation: sk-shimmer 1.4s ease-in-out infinite;
+}
+.sk-verdict { height: 5.5rem; }
+.sk-chart { height: 210px; }
+.sk-line { height: 0.9rem; }
+.sk-short { width: 60%; }
+@keyframes sk-shimmer { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .sk { animation: none; } }
+
+/* ---------- Cabecera de panel: título + contexto + cierre ---------- */
+.panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3); }
+.panel-title { min-width: 0; }
+.panel-title h2 { margin: 0; font-size: var(--text-xl); font-weight: var(--weight-bold); overflow-wrap: anywhere; }
+.panel-meta { margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted); }
+.panel-header .icon-button { margin-top: -0.375rem; }
+
+/* ---------- Veredicto: icono dibujado + palabra + cifra. El color acompaña, nunca informa solo. ---------- */
+.verdict {
+  --verdict-color: var(--color-text);
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-panel-raised);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+}
+.verdict--increasing { --verdict-color: var(--color-verdict-up); }
+.verdict--decreasing { --verdict-color: var(--color-verdict-down); }
+.verdict--inconclusive { --verdict-color: var(--color-verdict-insufficient); }
+.verdict--insufficient, .verdict--invalid { --verdict-color: var(--color-verdict-invalid); }
+.verdict-head { display: flex; align-items: center; gap: var(--space-2); margin: 0; }
+.verdict-icon { flex: 0 0 auto; fill: none; stroke: var(--verdict-color); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.verdict-word { font-size: var(--text-xl); font-weight: var(--weight-bold); line-height: var(--leading-tight); }
+.verdict-heading { margin: 0; font-size: var(--text-sm); font-weight: var(--weight-regular); color: var(--color-text-muted); }
+.verdict-figure { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-medium); line-height: var(--leading-tight); overflow-wrap: anywhere; }
+.verdict-figure .muted { font-size: var(--text-base); font-weight: var(--weight-regular); }
+/* Sin evidencia suficiente: la estimación sigue a la vista, pero no se lee como un resultado. */
+.verdict-figure--estimate { font-size: var(--text-sm); font-weight: var(--weight-regular); color: var(--color-text-muted); }
+.verdict-detail { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); margin: 0; font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* ---------- «In words» ---------- */
+.words { display: grid; gap: var(--space-2); }
+.words p { margin: 0; max-width: var(--measure); }
+.words-sentence { font-size: var(--text-base); }
+.words-notes { display: grid; gap: var(--space-1); margin: 0; padding-left: 1.2rem; font-size: var(--text-sm); color: var(--color-text-muted); }
+.words-note { font-size: var(--text-sm); color: var(--color-text-muted); }
+
+/* ---------- Periodo: una fila «From [año] to [año]» ---------- */
+.period { display: grid; gap: var(--space-1); min-width: 0; margin: 0; padding: 0; border: 0; }
+.period > legend { padding: 0; margin-bottom: var(--space-1); font-size: var(--text-base); font-weight: var(--weight-medium); }
+.period-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
+.period-row label, .period-row .period-fixed { color: var(--color-text-muted); }
+.period-row select { min-width: 5.5rem; }
+.period-row .link-button { margin-left: var(--space-1); }
+.period-hint { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+
+/* ---------- Términos con definición ---------- */
+/* La definición va en el flujo, debajo del término: no tapa lo que explica ni se sale del panel. */
+.term { display: inline-flex; flex-wrap: wrap; align-items: center; }
+.term:has(> .term-definition:not([hidden])) { display: flex; width: 100%; }
+.term-label { font-style: normal; }
+.term-button {
+  display: inline-grid;
+  place-items: center;
+  /* Objetivo táctil de 44 px con un círculo visible pequeño. */
+  min-height: var(--tap);
+  width: var(--tap);
+  margin: calc((var(--tap) - 1.4em) / -2) calc((var(--tap) - 1.4em) / -2 + 2px);
+  padding: 0;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+}
+.term-button:active { background: transparent; }
+.term-button > span {
+  display: grid;
+  place-items: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+.term-button:hover > span, .term-button[aria-expanded='true'] > span { color: var(--color-on-accent); background: var(--color-accent); }
+.term-definition {
+  display: block;
+  flex-basis: 100%;
+  margin: var(--space-1) 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-regular);
+  line-height: 1.45;
+  color: var(--color-text);
+  white-space: normal;
+}
+.term-definition[hidden] { display: none; }
+
+/* ---------- Gráficas: la misma lectura en todas ----------
+   puntos = valor anual (acento) · línea fina = unión de los años · recta gruesa clara = tendencia ·
+   banda = intervalo · zona oscura = fuera del periodo · trama = año excluido. */
+.chart { display: grid; gap: var(--space-2); min-width: 0; margin: 0; }
+.chart-svg { display: block; max-width: 100%; height: auto; overflow: visible; font-variant-numeric: tabular-nums; }
+.chart-grid { stroke: var(--color-line); stroke-width: 1; }
+.chart-zero { stroke: var(--color-text-muted); stroke-width: 1.25; stroke-dasharray: 3 3; }
+.chart-tick, .chart-unit, .chart-label { font-size: var(--text-xs); fill: var(--color-text-muted); }
+.chart-title { font-size: var(--text-xs); font-weight: var(--weight-medium); fill: var(--color-text); }
+.chart-outside { fill: var(--color-bg); opacity: 0.55; }
+.chart-hatch { stroke: var(--color-no-data); stroke-width: 2; }
+.chart-partial text { font-size: var(--text-xs); fill: var(--color-text-muted); }
+.chart-partial line { stroke: var(--color-text-muted); stroke-width: 1.5; stroke-dasharray: 4 3; }
+.chart-line { fill: none; stroke: var(--color-text-muted); stroke-width: 1; opacity: 0.6; }
+.chart-point { fill: var(--color-accent); stroke: var(--color-panel); stroke-width: 1; }
+.chart-point.is-outside { fill: var(--color-text-muted); opacity: 0.45; }
+.chart-sen { fill: none; stroke: var(--color-text); stroke-width: 2.25; stroke-linecap: round; }
+.chart-band { fill: var(--color-text); opacity: 0.14; }
+.chart-current line { stroke: var(--color-text); stroke-width: 1; stroke-dasharray: 2 3; }
+.chart-current circle { fill: none; stroke: var(--color-text); stroke-width: 2; }
+.chart-current text { font-size: var(--text-xs); font-weight: var(--weight-medium); fill: var(--color-text); }
+.chart.is-muted .chart-point { fill: var(--color-text-muted); opacity: 0.55; }
+.chart.is-muted .chart-line { opacity: 0.3; }
+.chart.is-muted .chart-grid { opacity: 0.6; }
+
+.chart-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); font-size: var(--text-xs); color: var(--color-text-muted); }
+.chart-legend > span { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); min-height: 1.5rem; min-width: 0; }
+.chart-legend > span:has(.term-definition:not([hidden])) { flex-basis: 100%; }
+.swatch { flex: 0 0 auto; display: inline-block; width: 14px; height: 10px; border-radius: 2px; }
+.swatch--point { width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); }
+.swatch--sen { height: 3px; background: var(--color-text); }
+.swatch--band { background: var(--color-text); opacity: 0.25; }
+.swatch--excluded { background: repeating-linear-gradient(45deg, var(--color-no-data) 0 2px, transparent 2px 5px); }
+.swatch--partial { height: 0; border-top: 2px dashed var(--color-text-muted); border-radius: 0; }
+.swatch--outside { background: var(--color-bg); border: 1px solid var(--color-line); }
+.chart.is-muted .swatch--point { background: var(--color-text-muted); opacity: 0.7; }
+
+/* ---------- Selector de estado (cabecera y comparación): campo con lista filtrable ---------- */
+.combo { position: relative; min-width: 0; }
+.combo-input { width: 100%; text-overflow: ellipsis; }
+.combo-popup {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  right: 0;
+  max-height: min(60vh, 22rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--color-panel);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-pop);
+}
+.combo-popup[hidden] { display: none; }
+/* Dentro del panel la lista va en el flujo: un panel con desplazamiento recortaría una lista flotante. */
+.combo--inline .combo-popup { position: static; margin-top: var(--space-1); max-height: 16rem; box-shadow: none; }
+.combo-group {
+  position: sticky;
+  top: 0;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background: var(--color-panel);
+  border-bottom: 1px solid var(--color-line);
+}
+.combo-option { display: flex; align-items: center; min-height: var(--tap); padding: 0 var(--space-3); cursor: pointer; }
+.combo-option[aria-selected='true'] { background: var(--color-panel-raised); box-shadow: inset 0 0 0 1px var(--color-accent); }
+.combo-option[data-current]::after { content: 'selected'; margin-left: auto; font-size: var(--text-xs); color: var(--color-text-muted); }
+.combo-empty, .combo-error { margin: 0; padding: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); }
+.combo-error { color: var(--color-danger); }

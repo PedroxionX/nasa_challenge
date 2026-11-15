@@ -1,6 +1,6 @@
 /**
- * Control de periodo (004 T007, FR-A06): dos <select> nativos «Desde» y «Hasta» que solo ofrecen años
- * válidos, y «Usar todo el periodo». Un periodo invertido o más corto que el mínimo no se puede elegir.
+ * Control de periodo (004 T007, FR-A06): dos <select> nativos «From» y «To» que solo ofrecen años
+ * válidos, y «Use full period» cuando el periodo no es el completo. Va justo debajo de la gráfica que modifica. Un periodo invertido o más corto que el mínimo no se puede elegir.
  */
 import { useId } from 'react'
 import { useAppState } from '../../app/state'
@@ -18,9 +18,9 @@ export default function PeriodControl({ catalog, showReset = true }: { catalog: 
   const min = catalog.period.min_window_years
 
   return (
-    <fieldset className="period-control">
+    <fieldset className="period">
       <legend>Period</legend>
-      <div className="period-control-row">
+      <div className="period-row">
         <label htmlFor={`${uid}-from`}>From</label>
         <select id={`${uid}-from`} value={from} onChange={e => setPeriod(Number(e.target.value), to)}>
           {starts.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
@@ -29,9 +29,10 @@ export default function PeriodControl({ catalog, showReset = true }: { catalog: 
         <select id={`${uid}-to`} value={to} onChange={e => setPeriod(from, Number(e.target.value))}>
           {ends.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
         </select>
-        {showReset && <button type="button" onClick={resetPeriod} disabled={full}>{UI_COPY.useFullPeriod}</button>}
+        {/* Con el periodo completo ya elegido no hay nada que restablecer: el botón no se muestra. */}
+        {showReset && !full && <button type="button" className="link-button" onClick={resetPeriod}>{UI_COPY.useFullPeriod}</button>}
       </div>
-      <p className="period-control-hint">{`The period must span at least ${min} years.`}</p>
+      <p className="period-hint">{`A period needs at least ${min} years.`}</p>
     </fieldset>
   )
 }

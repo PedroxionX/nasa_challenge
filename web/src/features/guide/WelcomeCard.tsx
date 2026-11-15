@@ -1,13 +1,23 @@
 /**
  * WelcomeCard — 006-guide-content T004
- * Se muestra en la primera visita (sin región seleccionada).
- * Ofrece dos ejemplos que abren un análisis completo con un toque.
+ * Se muestra en la primera visita (sin región seleccionada). Dice qué hacer (tocar un estado o buscarlo) y
+ * ofrece dos ejemplos que abren un análisis completo con un toque, diciendo qué enseña cada uno.
  * Los dos ejemplos se eligieron con los datos reales de 003 (ver docs/demo.md §2 y §3).
  */
 import { useAppState } from '../../app/state'
-import { variableCopy, UI_COPY } from '../../content'
+import { variableCopy, UI_COPY, WELCOME_COPY } from '../../content'
 import type { VariableId } from '../../lib/data'
 import './guide.css'
+
+/*
+ * Baja California: sin evidencia suficiente en el periodo completo, y el veredicto cambia según el año inicial.
+ * Chihuahua (T013, elegido con los datos del 2026-11-14): sube con evidencia en casi cualquier periodo.
+ * No es Sonora a propósito: «Encuentra Sonora» es la tarea 1 de la prueba con usuarios.
+ */
+const EXAMPLES: { regionId: string; place: string; variableId: VariableId; teaches: string }[] = [
+  { regionId: 'MX-BCN', place: 'Baja California', variableId: 'air_temperature', teaches: WELCOME_COPY.exampleInconclusive },
+  { regionId: 'MX-CHH', place: 'Chihuahua', variableId: 'air_temperature', teaches: WELCOME_COPY.exampleRising },
+]
 
 export default function WelcomeCard() {
   const { setRegion, setVariable, resetPeriod } = useAppState()
@@ -19,43 +29,21 @@ export default function WelcomeCard() {
   }
 
   return (
-    // Sin landmark propio: el armazón (002) ya envuelve esto en <section aria-label="Bienvenida">.
+    // Sin landmark propio: el armazón (002) ya envuelve esto en <section aria-label="Welcome">.
     <div className="welcome-card">
-      <h2 className="welcome-title">Trend Detective</h2>
-      <p className="welcome-lead">{UI_COPY.welcome}</p>
+      <h2 className="welcome-title">{UI_COPY.welcome}</h2>
+      <p className="welcome-how">{WELCOME_COPY.how}</p>
 
-      <p className="welcome-hint">
-        Or start with one of these examples:
-      </p>
-
-      <div className="welcome-examples">
-        {/* Ejemplo 1: Baja California · Temperatura */}
-        <button
-          type="button"
-          className="welcome-example-btn"
-          onClick={() => openExample('MX-BCN', 'air_temperature')}
-        >
-          <span className="example-label">See an example</span>
-          <span className="example-place">Baja California</span>
-          <span className="example-variable">{variableCopy('air_temperature').short}</span>
-        </button>
-
-        {/*
-          Ejemplo 2: Chihuahua · Temperatura (T013, elegido con los datos reales de 003 del 2026-11-14).
-          Contrasta con el primero: Baja California no tiene evidencia suficiente en 1980–2025 y su
-          veredicto cambia según el año inicial; Chihuahua sube con evidencia en casi cualquier periodo.
-          No es Sonora a propósito: «Encuentra Sonora» es la tarea 1 de la prueba con usuarios.
-        */}
-        <button
-          type="button"
-          className="welcome-example-btn"
-          onClick={() => openExample('MX-CHH', 'air_temperature')}
-        >
-          <span className="example-label">See an example</span>
-          <span className="example-place">Chihuahua</span>
-          <span className="example-variable">{variableCopy('air_temperature').short}</span>
-        </button>
-      </div>
+      <ul className="welcome-examples">
+        {EXAMPLES.map(e => (
+          <li key={e.regionId}>
+            <button type="button" className="welcome-example" onClick={() => openExample(e.regionId, e.variableId)}>
+              <span className="welcome-example-place">{`${e.place} · ${variableCopy(e.variableId).short}`}</span>
+              <span className="welcome-example-teaches">{e.teaches}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
 
       <p className="welcome-note">{UI_COPY.notCause}</p>
     </div>

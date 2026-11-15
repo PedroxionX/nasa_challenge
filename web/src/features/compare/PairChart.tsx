@@ -20,8 +20,8 @@ export interface ChartItem {
   row: TrendRow | null
 }
 
-const H = 128
-const M = { top: 22, right: 10, bottom: 8, left: 46 }
+const H = 132
+const M = { top: 26, right: 10, bottom: 8, left: 46 }
 const AXIS = 18
 
 function Mini({ item, unit, from, to, domain, withAxis, width: W }: {
@@ -43,31 +43,31 @@ function Mini({ item, unit, from, to, domain, withAxis, width: W }: {
   const plot = { left: M.left, right: W - M.right, top: M.top, bottom: H - M.bottom }
   const inPeriod = (year: number) => year >= from && year <= to
   return (
-    <svg className="compare-chart-svg" width={W} height={height} viewBox={`0 0 ${W} ${height}`} role="img"
+    <svg className="chart-svg" width={W} height={height} viewBox={`0 0 ${W} ${height}`} role="img"
       aria-label={`Yearly values for ${item.name}, in ${unit}. The values are in the table.`}>
-      <text className="compare-chart-title" x={0} y={12}>
-        <tspan className="compare-chart-tag">{item.tag}</tspan>{` · ${item.name}`}
+      <text className="chart-title" x={0} y={12}>
+        <tspan className="chart-title-tag">{item.tag}</tspan>{` · ${item.name}`}
       </text>
-      <text className="compare-chart-unit" x={W - M.right} y={12} textAnchor="end">{unit}</text>
+      <text className="chart-unit" x={W - M.right} y={12} textAnchor="end">{unit}</text>
       {yTicks.map(t => (
         <g key={t}>
-          <line className="compare-chart-grid" x1={plot.left} x2={plot.right} y1={y(t)} y2={y(t)} />
-          <text className="compare-chart-tick" x={plot.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, step)}</text>
+          <line className="chart-grid" x1={plot.left} x2={plot.right} y1={y(t)} y2={y(t)} />
+          <text className="chart-tick" x={plot.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, step)}</text>
         </g>
       ))}
       {from > domain[0] && (
-        <rect className="compare-chart-outside" x={plot.left} y={plot.top} width={Math.max(0, x(from - 0.5) - plot.left)} height={plot.bottom - plot.top} />
+        <rect className="chart-outside" x={plot.left} y={plot.top} width={Math.max(0, x(from - 0.5) - plot.left)} height={plot.bottom - plot.top} />
       )}
       {to < domain[1] && (
-        <rect className="compare-chart-outside" x={x(to + 0.5)} y={plot.top} width={Math.max(0, plot.right - x(to + 0.5))} height={plot.bottom - plot.top} />
+        <rect className="chart-outside" x={x(to + 0.5)} y={plot.top} width={Math.max(0, plot.right - x(to + 0.5))} height={plot.bottom - plot.top} />
       )}
-      <path className="compare-chart-line" d={path} />
-      {sen && <line className="compare-chart-sen" x1={x(sen[0].year)} y1={y(sen[0].value)} x2={x(sen[1].year)} y2={y(sen[1].value)} />}
+      <path className="chart-line" d={path} />
+      {sen && <line className="chart-sen" x1={x(sen[0].year)} y1={y(sen[0].value)} x2={x(sen[1].year)} y2={y(sen[1].value)} />}
       {item.points.map(p => (
-        <circle key={p.year} className={inPeriod(p.year) ? 'compare-chart-point' : 'compare-chart-point is-outside'} cx={x(p.year)} cy={y(p.value)} r={2.2} />
+        <circle key={p.year} className={inPeriod(p.year) ? 'chart-point' : 'chart-point is-outside'} cx={x(p.year)} cy={y(p.value)} r={3} />
       ))}
       {withAxis && xTicks.map(t => (
-        <text key={t} className="compare-chart-tick" x={x(t)} y={H + 10} textAnchor="middle">{t}</text>
+        <text key={t} className="chart-tick" x={x(t)} y={H + 10} textAnchor="middle">{t}</text>
       ))}
     </svg>
   )
@@ -83,32 +83,32 @@ export default function PairChart({ items, unit, from, to }: { items: ChartItem[
   const valueAt = (item: ChartItem, year: number) => item.points.find(p => p.year === year)?.value
   const anySen = items.some(i => senSegment(i.row) !== null)
   return (
-    <figure className="compare-chart" ref={ref}>
-      <h3 className="compare-heading">{COMPARE_COPY.chartHeading}</h3>
+    <figure className="chart" ref={ref}>
+      <h3 className="section-title">{COMPARE_COPY.chartHeading}</h3>
       {items.map((item, i) => (
         <Mini key={item.tag} item={item} unit={unit} from={from} to={to} domain={domain} withAxis={i === items.length - 1} width={width} />
       ))}
-      <figcaption className="compare-chart-legend">
-        <span><i className="compare-swatch compare-swatch--point" aria-hidden="true" />Yearly value</span>
+      <figcaption className="chart-legend">
+        <span><i className="swatch swatch--point" aria-hidden="true" />Yearly value</span>
         {anySen
-          ? <span><i className="compare-swatch compare-swatch--sen" aria-hidden="true" />Trend line for the period</span>
+          ? <span><i className="swatch swatch--sen" aria-hidden="true" />Trend line for the period</span>
           : <span>No trend line for this period</span>}
         <span>Each chart has its own vertical scale.</span>
       </figcaption>
-      <button type="button" className="compare-link" aria-expanded={showTable} aria-controls={tableId} onClick={() => setShowTable(s => !s)}>
+      <button type="button" className="link-button" aria-expanded={showTable} aria-controls={tableId} onClick={() => setShowTable(s => !s)}>
         {showTable ? 'Hide table' : 'View as table'}
       </button>
-      <div id={tableId} className="compare-table-wrap" hidden={!showTable}>
-        <table className="compare-table">
-          <caption className="compare-vh">{`Yearly values (${unit})`}</caption>
+      <div id={tableId} className="table-wrap table-wrap--tall" hidden={!showTable}>
+        <table className="data-table">
+          <caption className="vh">{`Yearly values (${unit})`}</caption>
           <thead>
-            <tr><th scope="col">Year</th>{items.map(i => <th key={i.tag} scope="col">{`${i.tag} · ${i.name}`}</th>)}</tr>
+            <tr><th scope="col">Year</th>{items.map(i => <th key={i.tag} scope="col" className="num">{`${i.tag} · ${i.name}`}</th>)}</tr>
           </thead>
           <tbody>
             {years.map(year => (
-              <tr key={year} className={year >= from && year <= to ? undefined : 'is-outside'}>
+              <tr key={year} className={year >= from && year <= to ? undefined : 'is-dim'}>
                 <th scope="row">{year}</th>
-                {items.map(i => <td key={i.tag}>{fmtValue(valueAt(i, year))}</td>)}
+                {items.map(i => <td key={i.tag} className="num">{fmtValue(valueAt(i, year))}</td>)}
               </tr>
             ))}
           </tbody>

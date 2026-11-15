@@ -22,10 +22,10 @@ export default function RegionTable({ rows, unit, caption, selectedId, compareId
   const sorted = useMemo(() => sortRows(rows, sort.key, sort.dir), [rows, sort])
   const hasValues = unit !== null
 
-  const header = (key: SortKey, text: string) => {
+  const header = (key: SortKey, text: string, className?: string) => {
     const active = sort.key === key
     return (
-      <th scope="col" aria-sort={active ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
+      <th scope="col" className={className} aria-sort={active ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
         <button
           type="button"
           className="globe-table-sort"
@@ -40,13 +40,13 @@ export default function RegionTable({ rows, unit, caption, selectedId, compareId
   }
 
   return (
-    <table className="globe-table">
+    <table className="data-table globe-table">
       <caption>{caption}</caption>
       <thead>
         <tr>
           {header('name', GLOBE_COPY.colRegion)}
-          <th scope="col">{GLOBE_COPY.colCountry}</th>
-          {hasValues && header('value', `${GLOBE_COPY.colValue} (${unit})`)}
+          <th scope="col" className="globe-table-country">{GLOBE_COPY.colCountry}</th>
+          {hasValues && header('value', GLOBE_COPY.colValue, 'num')}
           {hasValues && <th scope="col">{GLOBE_COPY.colClass}</th>}
         </tr>
       </thead>
@@ -65,10 +65,10 @@ export default function RegionTable({ rows, unit, caption, selectedId, compareId
               >
                 {r.name}
               </a>
-              {tagOf(r.id) && <span className="globe-table-compared">{GLOBE_COPY.compared(tagOf(r.id)!)}</span>}
+              {tagOf(r.id) && <span className="tag globe-table-compared">{GLOBE_COPY.compared(tagOf(r.id)!)}</span>}
             </th>
-            <td>{r.country}</td>
-            {hasValues && <td className="globe-table-num">{r.value === null ? GLOBE_COPY.noData : formatSlope(r.value)}</td>}
+            <td className="globe-table-country">{r.country}</td>
+            {hasValues && <td className="num">{r.value === null ? GLOBE_COPY.noData : formatSlope(r.value)}</td>}
             {hasValues && <td>{r.label ?? GLOBE_COPY.noData}</td>}
           </tr>
         ))}

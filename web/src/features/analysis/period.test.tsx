@@ -75,7 +75,8 @@ describe('PeriodControl (T007)', () => {
     await renderPanel('?region=MX-BCN&var=air_temperature')
     expect(optionYears(select('From')).at(-1)).toBe(2016)
     expect(optionYears(select('To'))[0]).toBe(1989)
-    expect((screen.getByRole('button', { name: 'Use full period' }) as HTMLButtonElement).disabled).toBe(true)
+    // Con el periodo completo no hay nada que restablecer: el botón no se ofrece.
+    expect(screen.queryByRole('button', { name: 'Use full period' })).toBeNull()
     expect(screen.queryByText(/You are viewing/)).toBeNull()
   })
 
@@ -102,7 +103,8 @@ describe('PeriodControl (T007)', () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
     expect(optionYears(select('From'))[0]).toBe(2001)
     expect(optionYears(select('To'))[0]).toBe(2010)
-    expect((screen.getByRole('button', { name: 'Use full period' }) as HTMLButtonElement).disabled).toBe(true)
+    // Con el periodo completo no hay nada que restablecer: el botón no se ofrece.
+    expect(screen.queryByRole('button', { name: 'Use full period' })).toBeNull()
   })
 })
 

@@ -20,9 +20,9 @@ export interface Side {
 export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
   return (
     <section aria-label={COMPARE_COPY.eachHeading}>
-      <h3 className="compare-heading">{COMPARE_COPY.eachHeading}</h3>
-      <div className="compare-table-wrap">
-        <table className="compare-table compare-each">
+      <h3 className="section-title">{COMPARE_COPY.eachHeading}</h3>
+      <div>
+        <table className="compare-each">
           <thead>
             <tr>
               <th scope="col">State</th>
@@ -40,11 +40,11 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
               const digits = digitsForValues(row?.slope_decade, row?.ci_low, row?.ci_high)
               return (
                 <tr key={tag}>
-                  <th scope="row"><span className="compare-tag">{tag}</span>{name}</th>
+                  <th scope="row"><span className="tag">{tag}</span>{name}</th>
                   <td className="compare-each-verdict">{verdict}</td>
                   <td data-label={`Change per decade (${unit})`}>
                     {shown ? fmtSigned(row.slope_decade, digits) : MISSING}
-                    {shown && result.pct && <span className="compare-muted">{` (${fmtSigned(result.pct.slope, 1)} %)`}</span>}
+                    {shown && result.pct && <span className="muted">{` (${fmtSigned(result.pct.slope, 1)} %)`}</span>}
                   </td>
                   <td data-label="95% interval">{shown ? fmtInterval(row.ci_low, row.ci_high, digits) : MISSING}</td>
                   <td data-label="p-value">{shown ? fmtP(row.p) : MISSING}</td>
@@ -69,12 +69,12 @@ function provenanceLine(series: SeriesFile): string {
 
 export function PairProvenance({ sides }: { sides: Side[] }) {
   return (
-    <details className="compare-details">
+    <details className="disclosure">
       <summary>Where the two series come from</summary>
-      <dl className="compare-facts">
+      <dl className="compare-provenance">
         {sides.map(({ tag, name, series }) => (
           <div key={tag}>
-            <dt><span className="compare-tag">{tag}</span>{name}</dt>
+            <dt><span className="tag">{tag}</span>{name}</dt>
             <dd>
               {provenanceLine(series)}
               {series.provenance.is_synthetic && ' · synthetic sample data'}

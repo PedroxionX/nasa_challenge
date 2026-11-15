@@ -13,62 +13,65 @@ import {
   pickComparison, type Catalog, type CompareVariableInfo, type DifferenceRow, type PairLookup, type SeriesFile,
 } from '../../lib/data'
 import { COMPARE_COPY, UI_COPY, explainComparison, explainTrend, localizeUnit, variableCopy, type ComparisonExplanation } from '../../content'
-import { RegionSelect } from './CompareEntry'
 import { ENTRY_SELECT_ID, individual, nearestStart, yearPoints, type Individual } from './compareData'
 import { digitsForValues, fmtAlpha, fmtInterval, fmtP, fmtSigned, fmtYears, perDecade } from '../../lib/format'
+import CloseButton from '../../lib/ui/CloseButton'
+import { VerdictIcon, WarningIcon, type VerdictGlyph } from '../../lib/ui/icons'
+import RegionCombobox from '../../lib/ui/RegionCombobox'
+import Term from '../../lib/ui/Term'
 import PairChart from './PairChart'
 import { EachRegion, PairProvenance, type Side } from './PairFacts'
 import StartSelect from './StartSelect'
 import { useCompareData } from './useCompareData'
 import './compare.css'
 
-function DifferenceIcon({ status }: { status: DifferenceRow['status'] }) {
-  const common = { width: 28, height: 28, viewBox: '0 0 28 28', 'aria-hidden': true as const, className: 'compare-verdict-icon' }
-  if (status === 'differ') return <svg {...common}><path d="M6 10 H22 M6 18 H22 M18 5 L10 23" /></svg> // ≠
-  if (status === 'inconclusive') return <svg {...common}><path d="M5 11 Q9.5 7 14 11 T23 11 M5 18 Q9.5 14 14 18 T23 18" /></svg> // ≈
-  return <svg {...common}><circle cx="14" cy="14" r="9" /><path d="M8 20 L20 8" /></svg>
+const GLYPH: Record<DifferenceRow['status'], VerdictGlyph> = {
+  differ: 'differ', inconclusive: 'approx', insufficient: 'blocked', invalid: 'blocked',
 }
 
-function Difference({ row, explanation, pairLabel, unit, basisText, alpha }: {
-  row: DifferenceRow; explanation: ComparisonExplanation; pairLabel: string; unit: string; basisText: string; alpha: number
+/** El mismo bloque de veredicto que el análisis: icono + palabras, la cifra de la diferencia y su evidencia. */
+function Difference({ row, explanation, pairLabel, unit, alpha }: {
+  row: DifferenceRow; explanation: ComparisonExplanation; pairLabel: string; unit: string; alpha: number
 }) {
   const figures = row.status === 'differ' || row.status === 'inconclusive'
   const digits = digitsForValues(row.diff_decade, row.ci_low, row.ci_high)
   const level = Math.round((1 - alpha) * 100)
   return (
-    <section className={`compare-verdict compare-verdict--${row.status}`} aria-label={COMPARE_COPY.differenceHeading}>
-      <h3 className="compare-heading">{COMPARE_COPY.differenceHeading}</h3>
-      <p className="compare-verdict-head">
-        <DifferenceIcon status={row.status} />
-        <span className="compare-verdict-word">{explanation.verdict}</span>
+    <section className={`verdict compare-verdict compare-verdict--${row.status}`} aria-label={COMPARE_COPY.differenceHeading}>
+      <h3 className="verdict-heading">{COMPARE_COPY.differenceHeading}</h3>
+      <p className="verdict-head">
+        <VerdictIcon glyph={GLYPH[row.status]} />
+        <span className="verdict-word">{explanation.verdict}</span>
       </p>
       {figures && (
-        <p className="compare-verdict-figure">
-          <span className="compare-muted">{`${pairLabel}: `}</span>
+        <p className={row.status === 'inconclusive' ? 'verdict-figure verdict-figure--estimate' : 'verdict-figure'}>
+          {row.status === 'inconclusive' && 'Estimated difference, '}
+          <span>{`${pairLabel}: `}</span>
           <span className="compare-verdict-number">{`${fmtSigned(row.diff_decade, digits)} ${perDecade(unit)}`}</span>
         </p>
       )}
-      <dl className="compare-facts">
-        {figures && (
-          <>
-            <div><dt>{`${level}% confidence interval`}</dt><dd>{fmtInterval(row.ci_low, row.ci_high, digits)}</dd></div>
-            <div><dt>Evidence</dt><dd>{`${fmtP(row.p)}; ${fmtAlpha(alpha)}`}</dd></div>
-          </>
-        )}
-        <div><dt>Period</dt><dd>{`${fmtYears(row.start, row.end)} · ${COMPARE_COPY.commonYears(row.n)}`}</dd></div>
-        <div><dt>How it is measured</dt><dd>{basisText}</dd></div>
-      </dl>
+      {figures && (
+        <p className="verdict-detail">
+          <Term k="ci">{`${level}% interval: ${fmtInterval(row.ci_low, row.ci_high, digits)}`}</Term>
+        </p>
+      )}
+      {figures && (
+        <p className="verdict-detail">
+          <Term k="p">{fmtP(row.p)}</Term>
+          <Term k="alpha">{fmtAlpha(alpha)}</Term>
+        </p>
+      )}
     </section>
   )
 }
 
 function Skeleton() {
   return (
-    <div className="compare-skeleton">
-      <span className="compare-vh">Loading…</span>
-      <div className="compare-sk compare-sk--verdict" />
-      <div className="compare-sk compare-sk--chart" />
-      <div className="compare-sk compare-sk--line" />
+    <div className="skeleton">
+      <span className="vh">Loading…</span>
+      <div className="sk sk-verdict" />
+      <div className="sk sk-chart" />
+      <div className="sk sk-line" />
     </div>
   )
 }
@@ -118,21 +121,20 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
 
   return (
     <div className="compare-result">
-      <p className="compare-vh" role="status" aria-live="polite">{announcement}</p>
+      <p className="vh" role="status" aria-live="polite">{announcement}</p>
 
-      {isSynthetic && <p className="compare-notice compare-notice--synthetic">{UI_COPY.synthetic}</p>}
+      {isSynthetic && <p className="notice notice--icon notice--synthetic"><WarningIcon size={18} />{UI_COPY.synthetic}</p>}
 
       {lookup?.kind === 'row' && explanation && published && (
         <Difference
           row={lookup.row} explanation={explanation} pairLabel={pairLabel} unit={localizeUnit(published.unit)} alpha={catalog.alpha}
-          basisText={published.basis === 'relative' ? COMPARE_COPY.relativeBasis : COMPARE_COPY.absoluteBasis}
         />
       )}
-      {lookup?.kind === 'not_comparable' && <p className="compare-notice">{COMPARE_COPY.notComparable[lookup.reason]}</p>}
-      {lookup?.kind === 'missing' && <p className="compare-notice">{COMPARE_COPY.missingPair}</p>}
-      {lookup === null && <p className="compare-notice">{COMPARE_COPY.notPublished}</p>}
+      {lookup?.kind === 'not_comparable' && <p className="notice">{COMPARE_COPY.notComparable[lookup.reason]}</p>}
+      {lookup?.kind === 'missing' && <p className="notice">{COMPARE_COPY.missingPair}</p>}
+      {lookup === null && <p className="notice">{COMPARE_COPY.notPublished}</p>}
       {lookup?.kind === 'no_window' && published && (
-        <div className="compare-notice">
+        <div className="notice">
           <p>{COMPARE_COPY.noWindow(published.end)}</p>
           {suggested !== null && (
             <button type="button" onClick={() => setPeriod(suggested, published.end)}>
@@ -142,34 +144,37 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
         </div>
       )}
 
-      {published && lookup !== null && lookup.kind !== 'not_comparable' && lookup.kind !== 'missing' && (
-        <StartSelect starts={published.starts} end={published.end} from={from} to={to} onPick={setPeriod} />
-      )}
-
-      <EachRegion sides={sides} unit={unit} />
-
-      <PairChart
-        items={sides.map(s => ({ tag: s.tag, name: s.name, points: yearPoints(s.series), row: s.result.row }))}
-        unit={unit} from={from} to={to}
-      />
-
       {explanation && (
-        <section className="compare-words" aria-label="In words">
-          <h3 className="compare-heading">In words</h3>
-          <p className="compare-sentence">{explanation.sentence}</p>
-          {explanation.pattern && <p>{explanation.pattern}</p>}
+        <section className="words" aria-label="In words">
+          <h3 className="section-title">In words</h3>
+          <p className="words-sentence">{explanation.sentence}</p>
+          {explanation.pattern && <p className="words-note">{explanation.pattern}</p>}
           {explanation.caveats.length > 0 && (
-            <ul className="compare-caveats">{explanation.caveats.map(c => <li key={c}>{c}</li>)}</ul>
+            <ul className="words-notes">{explanation.caveats.map(c => <li key={c}>{c}</li>)}</ul>
           )}
         </section>
       )}
 
-      <details className="compare-details">
-        <summary>How the comparison works</summary>
-        <p>{COMPARE_COPY.method}</p>
-        <p>{`${fmtAlpha(catalog.alpha)}. ${UI_COPY.significanceNote}`}</p>
-      </details>
-      <PairProvenance sides={sides} />
+      <EachRegion sides={sides} unit={unit} />
+
+      <div className="compare-charts">
+        <PairChart
+          items={sides.map(s => ({ tag: s.tag, name: s.name, points: yearPoints(s.series), row: s.result.row }))}
+          unit={unit} from={from} to={to}
+        />
+        {published && lookup !== null && lookup.kind !== 'not_comparable' && lookup.kind !== 'missing' && (
+          <StartSelect starts={published.starts} end={published.end} from={from} to={to} onPick={setPeriod} />
+        )}
+      </div>
+
+      <div className="compare-more">
+        <details className="disclosure">
+          <summary>How the comparison works</summary>
+          <p>{COMPARE_COPY.method}</p>
+          <p>{`${fmtAlpha(catalog.alpha)}. ${UI_COPY.significanceNote}`}</p>
+        </details>
+        <PairProvenance sides={sides} />
+      </div>
     </div>
   )
 }
@@ -210,33 +215,37 @@ export default function ComparePanel() {
 
   return (
     <article className="compare" aria-busy={load.kind === 'loading'}>
-      <div className="compare-header">
-        <div className="compare-title">
+      <div className="panel-header">
+        <div className="panel-title">
           <h2>{COMPARE_COPY.title(nameA, nameB)}</h2>
-          <p className="compare-meta">{`${variable.label} · ${fmtYears(from, to)}`}</p>
+          <p className="panel-meta">
+            {`${variable.label} · ${fmtYears(from, to)}`}
+            {lookup?.kind === 'row' && ` · ${COMPARE_COPY.commonYears(lookup.row.n)}`}
+          </p>
         </div>
-        <button type="button" className="compare-close" onClick={leave} aria-label={COMPARE_COPY.remove}>
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
-        </button>
+        <CloseButton label={COMPARE_COPY.remove} onClick={leave} />
       </div>
 
       <div className="compare-pick">
-        <span><span className="compare-tag">A</span>{nameA}</span>
-        <label htmlFor={selectId}><span className="compare-tag">B</span><span className="compare-vh">State compared</span></label>
-        <RegionSelect id={selectId} value={compareId} onChange={id => (id ? setCompare(id) : leave())} />
+        <span className="compare-pick-a"><span className="tag">A</span>{nameA}</span>
+        <span className="tag" aria-hidden="true">B</span>
+        <RegionCombobox
+          id={selectId} inline label="State compared" placeholder={COMPARE_COPY.entryPlaceholder}
+          value={compareId} excludeId={regionId} onChange={setCompare}
+        />
       </div>
 
       {load.kind === 'loading' && <Skeleton />}
 
       {load.kind === 'error' && (
-        <div className="compare-notice" role="alert">
+        <div className="notice notice--error" role="alert">
           <p>{COMPARE_COPY.loadError}</p>
           <button type="button" onClick={retry}>{UI_COPY.retry}</button>
         </div>
       )}
 
       {load.kind === 'ready' && (!load.seriesA || !load.seriesB) && (
-        <div className="compare-notice">
+        <div className="notice">
           {!load.seriesA && <p>{COMPARE_COPY.noData(nameA)}</p>}
           {!load.seriesB && <p>{COMPARE_COPY.noData(nameB)}</p>}
         </div>

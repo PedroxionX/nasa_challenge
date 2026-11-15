@@ -22,7 +22,7 @@ interface Props {
 export default function Fallback({ rows, unit, caption, selectedId, compareId = null, onPick, hrefFor, failed }: Props) {
   return (
     <section className="globe-fallback" aria-label={GLOBE_COPY.fallbackRegions}>
-      <p className="globe-fallback-notice" role="status">{UI_COPY.noWebgl}</p>
+      <p className="notice globe-fallback-notice" role="status">{UI_COPY.noWebgl}</p>
       {failed && rows.length === 0 ? (
         <p role="status">{GLOBE_COPY.listUnavailable}</p>
       ) : (

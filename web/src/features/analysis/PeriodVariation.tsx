@@ -42,7 +42,7 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
       </p>
       <button
         type="button"
-        className="analysis-link-button"
+        className="link-button"
         aria-expanded={open}
         aria-controls={`${uid}-view`}
         onClick={() => setOpen(o => !o)}
@@ -57,23 +57,23 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
           </p>
         )}
         {open && (plotted.length === 0
-          ? <p className="analysis-muted">{`No start year has a trend that can be assessed ending in ${fmtYear(to)}.`}</p>
+          ? <p className="muted small">{`No start year has a trend that can be assessed ending in ${fmtYear(to)}.`}</p>
           : <VariationChart rows={plotted} from={from} to={to} unit={unit} width={width} uid={uid} />)}
 
         {open && (
           <>
             <button
               type="button"
-              className="analysis-link-button"
+              className="link-button"
               aria-expanded={showTable}
               aria-controls={`${uid}-table`}
               onClick={() => setShowTable(s => !s)}
             >
               {showTable ? 'Hide table' : 'View as table'}
             </button>
-            <div id={`${uid}-table`} className="trend-chart-table-wrap" hidden={!showTable}>
-              <table className="analysis-table">
-                <caption className="analysis-vh">{`Slope per decade by start year, ending in ${fmtYear(to)} (${unit} per decade)`}</caption>
+            <div id={`${uid}-table`} className="table-wrap table-wrap--tall" hidden={!showTable}>
+              <table className="data-table">
+                <caption className="vh">{`Slope per decade by start year, ending in ${fmtYear(to)} (${unit} per decade)`}</caption>
                 <thead>
                   <tr>
                     <th scope="col">From</th>
@@ -131,7 +131,7 @@ function VariationChart({ rows, from, to, unit, width, uid }: {
 
   return (
     <svg
-      className="variation-chart"
+      className="chart-svg variation-chart"
       width={width}
       height={HEIGHT}
       viewBox={`0 0 ${width} ${HEIGHT}`}
@@ -144,21 +144,21 @@ function VariationChart({ rows, from, to, unit, width, uid }: {
       </desc>
       {yTicks.map(t => (
         <g key={`y${t}`}>
-          <line className={t === 0 ? 'variation-zero' : 'trend-chart-grid'} x1={M.left} x2={width - M.right} y1={y(t)} y2={y(t)} />
-          <text className="trend-chart-tick" x={M.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, yStep)}</text>
+          <line className={t === 0 ? 'chart-zero' : 'chart-grid'} x1={M.left} x2={width - M.right} y1={y(t)} y2={y(t)} />
+          <text className="chart-tick" x={M.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, yStep)}</text>
         </g>
       ))}
-      <text className="trend-chart-unit" x={M.left - 6} y={M.top - 4} textAnchor="end">{`${unit}/dec.`}</text>
+      <text className="chart-unit" x={M.left - 6} y={M.top - 4} textAnchor="end">{`${unit}/dec.`}</text>
       {xTicks.map(t => (
-        <text key={`x${t}`} className="trend-chart-tick" x={x(t)} y={HEIGHT - 8} textAnchor="middle">{fmtYear(t)}</text>
+        <text key={`x${t}`} className="chart-tick" x={x(t)} y={HEIGHT - 8} textAnchor="middle">{fmtYear(t)}</text>
       ))}
-      {band && <path className="trend-chart-band" d={band} />}
-      <path className="variation-line" d={path} />
+      {band && <path className="chart-band" d={band} />}
+      <path className="chart-line variation-line" d={path} />
       {rows.map(r => (
-        <circle key={r.start} className="variation-point" cx={x(r.start)} cy={y(r.slope_decade!)} r={2.5} />
+        <circle key={r.start} className="chart-point" cx={x(r.start)} cy={y(r.slope_decade!)} r={3} />
       ))}
       {current && (
-        <g className="variation-current">
+        <g className="chart-current variation-current">
           <line x1={x(current.start)} x2={x(current.start)} y1={M.top} y2={HEIGHT - M.bottom} />
           <circle cx={x(current.start)} cy={y(current.slope_decade!)} r={6} />
           <text x={x(current.start)} y={M.top - 2} textAnchor="middle">{fmtYear(current.start)}</text>

@@ -7,6 +7,7 @@ import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 import { useAppState } from '../../app/state'
 import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
 import { localizeUnit, variableCopy } from '../../content'
+import { InfoIcon } from '../../lib/ui/icons'
 
 const KIND: Record<string, string> = {
   reanalysis: 'reanalysis (a model that combines observations)',
@@ -24,7 +25,7 @@ function VariableFacts({ catalog, info }: { catalog: Catalog; info: VariableInfo
     ? `${info.product_short_name}${info.product_version ? ` version ${info.product_version}` : ''}`
     : null
   return (
-    <dl className="variable-picker-facts">
+    <dl className="facts">
       <dt>Unit</dt><dd>{AGGREGATION[info.aggregation] ? `${localizeUnit(info.unit_annual)} (${AGGREGATION[info.aggregation]})` : localizeUnit(info.unit_annual)}</dd>
       <dt>Source</dt><dd>{product ? `${KIND[info.kind] ?? info.kind} · ${product}` : KIND[info.kind] ?? info.kind}</dd>
       <dt>Years</dt><dd>{`${firstYear}–${lastYear}`}</dd>
@@ -58,7 +59,7 @@ export default function VariablePicker() {
 
   return (
     <div className="variable-picker" onKeyDown={closeOnEscape}>
-      <label className="query-vh" htmlFor={`${uid}-variable`}>Variable</label>
+      <label className="vh" htmlFor={`${uid}-variable`}>Variable</label>
       <select
         id={`${uid}-variable`}
         className="variable-picker-select"
@@ -71,17 +72,13 @@ export default function VariablePicker() {
       </select>
       <button
         type="button"
-        className="variable-picker-info"
+        className="icon-button variable-picker-info"
         aria-expanded={showDefinition}
         aria-controls={definitionId}
         aria-label={`What is ${copy.label.toLowerCase()}`}
         onClick={() => setShowDefinition(s => !s)}
       >
-        <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
-          <circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="10" cy="6" r="1.1" fill="currentColor" />
-          <path d="M10 9v5.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
+        <InfoIcon />
       </button>
       <div id={definitionId} className="variable-picker-definition" hidden={!showDefinition}>
         <p><strong>{copy.label}:</strong> {copy.definition}</p>

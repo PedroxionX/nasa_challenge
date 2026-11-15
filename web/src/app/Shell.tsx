@@ -11,6 +11,8 @@ import { GlobeStage } from '../features/globe'
 import { MethodsSheet, WelcomeCard } from '../features/guide'
 import { QueryBar } from '../features/query'
 import { UI_COPY } from '../content'
+import CloseButton from '../lib/ui/CloseButton'
+import { ChevronIcon } from '../lib/ui/icons'
 import { loadCatalog, variableIds, variablePeriod } from '../lib/data'
 import ErrorBoundary from './ErrorBoundary'
 import { configureState, dismissStateNotice, markWebglUnavailable, useAppState, useStateNotice } from './state'
@@ -21,6 +23,7 @@ export const DESKTOP_QUERY = '(min-width: 900px)'
 
 type Sheet = 'peek' | 'half' | 'full'
 const NEXT_SHEET: Record<Sheet, Sheet> = { peek: 'half', half: 'full', full: 'peek' }
+/** Lo que hará el asa al tocarla; se lee en la propia asa, junto a una flecha con la dirección. */
 const SHEET_LABEL: Record<Sheet, string> = { peek: 'Show more', half: 'Expand', full: 'Collapse' }
 
 function setInsets(right: number, bottom: number) {
@@ -41,6 +44,7 @@ export default function Shell() {
   const panelRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLElement>(null)
   const methodsRef = useRef<HTMLDialogElement>(null)
+  const welcomeRef = useRef<HTMLElement>(null)
 
   // El catálogo fija años y regiones válidos.
   useEffect(() => {
@@ -63,13 +67,15 @@ export default function Shell() {
 
   // Zona que ocupa el panel sobre el escenario.
   useLayoutEffect(() => {
-    const panel = panelRef.current
+    // Con región, lo que tapa es el panel; sin ella, en móvil, la bienvenida (va acoplada abajo como la hoja).
+    const panel = panelRef.current ?? welcomeRef.current
     const stage = stageRef.current
     if (!panel || !stage) { setInsets(0, 0); return }
+    const isPanel = panel === panelRef.current
     const measure = () => {
       const p = panel.getBoundingClientRect()
       const s = stage.getBoundingClientRect()
-      if (window.matchMedia?.(DESKTOP_QUERY).matches) setInsets(Math.max(0, s.right - p.left), 0)
+      if (window.matchMedia?.(DESKTOP_QUERY).matches) setInsets(isPanel ? Math.max(0, s.right - p.left) : 0, 0)
       else setInsets(0, Math.max(0, s.bottom - p.top))
     }
     measure()
@@ -118,7 +124,7 @@ export default function Shell() {
           {notice && (
             <p className="shell-notice" role="status">
               {notice}
-              <button type="button" onClick={dismissStateNotice} aria-label="Dismiss notice">✕</button>
+              <CloseButton label="Dismiss notice" onClick={dismissStateNotice} />
             </p>
           )}
           {catalogFailed && (
@@ -135,7 +141,7 @@ export default function Shell() {
           <GlobeStage />
         </ErrorBoundary>
         {!regionId && (
-          <section className="shell-welcome" aria-label="Welcome">
+          <section className="shell-welcome" ref={welcomeRef} aria-label="Welcome">
             <ErrorBoundary zone="welcome"><WelcomeCard /></ErrorBoundary>
           </section>
         )}
@@ -147,9 +153,12 @@ export default function Shell() {
             type="button"
             className="shell-sheet-handle"
             onClick={() => setSheet(NEXT_SHEET[sheet])}
-            aria-label={SHEET_LABEL[sheet]}
           >
-            <span aria-hidden="true" />
+            <span className="shell-sheet-grip" aria-hidden="true" />
+            <span className="shell-sheet-action">
+              <ChevronIcon size={16} up={sheet !== 'full'} />
+              {SHEET_LABEL[sheet]}
+            </span>
           </button>
           <div className="shell-panel-body">
             {/* 007: con una segunda región (vs=) el panel muestra la comparación; sin ella, el análisis y su entrada. */}
@@ -165,9 +174,17 @@ export default function Shell() {
         </aside>
       )}
 
-      <dialog className="shell-methods" ref={methodsRef} aria-label="Methods and sources">
-        <button type="button" className="shell-methods-close" onClick={closeMethods}>{UI_COPY.close}</button>
-        <ErrorBoundary zone="methods"><MethodsSheet /></ErrorBoundary>
+      <dialog
+        className="dialog shell-methods" ref={methodsRef} aria-labelledby="methods-title"
+        onClick={e => { if (e.target === e.currentTarget) closeMethods() }}
+      >
+        <div className="dialog-bar">
+          <h2 className="dialog-title" id="methods-title">Methods and sources</h2>
+          <CloseButton label={UI_COPY.close} onClick={closeMethods} />
+        </div>
+        <div className="dialog-body">
+          <ErrorBoundary zone="methods"><MethodsSheet /></ErrorBoundary>
+        </div>
       </dialog>
     </div>
   )

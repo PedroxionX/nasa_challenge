@@ -1,4 +1,4 @@
-/* Estilos del globo, su leyenda y su tabla (propiedad de 005). Solo variables de tokens.css. */
+/* Estilos del globo, su leyenda y su tabla (propiedad de 005). Solo coloca las piezas de styles/components.css. */
 .globe-container { position: absolute; inset: 0; overflow: hidden; }
 
 .globe-status {
@@ -6,6 +6,8 @@
   inset: 0;
   display: grid;
   place-content: center;
+  justify-items: center;
+  gap: var(--space-2);
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
@@ -17,14 +19,15 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  padding: 6px 10px;
+  padding: var(--space-2) var(--space-3);
   color: var(--color-text);
   background: var(--color-panel);
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-pop);
   font-family: var(--font-sans);
 }
-.globe-tooltip b { font-size: var(--text-sm); }
+.globe-tooltip b { font-size: var(--text-sm); font-weight: var(--weight-medium); }
 .globe-tooltip span { font-size: var(--text-xs); color: var(--color-text-muted); }
 .globe-tooltip .globe-tooltip-value { color: var(--color-text); font-variant-numeric: tabular-nums; }
 
@@ -43,99 +46,97 @@
 }
 
 /* ---------- Leyenda y acciones ---------- */
+/* Móvil: una franja (leyenda + tres botones de icono). Escritorio: columna estrecha arriba a la izquierda. */
 .globe-tools {
   position: absolute;
   z-index: 1;
-  top: var(--space-3);
-  left: var(--space-3);
-  display: grid;
+  top: var(--space-2);
+  left: var(--space-2);
+  right: var(--space-2);
+  display: flex;
+  align-items: flex-start;
   gap: var(--space-2);
-  width: min(19rem, calc(100% - 2 * var(--space-3)));
   font-size: var(--text-sm);
+  pointer-events: none; /* el hueco entre piezas deja pasar el gesto al globo */
 }
+.globe-tools > * { pointer-events: auto; }
 .globe-legend {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 19rem;
   padding: var(--space-2) var(--space-3);
   color: var(--color-text);
   background: var(--color-panel);
   border: 1px solid var(--color-line);
   border-radius: var(--radius);
 }
-.globe-legend summary {
-  display: grid;
-  min-height: var(--tap);
-  align-content: center;
-  cursor: pointer;
-}
+.globe-legend-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-2); margin: 0; }
 .globe-legend-title { font-weight: var(--weight-medium); }
 .globe-legend-sub { font-size: var(--text-xs); color: var(--color-text-muted); }
-.globe-legend-classes { display: grid; gap: var(--space-1); margin: var(--space-2) 0 0; padding: 0; list-style: none; }
+
+.globe-scale { margin-top: var(--space-2); font-size: var(--text-xs); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
+.globe-scale-bar { display: flex; height: 0.625rem; border: 1px solid var(--color-region-border); border-radius: 3px; overflow: hidden; }
+.globe-scale-bar span { flex: 1 1 0; }
+.globe-scale-breaks { display: grid; margin-top: 2px; text-align: center; white-space: nowrap; }
+.globe-scale-breaks span { grid-row: 1; }
+.globe-scale-ends { display: flex; justify-content: space-between; }
+
+.globe-legend-more { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--color-line); }
+.globe-legend-classes { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
 .globe-legend-classes li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-2); }
 .globe-legend-range { font-size: var(--text-xs); color: var(--color-text-muted); font-variant-numeric: tabular-nums; }
 .globe-legend-note { margin: var(--space-2) 0 0; font-size: var(--text-xs); color: var(--color-text-muted); }
+.globe-legend-note .link-button { min-height: 0; font-size: inherit; }
 
-.globe-swatch { width: 1.25rem; height: 0.875rem; border: 1px solid var(--color-text-muted); border-radius: 3px; }
+.globe-swatch { width: 1.25rem; height: 0.875rem; border: 1px solid var(--color-region-border); border-radius: 3px; }
 /* «Sin datos» nunca depende solo del color: trama + etiqueta. */
-.globe-swatch-nodata {
-  background:
-    repeating-linear-gradient(45deg, var(--color-no-data) 0 3px, transparent 3px 6px);
-}
-.globe-swatch-selected { background: transparent; border: 2px solid var(--color-selection); box-shadow: 0 2px 0 var(--color-selection); }
+.globe-swatch-nodata { background: repeating-linear-gradient(45deg, var(--color-no-data) 0 3px, transparent 3px 6px); }
 
-.globe-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.globe-actions button,
-.globe-legend-note button,
-.globe-status button,
-.globe-fallback button,
-.globe-table-close {
-  min-height: var(--tap);
-  padding: 0 var(--space-3);
-  color: var(--color-text);
-  font: inherit;
+.globe-actions { flex: 0 0 auto; display: flex; gap: var(--space-1); }
+.globe-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-width: var(--tap);
+  padding: 0;
   background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius);
-  cursor: pointer;
 }
-.globe-actions button:hover,
-.globe-table-close:hover { background: var(--color-panel-raised); }
-.globe-tools :focus-visible,
-.globe-table-dialog :focus-visible,
-.globe-fallback :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.globe-actions button:hover, .globe-actions button[aria-expanded="true"] { background: var(--color-panel-raised); }
+.globe-actions svg { flex: 0 0 auto; }
+/* En móvil los botones son solo icono; el texto sigue ahí para lectores de pantalla. */
+.globe-actions button span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (min-width: 900px) {
+  .globe-tools { top: var(--space-3); left: var(--space-3); right: auto; flex-direction: column; }
+  .globe-legend { width: 19rem; }
+  .globe-actions { gap: var(--space-2); }
+  .globe-actions button { padding: 0 var(--space-3); }
+  .globe-actions button span { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
+}
 
 /* ---------- Tabla ---------- */
-.globe-table-dialog {
-  width: min(44rem, calc(100vw - 2 * var(--space-4)));
-  max-height: calc(100dvh - 2 * var(--space-5));
-  padding: var(--space-4);
-  color: var(--color-text);
-  background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-}
-.globe-table-dialog::backdrop { background: var(--color-overlay); }
-.globe-table-close { float: right; margin-bottom: var(--space-2); }
-
-.globe-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
-.globe-table caption { padding-bottom: var(--space-2); font-weight: var(--weight-medium); text-align: left; }
-.globe-table th,
-.globe-table td { padding: var(--space-1) var(--space-2); text-align: left; border-bottom: 1px solid var(--color-line); }
-.globe-table thead th { color: var(--color-text-muted); font-weight: var(--weight-medium); }
-.globe-table tbody th { font-weight: var(--weight-regular); }
-.globe-table-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-.globe-table tr[aria-current="true"] th,
-.globe-table tr[aria-current="true"] td { background: var(--color-panel-raised); font-weight: var(--weight-medium); }
+.globe-table-dialog .dialog-body { padding-top: 0; }
 .globe-table .globe-table-sort,
 .globe-table .globe-table-pick {
   min-height: var(--tap);
   padding: 0;
   color: inherit;
   font: inherit;
-  text-align: left;
+  text-align: inherit;
   background: none;
   border: 0;
-  cursor: pointer;
+  border-radius: var(--radius-sm);
 }
-.globe-table .globe-table-pick { display: inline-flex; align-items: center; color: var(--color-accent); text-decoration: underline; text-underline-offset: 3px; }
+.globe-table .globe-table-sort { color: var(--color-text-muted); font-weight: var(--weight-medium); }
+.globe-table th, .globe-table td { vertical-align: middle; }
+.globe-table .globe-table-pick { display: inline-flex; align-items: center; color: var(--color-accent); }
+.globe-table-compared { margin: 0 0 0 var(--space-2); font-weight: var(--weight-medium); white-space: nowrap; }
+@media (max-width: 480px) {
+  /* El país se deduce del nombre y la tabla se puede ordenar: en teléfono se prescinde de esa columna. */
+  .globe-table .globe-table-country { display: none; }
+  .globe-table th, .globe-table td { padding-left: var(--space-2); padding-right: var(--space-2); }
+}
 
 /* ---------- Sin WebGL ---------- */
 .globe-fallback {
@@ -148,21 +149,4 @@
   color: var(--color-text);
   background: var(--color-bg);
 }
-.globe-fallback-notice {
-  margin: 0 0 var(--space-4);
-  padding: var(--space-3);
-  background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius);
-}
-
-/* Comparación (007 FR-K15): letra y texto junto al nombre, además del realce de la fila. */
-.globe-table-compared {
-  margin-left: var(--space-2);
-  padding: 0 var(--space-1);
-  font-size: var(--text-xs);
-  font-weight: var(--weight-medium);
-  border: 1px solid currentColor;
-  border-radius: 5px;
-  white-space: nowrap;
-}
+.globe-fallback-notice { margin-bottom: var(--space-4); }

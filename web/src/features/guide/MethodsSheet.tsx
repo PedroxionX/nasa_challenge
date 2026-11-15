@@ -102,11 +102,11 @@ export default function MethodsSheet() {
   const retrieved = useRetrievedDates(catalog)
 
   return (
-    <article className="methods-sheet" aria-label="Methods and sources">
-      <h2 className="methods-title">Methods and sources</h2>
+    // El título y el cierre los pone el diálogo del armazón (un solo patrón de diálogo en toda la app).
+    <article className="methods-sheet">
 
       {error && (
-        <p className="methods-warning" role="alert">
+        <p className="notice notice--error" role="alert">
           The catalog could not be loaded. Showing the values from the data contract.
         </p>
       )}

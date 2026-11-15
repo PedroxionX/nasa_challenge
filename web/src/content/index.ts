@@ -330,6 +330,13 @@ export const UI_COPY = {
     `Source: ${source}. Retrieved: ${retrieved}.`,
 } as const
 
+/** Welcome card: what to do, and what each example teaches (docs/demo.md §2–3, data of 2026-11-14). */
+export const WELCOME_COPY = {
+  how: 'Tap a state on the globe or search for it by name. Or open an example:',
+  exampleInconclusive: 'Not enough evidence, and the verdict changes with the start year.',
+  exampleRising: 'A rising trend, backed by evidence.',
+} as const
+
 // ---------- Verdict copy ----------
 
 const VERDICT_LABEL: Record<TrendStatus, string> = {
@@ -460,6 +467,7 @@ export const COMPARE_COPY = {
   chartHeading: 'Yearly values',
   startLabel: 'From',
   until: (end: number) => `to ${end}`,
+  periodHint: (end: number) => `The test of the difference is published for periods that end in ${end}.`,
   /** The pair is stored once and the difference is read in that order; it is not flipped. */
   order: (first: string, second: string) => `${first} − ${second}`,
   commonYears: (n: number) => `${n}\u00a0complete years in common`,

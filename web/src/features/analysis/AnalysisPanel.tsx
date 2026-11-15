@@ -1,16 +1,19 @@
 /**
  * Panel de análisis (004 T004–T006, T011). Lo coloca el armazón (002) sin props; lee useAppState().
- * Orden (ux.md §6): veredicto y cambio → gráfica → cifras → «En palabras» → desplegables.
+ * Orden (008): veredicto (dirección, cuánto, evidencia) → «In words» → gráfica → periodo → método y procedencia.
+ * Cada dato aparece una sola vez.
  * Estados: cargando (esqueleto) · error con reintento · sin datos · resultado.
  * No calcula estadística: elige la fila con pickWindow y presenta lo que trae el archivo.
  */
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useAppState } from '../../app/state'
-import { pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
+import { loadCatalog, pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
 import { explainTrend, localizeUnit, UI_COPY, variableCopy } from '../../content'
 import { HAS_TREND, isFullPeriod, readExtras } from './analysisData'
 import { digitsFor, fmtPercent, fmtSlope, fmtYears } from '../../lib/format'
-import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
+import CloseButton from '../../lib/ui/CloseButton'
+import { WarningIcon } from '../../lib/ui/icons'
+import { InWords, ProvenanceDetails, TechnicalDetails, Verdict } from './ResultCards'
 import PeriodControl from './PeriodControl'
 import PeriodVariation from './PeriodVariation'
 import TrendChart from './TrendChart'
@@ -33,6 +36,14 @@ function focusSearch() {
 export default function AnalysisPanel() {
   const { regionId, variableId, from, to, setRegion, resetPeriod } = useAppState()
   const { load, retry } = useAnalysisData(regionId, variableId)
+  // El catálogo se guarda aparte (lib/data lo tiene en caché): así la cabecera muestra el nombre del estado
+  // también mientras carga o si la serie falla, en vez de su clave («MX-CHH»).
+  const [known, setKnown] = useState<Catalog | null>(null)
+  useEffect(() => {
+    let live = true
+    loadCatalog().then(c => { if (live) setKnown(c) }).catch(() => {})
+    return () => { live = false }
+  }, [])
 
   // FR-A02: Escape cierra el panel (deselecciona la región) y devuelve el foco al buscador.
   useEffect(() => {
@@ -49,7 +60,7 @@ export default function AnalysisPanel() {
 
   if (!regionId) return null
 
-  const catalog = load.kind === 'ready' || load.kind === 'no-data' ? load.catalog : null
+  const catalog = (load.kind === 'ready' || load.kind === 'no-data' ? load.catalog : null) ?? known
   const region = catalog?.regions.find(r => r.id === regionId)
   const regionName = region?.name ?? regionId
   const variable = variableCopy(variableId, catalog?.variables.find(v => v.id === variableId))
@@ -58,31 +69,29 @@ export default function AnalysisPanel() {
 
   return (
     <article className="analysis" aria-busy={load.kind === 'loading'}>
-      <div className="analysis-header">
-        <div className="analysis-title">
+      <div className="panel-header">
+        <div className="panel-title">
           <h2>{regionName}</h2>
-          <p className="analysis-meta">
+          <p className="panel-meta">
             {region && `${COUNTRY[region.country]} · `}{variable.label} · {fmtYears(from, to)}
           </p>
         </div>
-        <button type="button" className="analysis-close" onClick={close} aria-label="Close analysis">
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
-        </button>
+        <CloseButton label="Close analysis" onClick={close} />
       </div>
 
       {load.kind === 'loading' && <Skeleton />}
 
       {load.kind === 'error' && (
-        <div className="analysis-state" role="alert">
+        <div className="notice notice--error" role="alert">
           <p>{UI_COPY.loadError}</p>
           <button type="button" onClick={retry}>{UI_COPY.retry}</button>
         </div>
       )}
 
       {load.kind === 'no-data' && (
-        <div className="analysis-state">
+        <div className="notice">
           <p>{UI_COPY.noData}</p>
-          <p className="analysis-muted">You can choose another state in the search box or on the globe.</p>
+          <p className="muted">You can choose another state in the search box or on the globe.</p>
         </div>
       )}
 
@@ -102,8 +111,8 @@ export default function AnalysisPanel() {
 
 function Skeleton() {
   return (
-    <div className="analysis-skeleton">
-      <span className="analysis-vh">Loading…</span>
+    <div className="skeleton">
+      <span className="vh">Loading…</span>
       <div className="sk sk-verdict" />
       <div className="sk sk-chart" />
       <div className="sk sk-line" />
@@ -164,51 +173,20 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
 
   return (
     <div className="analysis-result">
-      <p className="analysis-vh" role="status" aria-live="polite">{announcement}</p>
+      <p className="vh" role="status" aria-live="polite">{announcement}</p>
 
       {isSynthetic && (
-        <p className="analysis-synthetic">
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M10 3 L18 17 H2 Z M10 8 V12 M10 14.5 V14.6" /></svg>
-          {UI_COPY.synthetic}
-        </p>
+        <p className="notice notice--icon notice--synthetic"><WarningIcon size={18} />{UI_COPY.synthetic}</p>
       )}
 
-      <Verdict status={status} explanation={explanation} row={row} unit={unit} digits={digits} extras={extras} />
+      <Verdict status={status} explanation={explanation} row={row} unit={unit} digits={digits} extras={extras} alpha={catalog.alpha} />
 
       {!row && (
-        <div className="analysis-state analysis-state--inline">
+        <div className="notice">
           <p>{UI_COPY.insufficientData}</p>
           <button type="button" onClick={onReset}>{UI_COPY.useFullPeriod}</button>
         </div>
       )}
-
-      <TrendChart
-        series={series}
-        row={row}
-        from={from}
-        to={to}
-        unit={unit}
-        variableLabel={variableLabel}
-        regionName={regionName}
-        lineMid={extras.lineMid}
-      />
-
-      <PeriodControl catalog={catalog} showReset={row !== null} />
-      {!fullPeriod && (
-        <PeriodVariation series={series} from={from} to={to} unit={unit} digits={digits} verdictOf={verdictOf} />
-      )}
-
-      <ResultFacts
-        status={status}
-        row={row}
-        from={from}
-        to={to}
-        unit={unit}
-        digits={digits}
-        extras={extras}
-        catalog={catalog}
-        series={series}
-      />
 
       <InWords
         sentence={row ? explanation.sentence : null}
@@ -216,8 +194,28 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
         notCause={trend ? UI_COPY.notCause : null}
       />
 
-      <TechnicalDetails row={row} status={status} catalog={catalog} series={series} digits={digits} unit={unit} />
-      <ProvenanceDetails series={series} />
+      <div className="analysis-chart">
+        <TrendChart
+          series={series}
+          row={row}
+          from={from}
+          to={to}
+          unit={unit}
+          variableLabel={variableLabel}
+          regionName={regionName}
+          lineMid={extras.lineMid}
+        />
+        {/* El periodo va pegado a la gráfica que modifica. */}
+        <PeriodControl catalog={catalog} showReset={row !== null} />
+        {!fullPeriod && (
+          <PeriodVariation series={series} from={from} to={to} unit={unit} digits={digits} verdictOf={verdictOf} />
+        )}
+      </div>
+
+      <div className="analysis-more">
+        <TechnicalDetails row={row} status={status} catalog={catalog} series={series} digits={digits} unit={unit} from={from} to={to} />
+        <ProvenanceDetails series={series} />
+      </div>
     </div>
   )
 }

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { markWebglUnavailable, toSearch, useAppState } from '../../app/state'
 import { localizeClassLabel, localizeUnit, UI_COPY, variableCopy } from '../../content'
 import { loadCatalog, loadMap, windowKey, type Catalog, type MapFile } from '../../lib/data'
+import CloseButton from '../../lib/ui/CloseButton'
 import { GLOBE_COPY } from './copy'
 import EarthGlobe, { type EarthGlobeHandle } from './EarthGlobe'
 import Fallback from './Fallback'
@@ -111,7 +112,7 @@ export default function GlobeStage() {
   }, [catalog.value, geo.value, values, labels])
 
   const variableLabel = variableCopy(variableId, catalog.value?.variables.find(v => v.id === variableId)).short
-  const caption = `${GLOBE_COPY.tableTitle} · ${variableLabel} · ${from}–${to}`
+  const caption = `${variableLabel}${values && unit ? ` · ${unit}` : ''} · ${from}–${to}`
   const tableUnit = values ? unit : null
 
   // ---------- Cámara ----------
@@ -203,7 +204,7 @@ export default function GlobeStage() {
         <p className="globe-status" role="status">
           {geo.value === null ? (
             <>
-              {GLOBE_COPY.mapsError}{' '}
+              {GLOBE_COPY.mapsError}
               <button type="button" onClick={geo.retry}>{UI_COPY.retry}</button>
             </>
           ) : GLOBE_COPY.loading}
@@ -225,9 +226,17 @@ export default function GlobeStage() {
         onGlobalView={globalView}
       />
 
-      <dialog className="globe-table-dialog" ref={tableDialog} aria-label={GLOBE_COPY.tableTitle}>
-        <button type="button" className="globe-table-close" onClick={closeTable}>{GLOBE_COPY.close}</button>
-        <RegionTable rows={rows} unit={tableUnit} caption={caption} selectedId={regionId} compareId={compareId} onPick={pick} hrefFor={hrefFor} />
+      <dialog
+        className="dialog globe-table-dialog" ref={tableDialog} aria-labelledby="region-table-title"
+        onClick={e => { if (e.target === e.currentTarget) closeTable() }}
+      >
+        <div className="dialog-bar">
+          <h2 className="dialog-title" id="region-table-title">{GLOBE_COPY.tableTitle}</h2>
+          <CloseButton label={GLOBE_COPY.close} onClick={closeTable} />
+        </div>
+        <div className="dialog-body">
+          <RegionTable rows={rows} unit={tableUnit} caption={caption} selectedId={regionId} compareId={compareId} onPick={pick} hrefFor={hrefFor} />
+        </div>
       </dialog>
     </>
   )

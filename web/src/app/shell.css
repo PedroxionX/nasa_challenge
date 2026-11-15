@@ -1,11 +1,11 @@
 /*
- * Armazón adaptable (002 T005). Solo 002 edita este archivo.
+ * Armazón adaptable (002 T005).
  * Escritorio (≥ 900 px): cabecera arriba; globo a todo el ancho detrás; panel opaco a la derecha.
  * Móvil y tableta (< 900 px): hoja inferior con tres alturas. El punto de corte coincide con DESKTOP_QUERY.
  * Ninguna zona se superpone a otra; el globo recibe la zona tapada en --panel-inset-*.
  */
 .shell {
-  --panel-w: clamp(320px, 32vw, 420px);
+  --panel-w: clamp(340px, 32vw, 440px);
   --sheet-h: 50%;
   position: relative;
   display: grid;
@@ -31,7 +31,7 @@
   border-bottom: 1px solid var(--color-line);
 }
 .shell-brand { flex: 0 0 auto; min-width: 0; }
-.shell-brand h1 { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); letter-spacing: 0.01em; }
+.shell-brand h1 { margin: 0; font-size: var(--text-lg); font-weight: var(--weight-bold); }
 .shell-brand p { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
 .shell-query { flex: 1 1 22rem; min-width: 0; }
 .shell-help { flex: 0 0 auto; margin-left: auto; }
@@ -44,7 +44,7 @@
   justify-content: space-between;
   gap: var(--space-3);
   margin: 0;
-  padding: var(--space-1) var(--space-4);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-4);
   font-size: var(--text-sm);
   background: var(--color-panel-raised);
 }
@@ -57,12 +57,17 @@
   overflow: hidden;
   background: var(--color-bg);
 }
+/* Bienvenida: en móvil va acoplada abajo, a todo el ancho, como la hoja de análisis que la sustituye. */
 .shell-welcome {
   position: absolute;
   z-index: 2;
-  left: var(--space-4);
-  bottom: max(var(--space-4), env(safe-area-inset-bottom));
-  width: min(26rem, calc(100% - 2 * var(--space-4)));
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--color-panel);
+  border-top: 1px solid var(--color-line);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 /* ---------- Panel / hoja ---------- */
@@ -77,27 +82,53 @@
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   align-self: end;
   height: var(--sheet-h);
-  transition: height var(--dur);
+  transition: height var(--dur) var(--ease-out);
   padding-bottom: env(safe-area-inset-bottom);
 }
-.shell[data-sheet="peek"] { --sheet-h: 7.5rem; }
-.shell[data-sheet="half"] { --sheet-h: 50%; }
-.shell[data-sheet="full"] { --sheet-h: calc(100% - 5rem); } /* deja visible la barra del globo */
+/* Asomada: asa + nombre del estado + palabra del veredicto. Media: el veredicto entero y el inicio de la frase. */
+.shell[data-sheet="peek"] { --sheet-h: 11.25rem; }
+.shell[data-sheet="half"] { --sheet-h: 52%; }
+.shell[data-sheet="full"] { --sheet-h: calc(100% - 3.5rem); } /* deja ver una franja del globo */
 
 .shell-sheet-handle {
   flex: 0 0 auto;
   display: grid;
-  place-items: center;
+  justify-items: center;
+  align-content: center;
+  gap: 2px;
   width: 100%;
   min-height: var(--tap);
+  padding: var(--space-1) 0 0;
+  color: var(--color-text-muted);
   background: transparent;
   border: 0;
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
-.shell-sheet-handle span { width: 2.5rem; height: 4px; border-radius: 2px; background: var(--color-text-muted); }
-.shell-panel-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--space-4) var(--space-4); }
+.shell-sheet-handle:active { background: transparent; }
+.shell-sheet-grip { width: 2.5rem; height: 4px; border-radius: 2px; background: var(--color-line); }
+.shell-sheet-action { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-xs); }
+.shell-sheet-handle:hover .shell-sheet-action { color: var(--color-text); }
+.shell-panel-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--space-1) var(--space-4) var(--space-5);
+}
+/* Asomada no se desplaza: es un resumen; para leer más se amplía. */
+.shell[data-sheet="peek"] .shell-panel-body { overflow-y: hidden; }
 
 @media (min-width: 900px) {
+  .shell-welcome {
+    left: var(--space-4);
+    right: auto;
+    bottom: var(--space-4);
+    width: min(24rem, calc(100% - 2 * var(--space-4)));
+    padding-bottom: 0;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-lg);
+  }
   .shell-panel {
     justify-self: end;
     align-self: stretch;
@@ -109,21 +140,8 @@
     transition: none;
   }
   .shell-sheet-handle { display: none; }
-  .shell-panel-body { padding-top: var(--space-4); }
+  .shell-panel-body, .shell[data-sheet="peek"] .shell-panel-body { overflow-y: auto; padding: var(--space-4) var(--space-5) var(--space-6); }
 }
-
-/* ---------- Hoja de métodos ---------- */
-.shell-methods {
-  width: min(40rem, calc(100vw - 2 * var(--space-4)));
-  max-height: calc(100dvh - 2 * var(--space-6));
-  padding: var(--space-5);
-  color: var(--color-text);
-  background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-lg);
-}
-.shell-methods::backdrop { background: var(--color-overlay); }
-.shell-methods-close { float: right; }
 
 /* ---------- Errores de zona ---------- */
 .zone-error {
@@ -134,14 +152,16 @@
   color: var(--color-text);
   background: var(--color-panel);
 }
+.zone-error p { margin: 0; }
 .shell-stage > .zone-error { position: absolute; inset: 0; place-content: center; justify-items: center; }
 
 @media (prefers-reduced-motion: reduce) {
   .shell-panel { transition: none; }
 }
 
-/* Cabecera compacta en pantallas estrechas: marca + Métodos en una fila; consulta debajo. */
+/* Cabecera compacta en pantallas estrechas: marca + Methods en una fila; consulta debajo, en una sola fila. */
 @media (max-width: 899px) {
+  .shell-header { gap: var(--space-2); padding: var(--space-2) var(--space-3); }
   .shell-brand p { display: none; }
   .shell-help { order: 2; }
   .shell-query { order: 3; flex-basis: 100%; }

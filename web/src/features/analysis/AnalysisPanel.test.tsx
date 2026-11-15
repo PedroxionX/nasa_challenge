@@ -44,9 +44,10 @@ afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 /** Reglas que todo resultado debe cumplir (SC-A01, FR-A01, FR-A05, constitución II). */
 function expectMandatory() {
   const text = panel().textContent ?? ''
-  const facts = panel().querySelector<HTMLElement>('.result-facts')!
-  for (const label of ['Period', 'Complete years (n)', 'Units', 'Method', 'Source']) {
-    expect(within(facts).getByText(label)).toBeTruthy()
+  // Cada dato obligatorio está en el panel, una sola vez: periodo (su control), n, unidades y método
+  // («Method and assumptions») y procedencia («Where these data come from»).
+  for (const label of ['Period', 'Complete years (n)', 'Units', 'Slope', 'Test', 'Source']) {
+    expect(within(panel()).getAllByText(label)).toHaveLength(1)
   }
   expect(text).toMatch(/α = 0\.05/)
   expect(text).not.toMatch(/years to (be|become) significant/i)
@@ -60,11 +61,11 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     await renderPanel('?region=MX-BCN&var=air_temperature')
     expect(await screen.findByText('Rising')).toBeTruthy()
     expect(screen.getByText('+0.38 °C per decade')).toBeTruthy()
-    expect(panel().textContent).toMatch(/\+0\.33 to \+0\.45 °C per decade/)
+    expect(panel().textContent).toMatch(/95% interval: \+0\.33 to \+0\.45 °C/)
     expect(screen.getByText(/There is evidence of a trend/)).toBeTruthy()
     expect(screen.getByText('p < 0.001', { selector: 'dfn' })).toBeTruthy()
     expect(screen.getByText('α = 0.05', { selector: 'dfn' })).toBeTruthy()
-    expect(within(panel().querySelector<HTMLElement>('.result-facts')!).getByText('46')).toBeTruthy()
+    expect(panel().textContent).toMatch(/Complete years \(n\)46, 1980–2025/)
     expectMandatory()
   })
 
@@ -78,7 +79,9 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
 
   it('inconclusive: «Sin evidencia suficiente» con p y α, nunca «no hay cambio»', async () => {
     await renderPanel('?region=MX-SON&var=air_temperature')
-    expect(await screen.findAllByText('Not enough evidence')).toHaveLength(2) // veredicto y fila «Evidencia»
+    expect(await screen.findAllByText('Not enough evidence')).toHaveLength(1) // solo el veredicto: no se repite
+    // La estimación sigue a la vista, rotulada como estimación y sin el peso de un resultado.
+    expect(panel().querySelector('.verdict-figure--estimate')?.textContent).toMatch(/^Estimate: [+−]\d/)
     expect(panel().textContent).not.toMatch(/no hay cambio|shows no change|has not changed|is not changing/i)
     expect(screen.getByText(/^p = 0\.\d{3}$/, { selector: 'dfn' })).toBeTruthy()
     expect(screen.getByText('α = 0.05', { selector: 'dfn' })).toBeTruthy()
@@ -102,9 +105,9 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
     expect(panel().textContent).not.toMatch(/p [=<]/)
     expect(panel().textContent).toMatch(/abrupt jump around 2001/)
     // La gráfica muestra los valores anuales y explica por qué no hay recta.
-    expect(document.querySelector('.trend-chart.is-muted')).not.toBeNull()
-    expect(document.querySelector('.trend-chart-notice')?.textContent).toMatch(/No trend line\. The analysis is not valid/)
-    expect(document.querySelector('.trend-chart-sen')).toBeNull()
+    expect(document.querySelector('.chart.is-muted')).not.toBeNull()
+    expect(document.querySelector('.chart-notice')?.textContent).toMatch(/No trend line\. The analysis is not valid/)
+    expect(document.querySelector('.chart-sen')).toBeNull()
     expectMandatory()
   })
 })
@@ -140,7 +143,7 @@ describe('AnalysisPanel · términos y supuestos (T012, T014)', () => {
   it('«Detalles técnicos» declara los supuestos del método (FR-012)', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature')
     await screen.findByText('Rising')
-    const details = screen.getByText('Technical details').closest('details')!
+    const details = screen.getByText('Method and assumptions').closest('details')!
     expect(within(details).getByText('Assumptions')).toBeTruthy()
     expect(details.textContent).toMatch(/monotonic change/)
     expect(details.textContent).toMatch(/α = 0\.05, set before looking at the data/)
@@ -239,16 +242,16 @@ describe('AnalysisPanel · gráfica (T003) y % (T011)', () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
     expect(await screen.findByText('Falling')).toBeTruthy()
     expect(screen.getByText('−14.0 % per decade')).toBeTruthy()
-    expect(panel().textContent).toMatch(/−18\.8 to −7\.4 % per decade/)
-    expect(document.querySelector('.trend-chart-sen')).not.toBeNull()
-    expect(document.querySelector('.trend-chart-band')).not.toBeNull()
+    expect(panel().textContent).toMatch(/95% interval: −18\.8 to −7\.4 %/)
+    expect(document.querySelector('.chart-sen')).not.toBeNull()
+    expect(document.querySelector('.chart-band')).not.toBeNull()
     expect(screen.getByText('Sen line')).toBeTruthy()
   })
 
   it('años excluidos: hueco con trama y nota en la tabla', async () => {
     await renderPanel('?region=MX-CMX&var=air_temperature')
     await screen.findByText('Not enough data')
-    expect(document.querySelectorAll('.trend-chart-excluded').length).toBeGreaterThan(0)
+    expect(document.querySelectorAll('.chart-excluded').length).toBeGreaterThan(0)
     fireEvent.click(screen.getByRole('button', { name: 'View as table' }))
     expect(screen.getAllByText('Incomplete year: excluded').length).toBeGreaterThan(0)
   })
@@ -259,7 +262,7 @@ describe('AnalysisPanel · gráfica (T003) y % (T011)', () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
     await screen.findByText('Falling')
     expect(panel().textContent).not.toMatch(/%\s*per decade/)
-    expect(document.querySelector('.trend-chart-sen')).toBeNull()
+    expect(document.querySelector('.chart-sen')).toBeNull()
     expect(screen.getByText(/Trend line pending/)).toBeTruthy()
     expect(screen.queryByRole('alert')).toBeNull()
   })

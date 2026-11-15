@@ -1,5 +1,5 @@
 /**
- * Término técnico con su definición desplegable (004 T012). Botón de 44 px, operable con teclado y tacto;
+ * Término técnico con su definición desplegable (004 T012); compartido por análisis y comparación. Botón de 44 px, operable con teclado y tacto;
  * Escape cierra la definición sin cerrar el panel.
  */
 import { useId, useState, type KeyboardEvent, type ReactNode } from 'react'

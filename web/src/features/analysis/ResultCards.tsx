@@ -1,63 +1,82 @@
 /**
- * Tarjetas del resultado (004 T004, T011). Solo presentan cifras del archivo, formateadas con format.ts.
+ * Piezas del resultado (004 T004, T011). Solo presentan cifras del archivo, formateadas con lib/format.ts.
  * - Veredicto: icono dibujado + palabra + color; nunca solo color.
  * - Evidencia sin calificativos de fuerza (FR-A05); `insufficient` e `invalid` sin cifras de tendencia.
- * - Siempre: método, periodo, n, unidades, α y procedencia (SC-A01).
+ * - Método, periodo, n, unidades, α y procedencia siempre están en el panel (SC-A01), cada uno en un solo
+ *   lugar: periodo en la cabecera y en su control; intervalo, p y α en el veredicto; n, unidades y método en
+ *   «Method and assumptions»; la procedencia en «Where these data come from».
  */
 import type { Catalog, SeriesFile, TrendFlag, TrendRow, TrendStatus } from '../../lib/data'
 import { localizeSource, UI_COPY, type Explanation } from '../../content'
 import { HAS_TREND, evidenceLabel, type Extras } from './analysisData'
-import Term from './Term'
+import Term from '../../lib/ui/Term'
+import { VerdictIcon, type VerdictGlyph } from '../../lib/ui/icons'
 import {
   fmtAlpha, fmtInterval, fmtNumber, fmtP, fmtPercent, fmtSigned, fmtSlope, fmtYear, fmtYears,
 } from '../../lib/format'
 
 // ---------- Veredicto ----------
 
-function VerdictIcon({ status }: { status: TrendStatus }) {
-  const common = { width: 28, height: 28, viewBox: '0 0 28 28', 'aria-hidden': true as const, className: 'verdict-icon' }
-  switch (status) {
-    case 'increasing':
-      return <svg {...common}><path d="M6 20 L20 6 M11 6 H20 V15" /></svg>
-    case 'decreasing':
-      return <svg {...common}><path d="M6 8 L20 22 M11 22 H20 V13" /></svg>
-    case 'inconclusive':
-      return <svg {...common}><path d="M5 11 Q9.5 7 14 11 T23 11 M5 18 Q9.5 14 14 18 T23 18" /></svg>
-    default:
-      return <svg {...common}><circle cx="14" cy="14" r="9" /><path d="M8 20 L20 8" /></svg>
-  }
+const GLYPH: Record<TrendStatus, VerdictGlyph> = {
+  increasing: 'up', decreasing: 'down', inconclusive: 'approx', insufficient: 'blocked', invalid: 'blocked',
 }
 
-export function Verdict({ status, explanation, row, unit, digits, extras }: {
+/**
+ * El resultado en un solo bloque: ¿sube, baja o no se puede decir? (icono + palabra) · ¿cuánto? (cambio por
+ * década) · ¿qué tan seguro? (intervalo, p y α, cada uno con su definición).
+ * Con «Not enough evidence» la estimación sigue a la vista, pero rotulada como estimación y sin peso:
+ * la cifra no debe leerse como el resultado que el veredicto niega.
+ */
+export function Verdict({ status, explanation, row, unit, digits, extras, alpha }: {
   status: TrendStatus
   explanation: Explanation
   row: TrendRow | null
   unit: string
   digits: number
   extras: Extras
+  alpha: number
 }) {
-  const showSlope = row !== null && HAS_TREND.has(status) && row.slope_decade !== null
+  const trend = row !== null && HAS_TREND.has(status)
+  const showSlope = trend && row.slope_decade !== null
+  const estimate = status === 'inconclusive'
+  const evidence = evidenceLabel(status)
+  const pctInterval = extras.pct && extras.pct.low !== null && extras.pct.high !== null
   return (
     <section className={`verdict verdict--${status}`} aria-label="Result">
       <p className="verdict-head">
-        <VerdictIcon status={status} />
+        <VerdictIcon glyph={GLYPH[status]} />
         <span className="verdict-word">{explanation.verdict}</span>
       </p>
       {showSlope && (
         // Con cambio relativo (FR-A09) la cifra principal es el %, la misma magnitud que colorea el mapa;
         // la cifra en la unidad de la variable va al lado. Sin %, la principal es la de la unidad.
-        <p className="verdict-change">
+        <p className={estimate ? 'verdict-figure verdict-figure--estimate' : 'verdict-figure'}>
+          {estimate && 'Estimate: '}
           <span className="verdict-slope">
             {extras.pct ? `${fmtPercent(extras.pct.slope)} per decade` : fmtSlope(row.slope_decade, unit, digits)}
           </span>
-          {extras.pct && <span className="verdict-pct">{` (${fmtSlope(row.slope_decade, unit, digits)})`}</span>}
+          {extras.pct && <span className="muted">{` (${fmtSlope(row.slope_decade, unit, digits)})`}</span>}
+        </p>
+      )}
+      {trend && (
+        <p className="verdict-detail">
+          <Term k="ci">
+            {pctInterval
+              ? `95% interval: ${fmtSigned(extras.pct!.low, 1)} to ${fmtSigned(extras.pct!.high, 1)} % (${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit})`
+              : `95% interval: ${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit}`}
+          </Term>
+        </p>
+      )}
+      {trend && (
+        <p className="verdict-detail">
+          {evidence && !estimate && <span>{`${evidence}:`}</span>}
+          <Term k="p">{fmtP(row.p)}</Term>
+          <Term k="alpha">{fmtAlpha(alpha)}</Term>
         </p>
       )}
     </section>
   )
 }
-
-// ---------- Cifras y metadatos obligatorios ----------
 
 const METHOD_LABEL: Record<string, string> = {
   'theil-sen': 'Theil-Sen slope',
@@ -67,76 +86,17 @@ const METHOD_LABEL: Record<string, string> = {
 }
 const methodLabel = (id: string) => METHOD_LABEL[id] ?? id
 
-export function ResultFacts({ status, row, from, to, unit, digits, extras, catalog, series }: {
-  status: TrendStatus
-  row: TrendRow | null
-  from: number
-  to: number
-  unit: string
-  digits: number
-  extras: Extras
-  catalog: Catalog
-  series: SeriesFile
-}) {
-  const evidence = evidenceLabel(status)
-  const trend = row !== null && HAS_TREND.has(status)
-  return (
-    <dl className="result-facts">
-      {trend && (
-        <>
-          <dt>95% interval</dt>
-          <dd>
-            {extras.pct && extras.pct.low !== null && extras.pct.high !== null ? (
-              <>
-                <Term k="ci">{`${fmtSigned(extras.pct.low, 1)} to ${fmtSigned(extras.pct.high, 1)} % per decade`}</Term>
-                <span className="result-sub">{`(${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} per decade)`}</span>
-              </>
-            ) : (
-              <Term k="ci">{`${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} per decade`}</Term>
-            )}
-          </dd>
-        </>
-      )}
-      {evidence && (
-        <>
-          <dt>Evidence</dt>
-          <dd>
-            {evidence}
-            <span className="result-sub result-sub--terms">
-              <Term k="p">{fmtP(row?.p)}</Term>
-              <Term k="alpha">{fmtAlpha(catalog.alpha)}</Term>
-            </span>
-          </dd>
-        </>
-      )}
-      <dt>Period</dt>
-      <dd>{fmtYears(from, to)}</dd>
-      <dt>Complete years (n)</dt>
-      <dd>{row ? row.n : '—'}</dd>
-      <dt>Units</dt>
-      <dd>{`${unit} (change in ${unit} per decade)`}</dd>
-      <dt>Method</dt>
-      <dd>
-        {`${methodLabel(catalog.method.slope)} and ${methodLabel(catalog.method.test)}; `}
-        {fmtAlpha(catalog.alpha)}
-      </dd>
-      <dt>Source</dt>
-      <dd>{`${localizeSource(series.provenance.source)} · ${series.provenance.product}`}</dd>
-    </dl>
-  )
-}
-
 // ---------- En palabras ----------
 
 export function InWords({ sentence, caveats, notCause }: { sentence: string | null; caveats: string[]; notCause: string | null }) {
   if (!sentence && !notCause && caveats.length === 0) return null
   return (
-    <section className="in-words" aria-label="In words">
-      <h3>In words</h3>
-      {sentence && <p>{sentence}</p>}
-      {notCause && <p className="in-words-note">{notCause}</p>}
+    <section className="words" aria-label="In words">
+      <h3 className="section-title">In words</h3>
+      {sentence && <p className="words-sentence">{sentence}</p>}
+      {notCause && <p className="words-note">{notCause}</p>}
       {caveats.length > 0 && (
-        <ul className="in-words-caveats">
+        <ul className="words-notes">
           {caveats.map(c => <li key={c}>{c}</li>)}
         </ul>
       )}
@@ -158,13 +118,15 @@ function flagText(flag: TrendFlag, stepYear: number | null): string {
   }
 }
 
-export function TechnicalDetails({ row, status, catalog, series, digits, unit }: {
+export function TechnicalDetails({ row, status, catalog, series, digits, unit, from, to }: {
   row: TrendRow | null
   status: TrendStatus
   catalog: Catalog
   series: SeriesFile
   digits: number
   unit: string
+  from: number
+  to: number
 }) {
   const trend = row !== null && HAS_TREND.has(status)
   const flags = row?.flags ?? []
@@ -173,16 +135,18 @@ export function TechnicalDetails({ row, status, catalog, series, digits, unit }:
   if (stepYear !== null && !flags.includes('step')) notes.push(flagText('step', stepYear))
   if (series.diagnostics.autocorr_significant && !flags.includes('autocorr')) notes.push(flagText('autocorr', null))
   return (
-    <details className="analysis-details">
-      <summary>Technical details</summary>
-      <dl className="result-facts">
+    <details className="disclosure">
+      <summary>Method and assumptions</summary>
+      <dl className="facts">
+        <dt>Complete years (n)</dt><dd>{row ? `${row.n}, ${fmtYears(from, to)}` : '—'}</dd>
+        <dt>Units</dt><dd>{`${unit}; change in ${unit} per decade`}</dd>
         <dt>Slope</dt><dd>{methodLabel(catalog.method.slope)}</dd>
         <dt>Test</dt><dd>{methodLabel(catalog.method.test)}</dd>
         <dt>Interval</dt><dd>{methodLabel(catalog.method.interval)}</dd>
         <dt>Cross-check</dt><dd>{methodLabel(catalog.method.contrast)}</dd>
+        <dt>Threshold</dt><dd>{`${fmtAlpha(catalog.alpha)}, set before looking at the data`}</dd>
         {trend && (
           <>
-            <dt>Corrected p-value</dt><dd>{fmtP(row.p)}</dd>
             <dt>Uncorrected p-value</dt><dd>{fmtP(row.p_uncorrected)}</dd>
             <dt>Autocorrelation (lag 1)</dt><dd>{fmtNumber(row.r1, 2)}</dd>
             <dt>Cross-check (least squares)</dt>
@@ -190,17 +154,16 @@ export function TechnicalDetails({ row, status, catalog, series, digits, unit }:
           </>
         )}
       </dl>
-      <h4 className="analysis-details-sub">Assumptions</h4>
-      <ul className="analysis-notes">
+      <h4>Assumptions</h4>
+      <ul>
         <li>One value per complete year: incomplete years are excluded and never filled in. With yearly values, the seasonal cycle has no influence.</li>
         <li>The method looks for a monotonic change (always in the same direction). The slope sums it up, but does not explain its cause or predict the future.</li>
         <li>Consecutive years may resemble each other (lag-1 autocorrelation): the test and the interval correct for it.</li>
-        <li>{`${fmtAlpha(catalog.alpha)}, set before looking at the data.`}</li>
       </ul>
       {notes.length > 0 && (
         <>
-          <h4 className="analysis-details-sub">Diagnostics for this series</h4>
-          <ul className="analysis-notes">
+          <h4>Diagnostics for this series</h4>
+          <ul>
             {notes.map(n => <li key={n}>{n}</li>)}
           </ul>
         </>
@@ -214,14 +177,14 @@ export function TechnicalDetails({ row, status, catalog, series, digits, unit }:
 export function ProvenanceDetails({ series }: { series: SeriesFile }) {
   const p = series.provenance
   return (
-    <details className="analysis-details">
+    <details className="disclosure">
       <summary>Where these data come from</summary>
-      <dl className="result-facts">
+      <dl className="facts">
         <dt>Source</dt><dd>{localizeSource(p.source)}</dd>
         <dt>Product</dt>
         <dd>
           {p.short_name ? `${p.product} · ${p.short_name}${p.version ? ` version ${p.version}` : ''}` : p.product}
-          {p.api_version && p.api_version !== 'n/a' && <span className="result-sub">{`API version: ${p.api_version}`}</span>}
+          {p.api_version && p.api_version !== 'n/a' && <span className="facts-sub">{`API version: ${p.api_version}`}</span>}
         </dd>
         <dt>Citation (DOI)</dt>
         <dd>
@@ -239,9 +202,9 @@ export function ProvenanceDetails({ series }: { series: SeriesFile }) {
       </dl>
       {p.transformations.length > 0 && (
         <>
-          <h4 className="analysis-details-sub">Processing steps</h4>
-          <p className="analysis-muted">{UI_COPY.recordedInSpanish}</p>
-          <ol className="analysis-notes" lang="es">
+          <h4>Processing steps</h4>
+          <p className="muted">{UI_COPY.recordedInSpanish}</p>
+          <ol lang="es">
             {p.transformations.map(t => <li key={t}>{t}</li>)}
           </ol>
         </>

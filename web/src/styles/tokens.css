@@ -56,6 +56,9 @@
   --text-base: 1rem;     /* 400 · texto de lectura */
   --text-lg: 1.125rem;   /* 500 · frase en palabras, nombre de región */
   --text-xl: 1.5rem;     /* 700 · cifra principal (+X,XX °C/década) */
+  --leading-tight: 1.25; /* títulos y cifras */
+  --leading: 1.5;        /* texto de lectura */
+  --measure: 65ch;       /* ancho máximo de un párrafo de lectura */
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-bold: 700;
@@ -68,11 +71,17 @@
   --space-4: 1rem;
   --space-5: 1.5rem;
   --space-6: 2rem;
+  --space-7: 3rem;
+  --radius-sm: 6px;            /* marcas, muestras de color */
   --radius: 10px;
   --radius-lg: 14px;
   --tap: 44px;                 /* objetivo táctil mínimo */
 
+  /* ---------- Elevación: solo lo que flota sobre otra cosa (listas, definiciones, diálogos) ---------- */
+  --shadow-pop: 0 12px 32px rgba(10, 8, 16, 0.55);
+
   /* ---------- Movimiento ---------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast: 150ms;
   --dur: 250ms;
 

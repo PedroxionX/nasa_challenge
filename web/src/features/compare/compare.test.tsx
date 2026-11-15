@@ -49,13 +49,20 @@ const difference = () => screen.getByRole('region', { name: COMPARE_COPY.differe
 beforeEach(() => { overrides = {}; serve() })
 afterEach(() => { cleanup(); vi.unstubAllGlobals() })
 
+/** Elige un estado en el selector compartido: escribe su nombre y confirma con Intro. */
+async function pickState(input: HTMLElement, name: string) {
+  fireEvent.change(input, { target: { value: name } })
+  await waitFor(() => expect(screen.getByRole('option', { name })).toBeTruthy())
+  await act(async () => { fireEvent.keyDown(input, { key: 'Enter' }) })
+}
+
 /** Lo que toda comparación con prueba publicada debe enseñar (SC-K02) y lo que nunca puede decir (FR-K08). */
 function expectMandatory() {
   const text = panel().textContent ?? ''
   expect(text).toMatch(/α = 0\.05/)
   expect(text).toMatch(/complete years in common/)
   expect(text).toMatch(/Theil-Sen/)                          // método
-  expect(within(difference()).getByText('How it is measured')).toBeTruthy()   // base de la diferencia
+  expect(text).toMatch(/The difference is (in percentage points|measured by subtracting)/) // base de la diferencia, una sola vez
   expect(screen.getByText('Where the two series come from')).toBeTruthy()
   expect(text).toMatch(/NASA|Fixture|sintétic|synthetic/i)
   expect(text).not.toMatch(/the trends are the same|trends match|there is no difference|better|worse|years to be/i)
@@ -70,8 +77,8 @@ describe('ComparePanel · prueba de la diferencia (T013)', () => {
     expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('Baja California vs. Texas')
     expect(difference().textContent).toContain('Baja California − Texas: +0.07 °C per decade')
     expect(difference().textContent).toMatch(/−0\.03 to \+0\.17/)
-    expect(difference().textContent).toMatch(/p = 0\.130; α = 0\.05/)
-    expect(difference().textContent).toMatch(/1980–2025 · 46 complete years in common/)
+    expect(difference().textContent).toMatch(/p = 0\.130.*α = 0\.05/)
+    expect(panel().textContent).toMatch(/1980–2025 · 46 complete years in common/)
     expect(panel().textContent).toContain('This does not prove that they change alike')
     expectMandatory()
   })
@@ -80,7 +87,7 @@ describe('ComparePanel · prueba de la diferencia (T013)', () => {
     await renderCompare('?region=MX-BCN&vs=MX-SON&var=precipitation')
     expect(await screen.findByText('The trends differ')).toBeTruthy()
     expect(difference().textContent).toContain('Baja California − Sonora: −22.6 percentage points per decade')
-    expect(within(difference()).getByText(COMPARE_COPY.relativeBasis)).toBeTruthy()
+    expect(within(panel()).getByText(COMPARE_COPY.relativeBasis)).toBeTruthy()
     expect(panel().textContent).toContain(COMPARE_COPY.notCause)
     expectMandatory()
   })
@@ -144,7 +151,7 @@ describe('ComparePanel · periodo (T015)', () => {
     expect(screen.getByText('to 2025')).toBeTruthy()
     await act(async () => { fireEvent.change(select, { target: { value: '2010' } }) })
     expect(params().get('from')).toBe('2010')
-    expect(difference().textContent).toMatch(/2010–2025 · 16 complete years in common/)
+    expect(panel().textContent).toMatch(/2010–2025 · 16 complete years in common/)
   })
 })
 
@@ -207,12 +214,15 @@ describe('Entrada y salida de la comparación (T012, FR-K01)', () => {
     await freshState('?region=MX-BCN&var=air_temperature')
     const { default: CompareEntry } = await import('./CompareEntry')
     await act(async () => { render(<CompareEntry />) })
-    const select = screen.getByLabelText(COMPARE_COPY.entryLabel) as HTMLSelectElement
-    await waitFor(() => expect(select.disabled).toBe(false))
-    expect(within(select).getAllByRole('group').map(g => g.getAttribute('label'))).toEqual(['Mexico', 'United States'])
-    expect([...select.options].some(o => o.value === 'MX-BCN')).toBe(false) // la principal no se ofrece
-    expect(select.options).toHaveLength(84) // 83 estados + la opción vacía
-    await act(async () => { fireEvent.change(select, { target: { value: 'US-TX' } }) })
+    // El mismo selector de estado que la cabecera (lib/ui/RegionCombobox), sin la región principal.
+    const input = screen.getByRole('combobox', { name: COMPARE_COPY.entryLabel })
+    fireEvent.click(input)
+    const list = screen.getByRole('listbox')
+    await waitFor(() => expect(within(list).getAllByRole('option')).toHaveLength(83))
+    expect(within(list).getByRole('group', { name: 'Mexico' })).toBeTruthy()
+    expect(within(list).getByRole('group', { name: 'United States' })).toBeTruthy()
+    expect(within(list).queryByRole('option', { name: 'Baja California' })).toBeNull() // la principal no se ofrece
+    await pickState(input, 'Texas')
     expect(params().get('vs')).toBe('US-TX')
   })
 
@@ -231,7 +241,7 @@ describe('Entrada y salida de la comparación (T012, FR-K01)', () => {
   it('la segunda región se cambia desde la propia comparación', async () => {
     await renderCompare('?region=MX-BCN&vs=US-TX&var=air_temperature')
     await screen.findByText('Not enough evidence that they differ')
-    await act(async () => { fireEvent.change(screen.getByLabelText(/State compared/), { target: { value: 'MX-SON' } }) })
+    await pickState(screen.getByRole('combobox', { name: 'State compared' }), 'Sonora')
     expect(params().get('vs')).toBe('MX-SON')
     expect((await screen.findByRole('heading', { level: 2 })).textContent).toBe('Baja California vs. Sonora')
   })
@@ -243,10 +253,9 @@ describe('Entrada y salida de la comparación (T012, FR-K01)', () => {
     const { default: Shell } = await import('../../app/Shell')
     await act(async () => { render(<Shell />) })
     const aside = screen.getByRole('complementary', { name: 'Analysis' })
-    const select = await within(aside).findByLabelText(COMPARE_COPY.entryLabel) as HTMLSelectElement
+    const input = await within(aside).findByRole('combobox', { name: COMPARE_COPY.entryLabel })
     await within(aside).findByText('Rising')
-    await waitFor(() => expect(select.disabled).toBe(false))
-    await act(async () => { fireEvent.change(select, { target: { value: 'MX-SON' } }) })
+    await pickState(input, 'Sonora')
     expect(await within(aside).findByRole('heading', { level: 2, name: 'Baja California vs. Sonora' })).toBeTruthy()
     expect(within(aside).queryByLabelText(COMPARE_COPY.entryLabel)).toBeNull()
   })

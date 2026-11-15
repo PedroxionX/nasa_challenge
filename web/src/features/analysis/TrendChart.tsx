@@ -12,7 +12,7 @@ import { area, line } from 'd3-shape'
 import type { SeriesFile, TrendRow } from '../../lib/data'
 import { HAS_TREND, yearPoints, type YearPoint } from './analysisData'
 import { fmtTick, fmtValue, fmtYear, fmtYears } from '../../lib/format'
-import Term from './Term'
+import Term from '../../lib/ui/Term'
 
 interface Props {
   series: SeriesFile
@@ -135,17 +135,12 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
     })
 
   return (
-    <figure className={noLine?.muted ? 'trend-chart is-muted' : 'trend-chart'} ref={ref}>
+    <figure className={noLine?.muted ? 'chart is-muted' : 'chart'} ref={ref}>
       {noLine?.muted && (
-        <p className="trend-chart-notice">
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" /><path d="M6.5 17.5 L17.5 6.5" />
-          </svg>
-          <span><strong>{noLine.title}.</strong> {noLine.reason}</span>
-        </p>
+        <p className="notice chart-notice"><strong>{noLine.title}.</strong> {noLine.reason}</p>
       )}
       <svg
-        className="trend-chart-svg"
+        className="chart-svg"
         width={width}
         height={HEIGHT}
         viewBox={`0 0 ${width} ${HEIGHT}`}
@@ -163,37 +158,37 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
             <rect x={plot.left} y={plot.top} width={plot.right - plot.left} height={plot.bottom - plot.top} />
           </clipPath>
           <pattern id={hatchId} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" className="trend-chart-hatch" />
+            <line x1="0" y1="0" x2="0" y2="6" className="chart-hatch" />
           </pattern>
         </defs>
 
         {/* Rejilla y eje Y */}
         {yTicks.map(t => (
           <g key={`y${t}`}>
-            <line className="trend-chart-grid" x1={plot.left} x2={plot.right} y1={y(t)} y2={y(t)} />
-            <text className="trend-chart-tick" x={plot.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, yStep)}</text>
+            <line className="chart-grid" x1={plot.left} x2={plot.right} y1={y(t)} y2={y(t)} />
+            <text className="chart-tick" x={plot.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, yStep)}</text>
           </g>
         ))}
-        <text className="trend-chart-unit" x={plot.left - 6} y={plot.top - 10} textAnchor="end">{unit}</text>
+        <text className="chart-unit" x={plot.left - 6} y={plot.top - 10} textAnchor="end">{unit}</text>
 
         {/* Eje X */}
         {xTicks.map(t => (
-          <text key={`x${t}`} className="trend-chart-tick" x={x(t)} y={HEIGHT - 8} textAnchor="middle">{fmtYear(t)}</text>
+          <text key={`x${t}`} className="chart-tick" x={x(t)} y={HEIGHT - 8} textAnchor="middle">{fmtYear(t)}</text>
         ))}
 
         {/* Fuera del periodo elegido: atenuado */}
         {outsideBefore && (
-          <rect className="trend-chart-outside" x={plot.left} y={plot.top} width={Math.max(0, x(from - 0.5) - plot.left)} height={plot.bottom - plot.top} />
+          <rect className="chart-outside" x={plot.left} y={plot.top} width={Math.max(0, x(from - 0.5) - plot.left)} height={plot.bottom - plot.top} />
         )}
         {outsideAfter && (
-          <rect className="trend-chart-outside" x={x(to + 0.5)} y={plot.top} width={Math.max(0, x(dataLast + 0.5) - x(to + 0.5))} height={plot.bottom - plot.top} />
+          <rect className="chart-outside" x={x(to + 0.5)} y={plot.top} width={Math.max(0, x(dataLast + 0.5) - x(to + 0.5))} height={plot.bottom - plot.top} />
         )}
 
         {/* Años excluidos: huecos con trama */}
         {excluded.map(year => (
           <rect
             key={`ex${year}`}
-            className="trend-chart-excluded"
+            className="chart-excluded"
             x={x(year - 0.5)}
             y={plot.top}
             width={Math.max(1, x(year + 0.5) - x(year - 0.5))}
@@ -204,20 +199,20 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
 
         {/* Año parcial: solo se marca */}
         {partial && (
-          <g className="trend-chart-partial">
+          <g className="chart-partial">
             <line x1={x(partial.year)} x2={x(partial.year)} y1={plot.top} y2={plot.bottom} />
             <text x={x(partial.year)} y={plot.top - 8} textAnchor="end">{`${fmtYear(partial.year)} partial`}</text>
           </g>
         )}
 
         <g clipPath={`url(#${clipId})`}>
-          {bandPath && <path className="trend-chart-band" d={bandPath} />}
-          <path className="trend-chart-line" d={path} />
-          {senPath && <path className="trend-chart-sen" d={senPath} />}
+          {bandPath && <path className="chart-band" d={bandPath} />}
+          <path className="chart-line" d={path} />
+          {senPath && <path className="chart-sen" d={senPath} />}
           {points.map(p => (
             <circle
               key={p.year}
-              className={inPeriod(p.year) ? 'trend-chart-point' : 'trend-chart-point is-outside'}
+              className={inPeriod(p.year) ? 'chart-point' : 'chart-point is-outside'}
               cx={x(p.year)}
               cy={y(p.value)}
               r={3}
@@ -226,49 +221,49 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         </g>
       </svg>
 
-      <figcaption className="trend-chart-legend">
-        <span className="legend-item"><i className="legend-swatch legend-point" aria-hidden="true" />Yearly value</span>
+      <figcaption className="chart-legend">
+        <span><i className="swatch swatch--point" aria-hidden="true" />Yearly value</span>
         {drawLine
           ? (
             <>
-              <span className="legend-item"><i className="legend-swatch legend-sen" aria-hidden="true" /><Term k="sen" /></span>
-              {bandPath && <span className="legend-item"><i className="legend-swatch legend-band" aria-hidden="true" /><Term k="ci" /></span>}
+              <span><i className="swatch swatch--sen" aria-hidden="true" /><Term k="sen" /></span>
+              {bandPath && <span><i className="swatch swatch--band" aria-hidden="true" /><Term k="ci" /></span>}
             </>
           )
           : noLine && !noLine.muted && (
-            <span className="legend-item legend-note">{`${noLine.title}: ${noLine.reason.toLowerCase()}`}</span>
+            <span>{`${noLine.title}: ${noLine.reason.toLowerCase()}`}</span>
           )}
-        {excludedText && <span className="legend-item"><i className="legend-swatch legend-excluded" aria-hidden="true" />{excludedText}</span>}
+        {excludedText && <span><i className="swatch swatch--excluded" aria-hidden="true" />{excludedText}</span>}
         {partial && (
-          <span className="legend-item"><i className="legend-swatch legend-partial" aria-hidden="true" />
+          <span><i className="swatch swatch--partial" aria-hidden="true" />
             {`${fmtYear(partial.year)}: ${partial.months_valid} of 12 months, not used`}
           </span>
         )}
         {(outsideBefore || outsideAfter) && (
-          <span className="legend-item"><i className="legend-swatch legend-outside" aria-hidden="true" />Outside the period chosen</span>
+          <span><i className="swatch swatch--outside" aria-hidden="true" />Outside the period chosen</span>
         )}
       </figcaption>
 
       <button
         type="button"
-        className="analysis-link-button"
+        className="link-button"
         aria-expanded={showTable}
         aria-controls={tableId}
         onClick={() => setShowTable(s => !s)}
       >
         {showTable ? 'Hide table' : 'View as table'}
       </button>
-      <div id={tableId} className="trend-chart-table-wrap" hidden={!showTable}>
-        <table className="analysis-table">
-          <caption className="analysis-vh">{`Yearly values of ${variableLabel.toLowerCase()} in ${regionName} (${unit})`}</caption>
+      <div id={tableId} className="table-wrap table-wrap--tall" hidden={!showTable}>
+        <table className="data-table">
+          <caption className="vh">{`Yearly values of ${variableLabel.toLowerCase()} in ${regionName} (${unit})`}</caption>
           <thead>
-            <tr><th scope="col">Year</th><th scope="col">{`Value (${unit})`}</th><th scope="col">Note</th></tr>
+            <tr><th scope="col">Year</th><th scope="col" className="num">{`Value (${unit})`}</th><th scope="col">Note</th></tr>
           </thead>
           <tbody>
             {tableRows.map(r => (
-              <tr key={r.year} className={r.note ? 'is-noted' : undefined}>
+              <tr key={r.year} className={r.note ? 'is-dim' : undefined}>
                 <th scope="row">{fmtYear(r.year)}</th>
-                <td>{r.value === undefined ? '—' : fmtValue(r.value)}</td>
+                <td className="num">{r.value === undefined ? '—' : fmtValue(r.value)}</td>
                 <td>{r.note}</td>
               </tr>
             ))}

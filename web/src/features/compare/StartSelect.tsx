@@ -11,13 +11,18 @@ export default function StartSelect({ starts, end, from, to, onPick }: {
   const id = useId()
   const current = to === end && starts.includes(from) ? String(from) : ''
   return (
-    <div className="compare-period">
-      <label htmlFor={id}>{COMPARE_COPY.startLabel}</label>
-      <select id={id} className="compare-select" value={current} onChange={e => e.target.value && onPick(Number(e.target.value), end)}>
-        {current === '' && <option value="">—</option>}
-        {starts.map(s => <option key={s} value={s}>{s}</option>)}
-      </select>
-      <span>{COMPARE_COPY.until(end)}</span>
-    </div>
+    // Mismo aspecto que el periodo del análisis; aquí el año final es fijo y se dice en texto.
+    <fieldset className="period">
+      <legend>Period</legend>
+      <div className="period-row">
+        <label htmlFor={id}>{COMPARE_COPY.startLabel}</label>
+        <select id={id} value={current} onChange={e => e.target.value && onPick(Number(e.target.value), end)}>
+          {current === '' && <option value="">—</option>}
+          {starts.map(s => <option key={s} value={s}>{s}</option>)}
+        </select>
+        <span className="period-fixed">{COMPARE_COPY.until(end)}</span>
+      </div>
+      <p className="period-hint">{COMPARE_COPY.periodHint(end)}</p>
+    </fieldset>
   )
 }
