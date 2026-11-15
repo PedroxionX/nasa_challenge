@@ -70,16 +70,29 @@ def _p(x: Any) -> float | None:
 # --------------------------------------------------------------------------------------
 # Serie regional
 # --------------------------------------------------------------------------------------
-def regional_monthly(grid, cw: CellWeights) -> np.ndarray:
-    """Media ponderada por mes; NaN si falta cualquiera de las celdas con peso."""
+def regional_monthly(grid, cw: CellWeights, min_valid_fraction: float | None = None) -> np.ndarray:
+    """Media ponderada por mes.
+
+    Regla por omisión (`min_valid_fraction=None`): NaN si falta cualquiera de las celdas con peso.
+    Variables solo de tierra (FR-D10): media de las celdas con dato, con los pesos renormalizados, y NaN si esas
+    celdas suman menos de `min_valid_fraction` del peso total de la región.
+    """
     lookup = {(round(float(a), 4), round(float(o), 4)): i for i, (a, o) in enumerate(zip(grid.lats, grid.lons))}
     try:
         idx = np.array([lookup[(round(float(a), 4), round(float(o), 4))] for a, o in zip(cw.lats, cw.lons)])
     except KeyError as exc:
         raise KeyError(f"La lectura no incluye la celda {exc.args[0]}: revisa el recuadro de lectura.") from exc
     vals = grid.values[idx]
-    out = (cw.weights[:, None] * vals).sum(axis=0) / cw.weights.sum()
-    out[np.isnan(vals).any(axis=0)] = np.nan
+    w = cw.weights[:, None]
+    if min_valid_fraction is None:
+        out = (w * vals).sum(axis=0) / cw.weights.sum()
+        out[np.isnan(vals).any(axis=0)] = np.nan
+        return out
+    valid = ~np.isnan(vals)
+    wv = (w * valid).sum(axis=0)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = (w * np.where(valid, vals, 0.0)).sum(axis=0) / wv
+    out[wv < min_valid_fraction * cw.weights.sum()] = np.nan
     return out
 
 
@@ -195,7 +208,7 @@ class SeriesResult:
 def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, first_year: int, last_year: int,
                  manifest_ref: str) -> SeriesResult:
     spec, info = var.spec, data.info
-    monthly = regional_monthly(data, cw)
+    monthly = regional_monthly(data, cw, var.min_valid_fraction)
     bundle = regional_bundle(region, spec, data.months, monthly, info.source, info.product, info.grid_text)
     clean, rep = clean_monthly(bundle, first_year, last_year)
     annual = to_annual(clean, spec)
@@ -228,7 +241,9 @@ def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, f
         "relleno declarado por la fuente → faltante",
         var.conversion,
         f"promedio de área de {cw.n_cells} celdas de {info.grid_text} (peso = cos(latitud) × fracción cubierta); "
-        "un mes regional solo es válido si todas sus celdas lo son",
+        + ("un mes regional solo es válido si todas sus celdas lo son" if var.min_valid_fraction is None else
+           f"variable solo de tierra: media de las celdas con dato (pesos renormalizados); el mes es faltante si "
+           f"cubren menos del {var.min_valid_fraction:.0%} del peso de la región"),
     ]
     if rep.n_out_of_range:
         transformations.append(f"{rep.n_out_of_range} meses fuera de rango físico → faltante")

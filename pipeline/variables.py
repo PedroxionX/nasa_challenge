@@ -38,6 +38,9 @@ class VarDef:
     first_request_year: int  # primer año que vale la pena pedir (el primero completo del producto)
     parameter: str  # nombre de la variable en el archivo o parámetro de la API
     conversion: str  # transformación de unidades que aplica el adaptador, para provenance
+    # Variables solo de tierra (GLDAS, NDVI): media de las celdas con dato si cubren al menos esta fracción del
+    # peso de la región; None = regla de siempre (el mes es faltante si falta cualquier celda).
+    min_valid_fraction: float | None = None
 
     @property
     def catalog_fields(self) -> dict:
