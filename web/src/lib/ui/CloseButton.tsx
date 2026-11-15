@@ -6,7 +6,7 @@ export default function CloseButton({ label, onClick, className, ref }: {
   label: string; onClick: (e: MouseEvent<HTMLButtonElement>) => void; className?: string; ref?: Ref<HTMLButtonElement>
 }) {
   return (
-    <button type="button" ref={ref} className={className ? `icon-button ${className}` : 'icon-button'} onClick={onClick} aria-label={label}>
+    <button type="button" ref={ref} className={className ? `icon-button ${className}` : 'icon-button'} onClick={onClick} aria-label={label} title={label}>
       <CloseIcon />
     </button>
   )

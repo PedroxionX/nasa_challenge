@@ -21,17 +21,21 @@ export default function PeriodControl({ catalog, showReset = true }: { catalog: 
     <fieldset className="period">
       <legend>Period</legend>
       <div className="period-row">
-        <label htmlFor={`${uid}-from`}>From</label>
-        <select id={`${uid}-from`} value={from} onChange={e => setPeriod(Number(e.target.value), to)}>
-          {starts.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
-        </select>
-        <label htmlFor={`${uid}-to`}>To</label>
-        <select id={`${uid}-to`} value={to} onChange={e => setPeriod(from, Number(e.target.value))}>
-          {ends.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
-        </select>
-        {/* Con el periodo completo ya elegido no hay nada que restablecer: el botón no se muestra. */}
-        {showReset && !full && <button type="button" className="link-button" onClick={resetPeriod}>{UI_COPY.useFullPeriod}</button>}
+        <div className="period-field">
+          <label htmlFor={`${uid}-from`}>From</label>
+          <select id={`${uid}-from`} value={from} onChange={e => setPeriod(Number(e.target.value), to)}>
+            {starts.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
+          </select>
+        </div>
+        <div className="period-field">
+          <label htmlFor={`${uid}-to`}>To</label>
+          <select id={`${uid}-to`} value={to} onChange={e => setPeriod(from, Number(e.target.value))}>
+            {ends.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
+          </select>
+        </div>
       </div>
+      {/* Acción en su propia fila: no cambia de posición al variar el ancho del panel. */}
+      {showReset && !full && <button type="button" className="link-button" onClick={resetPeriod}>{UI_COPY.useFullPeriod}</button>}
       <p className="period-hint">{`A period needs at least ${min} years.`}</p>
     </fieldset>
   )

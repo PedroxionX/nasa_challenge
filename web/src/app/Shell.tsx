@@ -16,6 +16,7 @@ import { ChevronIcon } from '../lib/ui/icons'
 import { loadCatalog, variableIds, variablePeriod } from '../lib/data'
 import ErrorBoundary from './ErrorBoundary'
 import { configureState, dismissStateNotice, markWebglUnavailable, useAppState, useStateNotice } from './state'
+import { useMapPlaybackPlaying } from './playback'
 import './shell.css'
 
 /** Igual que el punto de corte de shell.css. */
@@ -35,12 +36,18 @@ function setInsets(right: number, bottom: number) {
 }
 
 export default function Shell() {
-  const { regionId, compareId, variableId, webgl } = useAppState()
+  const { regionId, compareId, variableId, from, to, webgl } = useAppState()
+  const playing = useMapPlaybackPlaying({ regionId, compareId, variableId, from, to })
   const notice = useStateNotice()
   const [catalogFailed, setCatalogFailed] = useState(false)
   const [catalogAttempt, setCatalogAttempt] = useState(0)
   // Una región nueva empieza con su resumen (asomada); ampliar es una decisión explícita.
   const [sheetFor, setSheetFor] = useState<{ region: string | null; sheet: Sheet }>({ region: null, sheet: 'peek' })
+  const [wasPlaying, setWasPlaying] = useState(playing)
+  if (playing !== wasPlaying) {
+    setWasPlaying(playing)
+    if (playing && webgl && !window.matchMedia?.(DESKTOP_QUERY).matches) setSheetFor({ region: regionId, sheet: 'peek' })
+  }
   const sheet: Sheet = sheetFor.region === regionId ? sheetFor.sheet : 'peek'
   const setSheet = (next: Sheet) => setSheetFor({ region: regionId, sheet: next })
   const panelRef = useRef<HTMLElement>(null)
@@ -48,6 +55,14 @@ export default function Shell() {
   const methodsRef = useRef<HTMLDialogElement>(null)
   const welcomeRef = useRef<HTMLElement>(null)
   const panelBodyRef = useRef<HTMLDivElement>(null)
+
+  // En móvil, Play despeja el globo y mantiene un control de pausa visible en la leyenda.
+  useEffect(() => {
+    if (!playing || !webgl || window.matchMedia?.(DESKTOP_QUERY).matches) return
+    if (panelRef.current?.contains(document.activeElement)) {
+      document.querySelector<HTMLButtonElement>('[aria-label="Pause map playback"]')?.focus({ preventScroll: true })
+    }
+  }, [playing, regionId, webgl])
 
   // El catálogo fija años y regiones válidos.
   useEffect(() => {
@@ -183,7 +198,19 @@ export default function Shell() {
               </button>
             )}
           </div>
-          <div className="shell-panel-body" id="analysis-panel-body" ref={panelBodyRef}>
+          <div
+            className="shell-panel-body" id="analysis-panel-body" ref={panelBodyRef}
+            onFocusCapture={e => {
+              // El resumen recorta el contenido: al tabular hacia él, ampliarlo antes de leerlo.
+              if (sheet !== 'peek' || window.matchMedia?.(DESKTOP_QUERY).matches) return
+              const target = e.target
+              // El navegador puede desplazar incluso overflow:hidden antes de emitir focus.
+              // La cabecera sigue operable en el resumen; el resto necesita la hoja abierta.
+              if (target.closest('.panel-header')) return
+              setSheet('full')
+              requestAnimationFrame(() => target.scrollIntoView?.({ block: 'nearest' }))
+            }}
+          >
             {/* 007: con una segunda región (vs=) el panel muestra la comparación; sin ella, el análisis y su entrada. */}
             {compareId ? (
               <ErrorBoundary zone="comparison" resetKeys={[regionId, compareId]}><ComparePanel /></ErrorBoundary>
