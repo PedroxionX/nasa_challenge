@@ -1,8 +1,8 @@
 /// <reference types="node" />
 // Mide el contraste WCAG 2.x de los pares de texto de tokens.css (paleta Ocaso de 006; mínimo 4,5:1)
-// y comprueba que los alias anteriores (--bg, --trend-1…) resuelven a los colores de Ocaso.
+// y comprueba que ningún estilo usa una variable que tokens.css no define (los alias viejos se retiraron en 008).
 // (Vitest no procesa CSS: con «?raw» llegaría vacío, así que se lee del disco.)
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -57,15 +57,27 @@ describe('tokens.css (Ocaso)', () => {
   })
 
   it('la escala de tendencia y el mapa tienen los valores de docs/paleta.md', () => {
-    expect([1, 2, 3, 4, 5].map(i => token(`trend-${i}`))).toEqual(['#3b2a7a', '#8e86d6', '#e3ded6', '#f2b84b', '#b45309'])
-    expect(token('no-data')).toBe('#8a93a0')
-    expect(token('selected')).toBe('#ffffff')
+    expect(['down-strong', 'down-weak', 'neutral', 'up-weak', 'up-strong'].map(k => token(`color-trend-${k}`))).toEqual(['#3b2a7a', '#8e86d6', '#e3ded6', '#f2b84b', '#b45309'])
+    expect(token('color-no-data')).toBe('#8a93a0')
+    expect(token('color-selection')).toBe('#ffffff')
   })
 
-  it.each([
-    ['bg', 'color-bg'], ['surface', 'color-panel'], ['surface-2', 'color-panel-raised'], ['border', 'color-line'],
-    ['text', 'color-text'], ['muted', 'color-text-muted'], ['accent', 'color-accent'], ['on-accent', 'color-on-accent'],
-  ])('el alias --%s resuelve a --%s', (alias, canonical) => {
-    expect(token(alias)).toBe(token(canonical))
+  it('ningún CSS usa una variable sin definir en tokens.css (alias retirados, erratas)', () => {
+    const defined = new Set([...css.matchAll(/(--[a-z0-9-]+)\s*:/g)].map(m => m[1]))
+    // Variables locales de un componente: se definen en su propio archivo.
+    const files = Object.fromEntries(
+      (readdirSync(join(process.cwd(), 'src'), { recursive: true }) as string[])
+        .filter(p => p.endsWith('.css'))
+        .map(p => [p, readFileSync(join(process.cwd(), 'src', p), 'utf8')]),
+    )
+    expect(Object.keys(files).length).toBeGreaterThan(3)
+    const missing: string[] = []
+    for (const [file, text] of Object.entries(files)) {
+      const local = new Set([...text.matchAll(/(--[a-z0-9-]+)\s*:/g)].map(m => m[1]))
+      for (const m of text.matchAll(/var\((--[a-z0-9-]+)/g)) {
+        if (!defined.has(m[1]) && !local.has(m[1])) missing.push(`${file}: ${m[1]}`)
+      }
+    }
+    expect(missing).toEqual([])
   })
 })

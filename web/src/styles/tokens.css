@@ -5,9 +5,9 @@
  * 006 midió los colores con simulación de deuteranopía, protanopía y tritanopía; tokens.test.ts mide el
  * contraste de cada par de texto (mínimo 4,5:1).
  *
- * Nombres canónicos: --color-*. Los nombres anteriores (--bg, --surface, --trend-1…) quedan como ALIAS
- * para no romper lo que ya los usa (005 lee --trend-1…5, --no-data y --selected con getComputedStyle).
- * Código nuevo: usar --color-*.
+ * Nombres canónicos: --color-*. No hay alias: los nombres anteriores (--bg, --surface, --trend-1…) se
+ * retiraron en 008. El globo lee --color-trend-*, --color-no-data y --color-selection con getComputedStyle
+ * (features/globe/mapColors.ts): si se renombra uno aquí, se renombra allí.
  */
 :root {
   /* ---------- Ocaso: escala de tendencia (5 clases, de baja a sube) ---------- */
@@ -79,28 +79,6 @@
   /* ---------- Armazón: el panel tapa esta zona del escenario (las escribe Shell.tsx) ---------- */
   --panel-inset-right: 0px;
   --panel-inset-bottom: 0px;
-
-  /* ---------- Alias de compatibilidad (no usar en código nuevo) ---------- */
-  --bg: var(--color-bg);
-  --surface: var(--color-panel);
-  --surface-2: var(--color-panel-raised);
-  --border: var(--color-line);
-  --overlay: var(--color-overlay);
-  --text: var(--color-text);
-  --muted: var(--color-text-muted);
-  --accent: var(--color-accent);
-  --on-accent: var(--color-on-accent);
-  --danger: var(--color-danger);
-  --trend-1: var(--color-trend-down-strong);
-  --trend-2: var(--color-trend-down-weak);
-  --trend-3: var(--color-trend-neutral);
-  --trend-4: var(--color-trend-up-weak);
-  --trend-5: var(--color-trend-up-strong);
-  --no-data: var(--color-no-data);
-  --selected: var(--color-selection);
-  --text-md: var(--text-base);
-  --glass: rgba(31, 26, 46, 0.78);
-  --glass-strong: rgba(31, 26, 46, 0.92);
 }
 
 @media (prefers-reduced-motion: reduce) {

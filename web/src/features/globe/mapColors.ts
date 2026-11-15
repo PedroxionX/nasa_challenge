@@ -24,10 +24,7 @@ const DEFAULT_PALETTE: Palette = {
 
 const TREND_TOKENS = ['down-strong', 'down-weak', 'neutral', 'up-weak', 'up-strong']
 
-/**
- * Lee las variables de diseño (tokens.css): primero el nombre canónico (--color-*), después
- * el alias anterior y, si faltan ambos, el valor por defecto.
- */
+/** Lee las variables de diseño (tokens.css, nombres --color-*); si falta alguna, usa el valor por defecto. */
 export function readPalette(): Palette {
   const s = getComputedStyle(document.documentElement)
   const v = (names: string[], fallback: string) => {
@@ -39,9 +36,9 @@ export function readPalette(): Palette {
   }
   const opacity = Number.parseFloat(v(['--map-fill-opacity'], ''))
   return {
-    classes: DEFAULT_PALETTE.classes.map((d, i) => v([`--color-trend-${TREND_TOKENS[i]}`, `--trend-${i + 1}`], d)),
-    noData: v(['--color-no-data', '--no-data'], DEFAULT_PALETTE.noData),
-    selected: v(['--color-selection', '--selected'], DEFAULT_PALETTE.selected),
+    classes: DEFAULT_PALETTE.classes.map((d, i) => v([`--color-trend-${TREND_TOKENS[i]}`], d)),
+    noData: v(['--color-no-data'], DEFAULT_PALETTE.noData),
+    selected: v(['--color-selection'], DEFAULT_PALETTE.selected),
     fillOpacity: opacity > 0 && opacity <= 1 ? opacity : DEFAULT_PALETTE.fillOpacity,
   }
 }
