@@ -65,6 +65,12 @@ Feature 006 · T007 · Cumple FR-C05: texto exacto palabra por palabra y tiempo 
 
 > «Todo el método está aquí, en lenguaje llano: prueba de Mann-Kendall corregida por autocorrelación, pendiente de Sen y alfa de cero punto cero cinco, fijado antes de mirar los datos. Y también sus límites: la corrección no es perfecta, la precipitación tiene menos años que la temperatura, de 2001 a 2024, y con tantos estados algunos destacarán por azar.»
 
+**Si preguntan por la comparación entre estados (007; no cuenta en el tiempo):**
+
+> «También se pueden comparar dos estados. La aplicación no resta las dos pendientes: resta una serie de la otra, año por año, y prueba si esa diferencia tiene tendencia; así tiene en cuenta que dos estados vecinos comparten buena parte de su clima. Que uno suba y el otro no, no demuestra por sí solo que difieran.»
+
+Para mostrarlo: con Baja California abierta, elegir Chihuahua en «Comparar con otro estado» y leer el veredicto de la diferencia tal como sale en pantalla.
+
 ## 5. Cierre · 2:40–2:50 (10 s)
 
 > «Trend Detective: cuánto cambió, cuánta evidencia hay y qué no se puede concluir. Datos de la NASA, explicados sin exagerar. Gracias.»

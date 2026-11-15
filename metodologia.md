@@ -13,6 +13,7 @@ Cada persona tiene una especificación y una rama, y nadie toca archivos de otra
 | [004 Búsqueda y panel](specs/004-analysis-panel/spec.md) | `004-analysis-panel` | Buscador, variable, gráfica, resultado y periodo |
 | [005 Globo y mapa](specs/005-globe-map/spec.md) | `005-globe-map` | Selección en el globo, mapa coloreado, rendimiento |
 | [006 Textos y validación](specs/006-guide-content/spec.md) | `006-guide-content` | Explicaciones, ejemplos, prueba con usuarios, guion |
+| [007 Comparación de regiones](specs/007-region-comparison/spec.md) | `007-region-comparison` | Prueba de la diferencia entre dos estados (`compare/`), vista de comparación, variables leídas del catálogo |
 
 ## 2. Orden de arranque
 

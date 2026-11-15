@@ -130,9 +130,19 @@ Reglas:
 - Variables con `relative_change: true` (precipitación): el valor es `slope_decade_pct` y `unit` es «%/década», para que regiones secas y húmedas sean comparables en el mapa.
 - Los cortes de `classes` son un ejemplo y se fijan al ver la distribución real.
 
+## `compare/` (comparación entre regiones, 007)
+
+Extensión **solo aditiva** definida en [../../007-region-comparison/contracts/compare-files.md](../../007-region-comparison/contracts/compare-files.md): `compare/index.json` y `compare/{variable}/{region}.json`. No cambia ningún archivo de este contrato y `schema_version` sigue en 1; un lector que no conozca `compare/` sigue funcionando.
+
+- Las variables son las de `catalog.variables[]` (lista abierta; ids con forma `^[a-z][a-z0-9_]*$`). Una variable sin entrada en `compare/index.json` significa «prueba de la diferencia no publicada», no error.
+- Lo genera `pipeline/compare_build.py` a partir de `series/`; `compare_build.py --check` comprueba con `series_sha256` que corresponde a las series publicadas. Tras republicar series, se ejecuta `--check` y se regeneran las variables desfasadas con `--variables`.
+- `merge_outputs.py` no toca `compare/`.
+
 ## Contrato de la interfaz (estado en la URL)
 
-`?region=MX-BCN&var=air_temperature&from=1980&to=2025` · valores inexistentes se sustituyen por los predeterminados y se avisa · `var=T2M` y `var=PRECTOTCORR` (enlaces anteriores) se traducen a los ids nuevos sin aviso · el periodo se valida contra el de la variable activa.
+`?region=MX-BCN&var=air_temperature&from=1980&to=2025` · valores inexistentes se sustituyen por los predeterminados y se avisa · `var=T2M` y `var=PRECTOTCORR` (enlaces anteriores) se traducen a los ids nuevos sin aviso · el periodo se valida contra el de la variable activa · `var` acepta cualquier id del catálogo.
+
+**Comparación (007):** `?region=MX-BCN&vs=US-TX&var=precipitation&from=2001&to=2024` · `vs` es la segunda región · `vs` inexistente o igual a `region` se descarta con aviso · sin `region`, `vs` se ignora · el par se presenta en el orden del archivo de `compare/` (región de id menor − región de id mayor).
 
 ## Lo que nunca se publica
 

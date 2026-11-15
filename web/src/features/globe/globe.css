@@ -120,6 +120,7 @@
 .globe-table .globe-table-sort,
 .globe-table .globe-table-pick {
   min-height: var(--tap);
+  min-width: var(--tap);
   padding: 0;
   color: inherit;
   font: inherit;
