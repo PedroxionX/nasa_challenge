@@ -405,7 +405,8 @@ def default_sources(source: str) -> dict[str, Any]:
     if source == "gesdisc":
         from sources.gesdisc import GesDiscSource
         from sources.imerg import IMERG_PRECIP
-        from sources.merra2 import MERRA2_QV2M, MERRA2_T2M, MERRA2_TO3, MERRA2_TQV
+        from sources.merra2 import (MERRA2_AOD, MERRA2_DUST_AOD, MERRA2_QV2M, MERRA2_T2M, MERRA2_T2MMAX,
+                                    MERRA2_T2MMIN, MERRA2_TO3, MERRA2_TQV)
         from sources.gldas import (
             GLDAS_EVAPOTRANSPIRATION,
             GLDAS_RUNOFF,
@@ -425,6 +426,10 @@ def default_sources(source: str) -> dict[str, Any]:
             "runoff": GesDiscSource(GLDAS_RUNOFF),
             "snow_water_equivalent": GesDiscSource(GLDAS_SWE),
             "soil_temperature": GesDiscSource(GLDAS_SURF_TEMP),
+            "aerosol_optical_depth": GesDiscSource(MERRA2_AOD),
+            "dust_optical_depth": GesDiscSource(MERRA2_DUST_AOD),
+            "max_air_temperature": GesDiscSource(MERRA2_T2MMAX),
+            "min_air_temperature": GesDiscSource(MERRA2_T2MMIN),
         }
     if source == "power":
         from sources.power import PowerSource

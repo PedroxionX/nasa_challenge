@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import io
+import math
 import os
 import re
 import time
@@ -84,6 +85,10 @@ class Product:
     dlat: float
     dlon: float
     read: Callable[[Any], tuple[np.ndarray, np.ndarray, np.ndarray]]  # archivo → (lats, lons, valores[lat, lon])
+    # Si se indica (centro de la primera celda del archivo: latitud, longitud), el gránulo se pide a OPeNDAP ya
+    # recortado a la variable y a READ_BOX, en vez de abrir el archivo entero por HTTPS. Mismos valores, ~50 veces
+    # menos tráfico (medido el 2026-11-15 con M2TMNXAER: 0,2 MB y 1,5 s por mes frente a un archivo de 80 MB).
+    opendap_origin: tuple[float, float] | None = None
 
 
 @dataclass
@@ -121,6 +126,47 @@ def open_granule(g: Granule) -> Any:
     if not files:
         raise DataSourceError(f"No se pudo abrir {g.name}.")
     return files[0]
+
+
+# --------------------------------------------------------------------------------------
+# OPeNDAP: el servidor recorta y entrega NetCDF-4 (lo abre el mismo `read` del producto)
+# --------------------------------------------------------------------------------------
+def opendap_url(handle: Any) -> str:
+    """Punto OPeNDAP que CMR anuncia para el gránulo («USE SERVICE API» / «OPENDAP DATA»)."""
+    for u in handle["umm"].get("RelatedUrls", []):
+        if (u.get("Subtype") or "").upper() == "OPENDAP DATA":
+            return u["URL"]
+    raise DataSourceError("El gránulo no anuncia un punto OPeNDAP en CMR.")
+
+
+def opendap_constraint(product: Product) -> str:
+    """Restricción DAP2: la variable y sus coordenadas, solo las filas y columnas de READ_BOX (extremos incluidos)."""
+    lat0, lon0 = product.opendap_origin
+    i0 = max(0, math.ceil((READ_BOX["south"] - lat0) / product.dlat - 1e-6))
+    i1 = math.floor((READ_BOX["north"] - lat0) / product.dlat + 1e-6)
+    j0 = max(0, math.ceil((READ_BOX["west"] - lon0) / product.dlon - 1e-6))
+    j1 = math.floor((READ_BOX["east"] - lon0) / product.dlon + 1e-6)
+    return f"{product.parameter}[0:0][{i0}:{i1}][{j0}:{j1}],lat[{i0}:{i1}],lon[{j0}:{j1}],time[0:0]"
+
+
+_opendap_session = None
+
+
+def open_granule_opendap(g: Granule, product: Product, session: Any = None) -> Any:
+    """Pide el recorte y lo devuelve como archivo en memoria. Cualquier respuesta que no sea NetCDF-4 es un error
+    (lo reintenta quien llama): un 401 o una página de inicio de sesión no deben leerse como datos."""
+    global _opendap_session
+    if session is None:
+        if _opendap_session is None:
+            import earthaccess
+
+            ensure_login()
+            _opendap_session = earthaccess.get_requests_https_session()
+        session = _opendap_session
+    r = session.get(f"{opendap_url(g.handle)}.nc4?{opendap_constraint(product)}", timeout=120)
+    if r.status_code != 200 or not r.content.startswith(b"\x89HDF"):
+        raise OSError(f"OPeNDAP respondió {r.status_code} con {len(r.content)} bytes que no son NetCDF-4 ({g.name}).")
+    return io.BytesIO(r.content)
 
 
 # --------------------------------------------------------------------------------------
@@ -179,7 +225,8 @@ def write_cache(p: Path, values: np.ndarray, url: str, retrieved: str, sha: str)
 def read_granule_cached(product: Product, g: Granule, lats: np.ndarray, lons: np.ndarray, key: str,
                         cache_dir: Path, opener: Callable = None, sleep: Callable = time.sleep) -> tuple:
     """Devuelve (valores, meta) o (None, meta con error). Caché, 3 reintentos y sin cambiar de fuente."""
-    opener = opener or open_granule
+    if opener is None:
+        opener = (lambda gr: open_granule_opendap(gr, product)) if product.opendap_origin else open_granule
     p = cache_path(cache_dir, product.short_name, key, g.name, product.parameter)
     cached = read_cache(p)
     if cached is not None:
@@ -217,7 +264,16 @@ def _error_meta(msg: str) -> dict:
 
 
 def _worker_init() -> None:
-    ensure_login()
+    """Sesión de Earthdata en cada proceso. Se reintenta: un fallo de red pasajero al iniciar sesión tumbaba todo el
+    grupo de procesos (BrokenProcessPool) y con él la lectura completa (visto el 2026-11-15)."""
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            ensure_login()
+            return
+        except Exception:
+            if attempt == MAX_RETRIES:
+                raise
+            time.sleep(BACKOFF_S[min(attempt, len(BACKOFF_S) - 1)])
 
 
 def _process_task(args: tuple) -> tuple:
@@ -262,8 +318,9 @@ class GesDiscSource:
             mapped = pool.map(_process_task, tasks)
         else:
             pool = ThreadPoolExecutor(max_workers=self.max_workers)
+            opener = None if self.opener is open_granule else self.opener  # None: el producto decide (OPeNDAP o no)
             mapped = pool.map(lambda g: read_granule_cached(self.product, g, union_lats, union_lons, key,
-                                                            self.cache_dir, self.opener, self.sleep), granules)
+                                                            self.cache_dir, opener, self.sleep), granules)
         with pool:
             for k, (vals, meta) in enumerate(mapped):
                 g = granules[k]
@@ -282,7 +339,8 @@ class GesDiscSource:
         import earthaccess  # noqa: PLC0415 (versión para provenance)
 
         info = SourceInfo(
-            source="NASA GES DISC (Earthdata Cloud) vía earthaccess", product=self.product.product,
+            source="NASA GES DISC (Earthdata Cloud) vía earthaccess"
+                   + (", recorte por OPeNDAP" if self.product.opendap_origin else ""), product=self.product.product,
             short_name=self.product.short_name, version=self.product.version, doi=self.product.doi,
             api_version=f"earthaccess {getattr(earthaccess, '__version__', '?')}", parameter=self.product.parameter,
             unit_declared=self.product.unit_declared, grid_text=f"{self.product.dlat:g}° × {self.product.dlon:g}°")

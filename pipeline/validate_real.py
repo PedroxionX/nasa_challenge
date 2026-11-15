@@ -35,7 +35,8 @@ TOL_P_REL = 0.02
 # --------------------------------------------------------------------------------------
 # Lectura de la rejilla (desde la caché que dejó build.py)
 # --------------------------------------------------------------------------------------
-def read_grid(var_id: str):
+def read_grid(var_id: str, end_year: int | None = None):
+    """`end_year` limita la lectura (por omisión, el año en curso); con el último año publicado todo sale de la caché."""
     var = variables.get(var_id, "gesdisc")
     src = default_sources("gesdisc")[var_id]
     all_regions = load_regions()
@@ -44,7 +45,7 @@ def read_grid(var_id: str):
     ulats, ulons = (np.array(c) for c in zip(*union))
     import datetime as dt
 
-    data = src.read(var, all_regions, w_all, ulats, ulons, var.first_request_year, dt.date.today().year)
+    data = src.read(var, all_regions, w_all, ulats, ulons, var.first_request_year, end_year or dt.date.today().year)
     return var, data, w_all, src
 
 
@@ -73,11 +74,29 @@ def center_inside_weights(geom, grid) -> CellWeights:
 # --------------------------------------------------------------------------------------
 # 1. Sanidad física
 # --------------------------------------------------------------------------------------
-def sanity(out_dir: Path) -> dict:
+# Rango plausible de la media anual de un estado (mínimo, máximo) y salto absoluto entre años que se marca para
+# revisar (None = salto relativo, > 60 % de la media). Variables de la Phase 8; las demás siguen la regla de siempre.
+SANITY_RANGES: dict[str, tuple[float, float, float | None]] = {
+    "soil_temperature": (-20.0, 35.0, 2.5),
+    "max_air_temperature": (-20.0, 40.0, 2.5),
+    "min_air_temperature": (-30.0, 30.0, 2.5),
+    "specific_humidity": (1.0, 22.0, None),          # g/kg
+    "total_precipitable_water": (3.0, 60.0, None),   # mm
+    "total_ozone": (220.0, 420.0, None),             # DU
+    "aerosol_optical_depth": (0.01, 1.0, None),      # sin unidad
+    "dust_optical_depth": (0.0, 0.5, None),
+    "runoff": (0.0, 3000.0, None),                   # mm al año
+    "snow_water_equivalent": (0.0, 2000.0, None),    # mm
+}
+
+
+def sanity(out_dir: Path, var_ids: list[str] | None = None) -> dict:
     cat = json.loads((out_dir / "catalog.json").read_text(encoding="utf-8"))
     checks, flags = [], []
     for v in cat["variables"]:
         vid = v["id"]
+        if var_ids and vid not in var_ids:
+            continue
         for r in cat["regions"]:
             p = out_dir / "series" / vid / f"{r['id']}.json"
             if not p.exists():
@@ -90,6 +109,15 @@ def sanity(out_dir: Path) -> dict:
                 lo, hi = (10.0, 30.0) if r["country"] == "MX" else (-20.0, 30.0)
                 ok = len(vals) > 0 and lo <= mean <= hi
                 jumps = np.abs(np.diff(vals)) > 2.5
+            elif vid in SANITY_RANGES:
+                lo, hi, jump_abs = SANITY_RANGES[vid]
+                ok = len(vals) > 0 and lo <= mean <= hi and (lo < 0 or vals.min() >= 0)
+                if jump_abs is not None:
+                    jumps = np.abs(np.diff(vals)) > jump_abs
+                elif vid == "snow_water_equivalent" and mean < 5:  # casi sin nieve: el salto relativo no dice nada
+                    jumps = np.zeros(max(len(vals) - 1, 0), bool)
+                else:
+                    jumps = np.abs(np.diff(vals)) > 0.6 * mean
             else:
                 ok = len(vals) > 0 and vals.min() >= 0 and mean < 6000
                 jumps = np.abs(np.diff(vals)) > 0.6 * mean
@@ -114,7 +142,8 @@ def sanity(out_dir: Path) -> dict:
 # --------------------------------------------------------------------------------------
 # 2. Región de una sola celda frente al gránulo original
 # --------------------------------------------------------------------------------------
-def cells(months_to_check=((1990, 1), (2005, 7), (2024, 7))) -> dict:
+def cells(months_to_check=((1990, 1), (2005, 7), (2024, 7)), var_ids: list[str] | None = None,
+          end_year: int | None = None) -> dict:
     import earthaccess
 
     from sources.gesdisc import ensure_login, open_granule, search_granules
@@ -122,8 +151,8 @@ def cells(months_to_check=((1990, 1), (2005, 7), (2024, 7))) -> dict:
     ensure_login()
     (dc,) = load_regions(["US-DC"])
     out = []
-    for var_id in variables.VARIABLE_IDS:
-        var, data, w_all, src = read_grid(var_id)
+    for var_id in var_ids or variables.VARIABLE_IDS:
+        var, data, w_all, src = read_grid(var_id, end_year)
         prod = src.product
         merra_cw = region_weights(dc.geometry, var.grid)
         cw = merra_cw if merra_cw.n_cells == 1 else CellWeights(merra_cw.lats[:1], merra_cw.lons[:1],
@@ -185,18 +214,23 @@ def main(argv: list[str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     s1 = sub.add_parser("sanity")
     s1.add_argument("--out", default=str(PIPELINE_DIR / "out" / "gesdisc_all"))
-    sub.add_parser("cells")
+    s2 = sub.add_parser("cells")
+    for s in (s1, s2):
+        s.add_argument("--vars", default=None, help="ids separados por coma (por omisión, todas)")
+        s.add_argument("--report", default=None, help="nombre del informe en validation/ (por omisión, el de siempre)")
+    s2.add_argument("--end-year", type=int, default=None, help="último año que se lee (con el publicado, todo sale de la caché)")
     s3 = sub.add_parser("giovanni")
     s3.add_argument("--region", required=True)
     s3.add_argument("--var", required=True, choices=list(variables.VARIABLE_IDS))
     s3.add_argument("--giovanni", required=True)
     a = ap.parse_args(argv)
     VALIDATION_DIR.mkdir(exist_ok=True)
+    var_ids = a.vars.split(",") if getattr(a, "vars", None) else None
     if a.cmd == "sanity":
-        rep, name = sanity(Path(a.out)), "real_sanity.json"
+        rep, name = sanity(Path(a.out), var_ids), a.report or "real_sanity.json"
         ok = rep["all_pass"]
     elif a.cmd == "cells":
-        rep, name = cells(), "real_single_cell.json"
+        rep, name = cells(var_ids=var_ids, end_year=a.end_year), a.report or "real_single_cell.json"
         ok = rep["all_pass"]
     else:
         rep, name = giovanni(a.region, a.var, Path(a.giovanni)), f"real_giovanni_{a.region}_{a.var}.json"

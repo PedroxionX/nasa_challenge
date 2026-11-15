@@ -180,6 +180,66 @@ VARS[("soil_temperature", "gesdisc")] = VarDef(
     False, "°C/década", T_BREAKS, _ST_SPEC, GLDAS_GRID, 2000, "AvgSurfT_inst",
     "relleno −9999 (mar) → faltante; K → °C (− 273,15)", min_valid_fraction=0.5)
 
+# Aerosoles (M2TMNXAER) y temperatura máxima y mínima (M2SMNXSLV), añadidas el 2026-11-15.
+_AOD_DEF = ("Espesor óptico de aerosoles a 550 nm, de MERRA-2: cuánto atenúan la luz del sol las partículas del aire "
+            "(polvo, humo, sulfatos, sal marina) en toda la columna. No tiene unidad y no es la contaminación que se "
+            "respira a nivel del suelo. Reanálisis que asimila observaciones de satélite; no es una medición directa. "
+            "Se publica desde 2003: antes el reanálisis contaba con menos satélites y las erupciones de El Chichón "
+            "(1982) y Pinatubo (1991) elevan los primeros años.")
+_DUST_DEF = ("Parte del espesor óptico de aerosoles a 550 nm que se debe al polvo mineral, de MERRA-2. No tiene unidad. "
+             "En regiones con muy poco polvo el valor es casi cero y el cambio en % puede ser grande sin ser relevante. "
+             "Se publica desde 2003: en 2000 la serie da un salto al empezar a asimilarse nuevos satélites, y con él "
+             "la tendencia desde 1980 sería un artefacto.")
+# Los aerosoles empiezan en 2003 (decisión del 2026-11-15, con los datos de 1980–2025 a la vista): el polvo salta en
+# 2000 en las 84 regiones (Texas: 0,013 en 1999 y 0,018 en 2000; 80 de 84 con el aviso «step») y los aerosoles totales
+# tienen los picos de El Chichón y Pinatubo (Texas: 0,27 en 1982 y 0,29 en 1991 frente a ~0,16). Desde 2003 MERRA-2
+# asimila MODIS de Terra y de Aqua todo el periodo.
+AEROSOL_FIRST_YEAR = 2003
+_TMAX_DEF = ("Temperatura máxima del aire a 2 m, de MERRA-2 (statM_2d_slv_Nx): promedio mensual de la máxima de cada "
+             "día. Reanálisis; no es la temperatura de una estación.")
+_TMIN_DEF = ("Temperatura mínima del aire a 2 m, de MERRA-2 (statM_2d_slv_Nx): promedio mensual de la mínima de cada "
+             "día. Reanálisis; no es la temperatura de una estación.")
+_AOD_SPEC = VariableSpec(
+    code="aerosol_optical_depth", name_es="Espesor óptico de aerosoles (550 nm)", short_es="Aerosoles",
+    description_es=_AOD_DEF, power_unit_label="1", native_unit="adimensional", monthly_unit="adimensional",
+    annual_unit="adimensional", aggregation="mean", physical_min=0.0, physical_max=5.0,
+    product="MERRA-2 M2TMNXAER v5.12.4 TOTEXTTAU")
+_DUST_SPEC = VariableSpec(
+    code="dust_optical_depth", name_es="Espesor óptico del polvo (550 nm)", short_es="Polvo en el aire",
+    description_es=_DUST_DEF, power_unit_label="1", native_unit="adimensional", monthly_unit="adimensional",
+    annual_unit="adimensional", aggregation="mean", physical_min=0.0, physical_max=5.0,
+    product="MERRA-2 M2TMNXAER v5.12.4 DUEXTTAU")
+_TMAX_SPEC = VariableSpec(
+    code="max_air_temperature", name_es="Temperatura máxima del aire a 2 metros", short_es="Temperatura máxima",
+    description_es=_TMAX_DEF, power_unit_label="K", native_unit="°C", monthly_unit="°C", annual_unit="°C",
+    aggregation="mean", physical_min=-90.0, physical_max=70.0, product="MERRA-2 M2SMNXSLV v5.12.4 T2MMAX")
+_TMIN_SPEC = VariableSpec(
+    code="min_air_temperature", name_es="Temperatura mínima del aire a 2 metros", short_es="Temperatura mínima",
+    description_es=_TMIN_DEF, power_unit_label="K", native_unit="°C", monthly_unit="°C", annual_unit="°C",
+    aggregation="mean", physical_min=-90.0, physical_max=70.0, product="MERRA-2 M2SMNXSLV v5.12.4 T2MMIN")
+
+# Cortes fijados el 2026-11-15 con la distribución real de 2003–2025 (84 regiones): aerosoles, mediana −5,4 %/década
+# (−14,4…11,9), reparten 20·43·13·4·4; polvo, mediana −11,5 (−17,8…1,8), reparte 56·18·10·0·0. Temperatura máxima y
+# mínima usan los cortes de la temperatura media para que los tres mapas se comparen: 0·0·3·34·47 y 0·0·1·43·40.
+AOD_BREAKS = [-8.0, -3.0, 3.0, 8.0]
+DUST_BREAKS = [-10.0, -4.0, 4.0, 10.0]
+VARS[("aerosol_optical_depth", "gesdisc")] = VarDef(
+    "aerosol_optical_depth", "gesdisc", "Aerosoles", _AOD_DEF, "reanalysis", "adimensional", "mean_day_weighted",
+    True, "%/década", AOD_BREAKS, _AOD_SPEC, MERRA2_GRID, AEROSOL_FIRST_YEAR, "TOTEXTTAU",
+    "sin conversión (espesor óptico, sin unidad)")
+VARS[("dust_optical_depth", "gesdisc")] = VarDef(
+    "dust_optical_depth", "gesdisc", "Polvo en el aire", _DUST_DEF, "reanalysis", "adimensional", "mean_day_weighted",
+    True, "%/década", DUST_BREAKS, _DUST_SPEC, MERRA2_GRID, AEROSOL_FIRST_YEAR, "DUEXTTAU",
+    "sin conversión (espesor óptico, sin unidad)")
+VARS[("max_air_temperature", "gesdisc")] = VarDef(
+    "max_air_temperature", "gesdisc", "Temperatura máxima", _TMAX_DEF, "reanalysis", "°C", "mean_day_weighted",
+    False, "°C/década", T_BREAKS, _TMAX_SPEC, MERRA2_GRID, 1980, "T2MMAX",
+    "K → °C (− 273,15)")
+VARS[("min_air_temperature", "gesdisc")] = VarDef(
+    "min_air_temperature", "gesdisc", "Temperatura mínima", _TMIN_DEF, "reanalysis", "°C", "mean_day_weighted",
+    False, "°C/década", T_BREAKS, _TMIN_SPEC, MERRA2_GRID, 1980, "T2MMIN",
+    "K → °C (− 273,15)")
+
 VARIABLE_IDS = (
     "air_temperature",
     "precipitation",
@@ -191,6 +251,10 @@ VARIABLE_IDS = (
     "runoff",
     "snow_water_equivalent",
     "soil_temperature",
+    "aerosol_optical_depth",
+    "dust_optical_depth",
+    "max_air_temperature",
+    "min_air_temperature",
 )
 
 
