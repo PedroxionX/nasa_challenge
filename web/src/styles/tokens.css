@@ -88,6 +88,8 @@
   /* ---------- Armazón: el panel tapa esta zona del escenario (las escribe Shell.tsx) ---------- */
   --panel-inset-right: 0px;
   --panel-inset-bottom: 0px;
+  --tools-bottom: 0px;
+  --rail-w: 20rem;             /* columna izquierda del escenario: leyenda, sus botones y la bienvenida */
 }
 
 @media (prefers-reduced-motion: reduce) {

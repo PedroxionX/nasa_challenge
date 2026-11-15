@@ -44,6 +44,8 @@
   pointer-events: none;
   transform: translateY(-50%);
 }
+.globe-pin--up { translate: 0 -75%; }
+.globe-pin--down { translate: 0 75%; }
 
 /* ---------- Leyenda y acciones ---------- */
 /* Móvil: una franja (leyenda + tres botones de icono). Escritorio: columna estrecha arriba a la izquierda. */
@@ -90,6 +92,10 @@
 @container (max-width: 15rem) {
   .globe-scale-breaks span:nth-child(even) { grid-row: 2; }
 }
+/* La variable ya se lee en el selector de la cabecera: en leyendas estrechas sobra. */
+@container (max-width: 17rem) {
+  .globe-legend-var { display: none; }
+}
 
 .globe-legend-more { margin-top: var(--space-2); padding-top: var(--space-2); border-top: 1px solid var(--color-line); }
 .globe-legend-classes { display: grid; gap: var(--space-1); margin: 0; padding: 0; list-style: none; }
@@ -102,7 +108,7 @@
 /* «Sin datos» nunca depende solo del color: trama + etiqueta. */
 .globe-swatch-nodata { background: repeating-linear-gradient(45deg, var(--color-no-data) 0 3px, transparent 3px 6px); }
 
-.globe-actions { flex: 0 0 auto; display: flex; gap: var(--space-1); }
+.globe-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: var(--space-1); }
 .globe-actions button {
   display: inline-flex;
   align-items: center;
@@ -119,9 +125,9 @@
 
 @media (min-width: 900px) {
   .globe-tools { top: var(--space-3); left: var(--space-3); right: auto; max-width: calc(100% - var(--panel-inset-right) - 2 * var(--space-3)); flex-direction: column; }
-  .globe-legend { width: 19rem; }
-  .globe-actions { gap: var(--space-2); }
-  .globe-actions button { padding: 0 var(--space-3); }
+  .globe-legend { width: var(--rail-w); max-width: none; }
+  .globe-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: var(--rail-w); gap: var(--space-2); }
+  .globe-actions button { padding: 0 var(--space-2); }
   .globe-actions button span { position: static; width: auto; height: auto; overflow: visible; clip-path: none; }
 }
 

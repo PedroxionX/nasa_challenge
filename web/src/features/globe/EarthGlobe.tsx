@@ -423,11 +423,17 @@ export default function EarthGlobe({
       const { lat, lng } = viewForGeometry(f.geometry)
       return [{ lat, lng, name: tag ? `${tag} · ${f.properties.name}` : f.properties.name }]
     }
-    return compareId ? [...pin(selectedId, 'A'), ...pin(compareId, 'B')] : pin(selectedId, null)
+    if (!compareId) return pin(selectedId, null)
+    // Dos estados vecinos: la etiqueta del más al norte va encima y la del otro debajo, para que no se pisen.
+    const both = [...pin(selectedId, 'A'), ...pin(compareId, 'B')]
+    if (both.length < 2) return both
+    const north = both[0].lat >= both[1].lat ? 0 : 1
+    return both.map((p, i) => ({ ...p, side: i === north ? 'up' : 'down' }))
   }, [regions, selectedId, compareId])
   const pinElement = useCallback((d: object) => {
     const el = document.createElement('div')
-    el.className = 'globe-pin'
+    const side = (d as { side?: string }).side
+    el.className = side ? `globe-pin globe-pin--${side}` : 'globe-pin'
     el.textContent = (d as { name: string }).name
     return el
   }, [])

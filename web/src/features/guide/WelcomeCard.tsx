@@ -38,7 +38,9 @@ export default function WelcomeCard() {
         {EXAMPLES.map(e => (
           <li key={e.regionId}>
             <button type="button" className="welcome-example" onClick={() => openExample(e.regionId, e.variableId)}>
-              <span className="welcome-example-place">{`${e.place} · ${variableCopy(e.variableId).short}`}</span>
+              <span className="welcome-example-place">
+                {e.place}<span className="welcome-example-var">{` · ${variableCopy(e.variableId).short}`}</span>
+              </span>
               <span className="welcome-example-teaches">{e.teaches}</span>
             </button>
           </li>

@@ -72,7 +72,7 @@
   background: var(--color-panel);
   border-top: 1px solid var(--color-line);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  max-height: calc(65% - var(--space-4));
+  max-height: min(65%, calc(100% - var(--tools-bottom) - var(--space-3)));
   overflow-y: auto;
   overscroll-behavior: contain;
   min-width: 0;
@@ -131,16 +131,22 @@
   min-width: 0;
   padding: var(--space-1) max(var(--space-4), env(safe-area-inset-right)) var(--space-5) max(var(--space-4), env(safe-area-inset-left));
 }
-/* Asomada no se desplaza: es un resumen; para leer más se amplía. */
+/* Asomada no se desplaza: es un resumen (estado + veredicto + cifra); para leer más se amplía. */
 .shell[data-sheet="peek"] .shell-panel-body { overflow-y: hidden; }
+@media (max-width: 899px) and (min-height: 501px), (max-width: 599px) {
+  .shell[data-sheet="peek"] .panel-meta { display: none; }
+  .shell[data-sheet="peek"] .verdict { padding: var(--space-2) var(--space-3); gap: 0; }
+  .shell[data-sheet="peek"] .verdict-word { font-size: var(--text-lg); }
+  .shell[data-sheet="peek"] :is(.verdict-evidence, .verdict-detail) { display: none; }
+}
 
 @media (min-width: 900px), (min-width: 600px) and (max-height: 500px) {
   .shell-welcome {
-    left: var(--space-4);
+    left: var(--space-3);
     right: auto;
-    bottom: var(--space-4);
-    width: min(24rem, calc(100% - 2 * var(--space-4)));
-    max-height: calc(100% - 2 * var(--space-4));
+    bottom: var(--space-3);
+    width: min(var(--rail-w), calc(100% - 2 * var(--space-3)));
+    max-height: calc(100% - var(--tools-bottom) - 2 * var(--space-3));
     padding-bottom: 0;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-lg);

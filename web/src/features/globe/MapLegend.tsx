@@ -42,9 +42,12 @@ export default function MapLegend(p: Props) {
     if (!el) return
     const measure = () => {
       const compact = window.matchMedia?.('(max-width: 899px), (max-height: 500px)').matches
-      const value = `${compact ? el.offsetTop + el.offsetHeight + 8 : 0}px`
+      const bottom = el.offsetTop + el.offsetHeight
       const style = document.documentElement.style
-      if (style.getPropertyValue('--globe-inset-top') !== value) style.setProperty('--globe-inset-top', value)
+      const set = (k: string, v: string) => { if (style.getPropertyValue(k) !== v) style.setProperty(k, v) }
+      set('--globe-inset-top', `${compact ? bottom + 8 : 0}px`)
+      // Borde inferior de las herramientas: la bienvenida no sube más allá (nada se superpone).
+      set('--tools-bottom', `${bottom}px`)
     }
     measure()
     const ro = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(measure)
@@ -54,6 +57,7 @@ export default function MapLegend(p: Props) {
       ro?.disconnect()
       window.removeEventListener('resize', measure)
       document.documentElement.style.setProperty('--globe-inset-top', '0px')
+      document.documentElement.style.setProperty('--tools-bottom', '0px')
     }
   }, [])
 
@@ -63,7 +67,7 @@ export default function MapLegend(p: Props) {
         <p className="globe-legend-head">
           <span className="globe-legend-title">{GLOBE_COPY.legendTitle}</span>
           <span className="globe-legend-sub">
-            {p.variableLabel}{p.unit ? ` · ${p.unit}` : ''} · {p.from}–{p.to}
+            <span className="globe-legend-var">{p.variableLabel} · </span>{p.unit ? `${p.unit} · ` : ''}{p.from}–{p.to}
           </span>
         </p>
 
@@ -114,12 +118,12 @@ export default function MapLegend(p: Props) {
 
       <div className="globe-actions">
         {p.status === 'ready' && (
-          <button type="button" aria-expanded={open} aria-controls={moreId} onClick={() => setOpen(o => !o)}>
-            <InfoIcon size={18} /><span>{GLOBE_COPY.aboutColors}</span>
+          <button type="button" aria-label={GLOBE_COPY.aboutColors} aria-expanded={open} aria-controls={moreId} onClick={() => setOpen(o => !o)}>
+            <InfoIcon size={18} /><span aria-hidden="true">Colors</span>
           </button>
         )}
-        <button type="button" onClick={p.onOpenTable}><TableIcon size={18} /><span>{GLOBE_COPY.showTable}</span></button>
-        <button type="button" onClick={p.onGlobalView}><GlobeIcon size={18} /><span>{GLOBE_COPY.globalView}</span></button>
+        <button type="button" aria-label={GLOBE_COPY.showTable} onClick={p.onOpenTable}><TableIcon size={18} /><span aria-hidden="true">Table</span></button>
+        <button type="button" aria-label={GLOBE_COPY.globalView} onClick={p.onGlobalView}><GlobeIcon size={18} /><span aria-hidden="true">Reset</span></button>
       </div>
     </div>
   )

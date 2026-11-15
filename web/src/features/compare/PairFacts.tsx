@@ -21,7 +21,7 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
   return (
     <section aria-label={COMPARE_COPY.eachHeading}>
       <h3 className="section-title">{COMPARE_COPY.eachHeading}</h3>
-      <div className="table-wrap" role="region" aria-label="Results for each state" tabIndex={0}>
+      <div className="table-wrap table-wrap--plain" role="region" aria-label="Results for each state" tabIndex={0}>
         <table className="compare-each">
           <thead>
             <tr>

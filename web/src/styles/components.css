@@ -129,6 +129,8 @@
 .table-wrap { max-width: 100%; overflow: auto; border: 1px solid var(--color-line); border-radius: var(--radius); }
 .table-wrap[hidden] { display: none; }
 .table-wrap--tall { max-height: 18rem; }
+/* Tabla que ya va dentro de una sección o diálogo: solo el desplazamiento, sin marco. */
+.table-wrap--plain { border: 0; border-radius: 0; }
 .data-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
 .data-table caption { padding: var(--space-2) var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); text-align: left; }
 .data-table th, .data-table td { padding: var(--space-2) var(--space-3); text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-line); }
@@ -228,6 +230,7 @@
 .verdict-figure .muted { font-size: var(--text-base); font-weight: var(--weight-regular); }
 /* Sin evidencia suficiente: la estimación sigue a la vista, pero no se lee como un resultado. */
 .verdict-figure--estimate { font-size: var(--text-sm); font-weight: var(--weight-regular); color: var(--color-text-muted); }
+.verdict-evidence { margin: 0; font-size: var(--text-sm); }
 .verdict-detail { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-3); margin: 0; font-size: var(--text-sm); color: var(--color-text-muted); }
 
 /* ---------- «In words» ---------- */

@@ -58,6 +58,7 @@ export function Verdict({ status, explanation, row, unit, digits, extras, alpha 
           {extras.pct && <span className="muted">{` (${fmtSlope(row.slope_decade, unit, digits)})`}</span>}
         </p>
       )}
+      {trend && evidence && !estimate && <p className="verdict-evidence">{evidence}</p>}
       {trend && (
         <p className="verdict-detail">
           <Term k="ci">
@@ -65,11 +66,6 @@ export function Verdict({ status, explanation, row, unit, digits, extras, alpha 
               ? `95% interval: ${fmtSigned(extras.pct!.low, 1)} to ${fmtSigned(extras.pct!.high, 1)} % (${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit})`
               : `95% interval: ${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit}`}
           </Term>
-        </p>
-      )}
-      {trend && (
-        <p className="verdict-detail">
-          {evidence && !estimate && <span>{`${evidence}:`}</span>}
           <Term k="p">{fmtP(row.p)}</Term>
           <Term k="alpha">{fmtAlpha(alpha)}</Term>
         </p>

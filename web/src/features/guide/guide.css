@@ -16,7 +16,7 @@
 .welcome-example-teaches { font-size: var(--text-sm); color: var(--color-text-muted); }
 .welcome-note { margin: 0; font-size: var(--text-xs); color: var(--color-text-muted); }
 @media (min-width: 900px) {
-  .welcome-card { padding: var(--space-5); }
+  .welcome-card { padding: var(--space-4); }
 }
 /* En móvil la tarjeta tapa parte del globo (009): más compacta, ejemplos en dos columnas y solo con el lugar. */
 @media (max-width: 899px) {
@@ -24,13 +24,17 @@
   .welcome-title { font-size: var(--text-base); }
   .welcome-examples { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .welcome-example { min-width: 0; min-height: var(--tap); padding: var(--space-1) var(--space-2); overflow-wrap: anywhere; }
-  .welcome-example-teaches { display: none; }
+  .welcome-example-teaches, .welcome-example-var { display: none; }
   /* La nota de causalidad se lee después, en cada análisis. */
   .welcome-note { display: none; }
 }
 /* Pantallas bajas (teléfono apaisado): lo esencial es el título y los ejemplos. */
+/* Ventanas bajas: solo título, instrucción y lugares; lo que enseña cada ejemplo se ve al abrirlo. */
+@media (max-height: 760px) {
+  .welcome-example-teaches, .welcome-note { display: none; }
+}
 @media (max-height: 560px) {
-  .welcome-how { display: none; }
+  .welcome-how, .welcome-note { display: none; }
 }
 
 /* ── MethodsSheet: texto de lectura dentro del diálogo ── */

@@ -150,7 +150,11 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
           <p className="words-sentence">{explanation.sentence}</p>
           {explanation.pattern && <p className="words-note">{explanation.pattern}</p>}
           {explanation.caveats.length > 0 && (
-            <ul className="words-notes">{explanation.caveats.map(c => <li key={c}>{c}</li>)}</ul>
+            // Las advertencias se pliegan: la frase y el patrón bastan para la primera lectura.
+            <details className="disclosure">
+              <summary>Keep in mind</summary>
+              <ul className="words-notes">{explanation.caveats.map(c => <li key={c}>{c}</li>)}</ul>
+            </details>
           )}
         </section>
       )}

@@ -1,6 +1,6 @@
 /**
  * Panel de análisis (004 T004–T006, T011). Lo coloca el armazón (002) sin props; lee useAppState().
- * Orden (008): veredicto (dirección, cuánto, evidencia) → «In words» → gráfica → periodo → método y procedencia.
+ * Orden: veredicto (dirección, cuánto, evidencia) → gráfica → periodo → «In words» → método y procedencia.
  * Cada dato aparece una sola vez.
  * Estados: cargando (esqueleto) · error con reintento · sin datos · resultado.
  * No calcula estadística: elige la fila con pickWindow y presenta lo que trae el archivo.
@@ -188,12 +188,6 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
         </div>
       )}
 
-      <InWords
-        sentence={row ? explanation.sentence : null}
-        caveats={caveats}
-        notCause={trend ? UI_COPY.notCause : null}
-      />
-
       <div className="analysis-chart">
         <TrendChart
           series={series}
@@ -211,6 +205,13 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
           <PeriodVariation series={series} from={from} to={to} unit={unit} digits={digits} verdictOf={verdictOf} />
         )}
       </div>
+
+      {/* La frase repite las cifras del veredicto en palabras: va después de la gráfica, no pegada a él. */}
+      <InWords
+        sentence={row ? explanation.sentence : null}
+        caveats={caveats}
+        notCause={trend ? UI_COPY.notCause : null}
+      />
 
       <div className="analysis-more">
         <TechnicalDetails row={row} status={status} catalog={catalog} series={series} digits={digits} unit={unit} from={from} to={to} />
