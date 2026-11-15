@@ -9,8 +9,10 @@
  *   Un código desconocido se muestra tal cual, sin inventar su significado.
  */
 import { useEffect, useState } from 'react'
-import { loadCatalog, VARIABLE_IDS, type Catalog } from '../../lib/data'
-import { VARIABLE_COPY, UI_COPY, GLOSSARY } from '../../content'
+import { loadCatalog, variablePeriod, VARIABLE_IDS, type Catalog, type VariableId } from '../../lib/data'
+import {
+  VARIABLE_COPY, UI_COPY, GLOSSARY, KIND_LABEL, PRECIPITATION_REANALYSIS_DEFINITION, productCitation,
+} from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -40,6 +42,19 @@ function describe(table: Record<string, string>, code: string): string {
   return table[code] ?? `método «${code}»`
 }
 
+/** Periodos del contrato si el catálogo no carga (contracts/data-files.md). */
+const DEFAULT_PERIOD: Record<VariableId, [number, number]> = {
+  air_temperature: [1980, 2025],
+  precipitation: [2001, 2024],
+}
+
+/** Definición según lo que declare el catálogo: si la precipitación llega como reanálisis, se dice. */
+function definitionFor(catalog: Catalog | null, id: VariableId): string {
+  const kind = catalog?.variables.find(v => v.id === id)?.kind
+  if (id === 'precipitation' && kind === 'reanalysis') return PRECIPITATION_REANALYSIS_DEFINITION
+  return VARIABLE_COPY[id].definition
+}
+
 export default function MethodsSheet() {
   const [catalog, setCatalog] = useState<Catalog | null>(null)
   const [error, setError] = useState(false)
@@ -52,14 +67,16 @@ export default function MethodsSheet() {
 
   const alpha = catalog?.alpha ?? 0.05
   const level = Math.round((1 - alpha) * 100)
-  const firstYear = catalog?.period.first_year ?? 1981
-  const lastYear = catalog?.period.last_complete_year ?? 2025
+  const periodOf = (id: VariableId): [number, number] => {
+    if (!catalog) return DEFAULT_PERIOD[id]
+    const { firstYear, lastYear } = variablePeriod(catalog, id)
+    return [firstYear, lastYear]
+  }
   const minWindow = catalog?.period.min_window_years ?? 10
   const method = catalog?.method ?? DEFAULT_METHOD
 
   return (
     <article className="methods-sheet" aria-label="Métodos y fuentes">
-      <span className="stub-tag">Esbozo · 006</span>
       <h2 className="methods-title">Métodos y fuentes</h2>
 
       {error && (
@@ -72,10 +89,20 @@ export default function MethodsSheet() {
       <section className="methods-section">
         <h3>Periodo analizado</h3>
         <p>
-          Los análisis cubren desde <strong>{firstYear}</strong> hasta{' '}
-          <strong>{lastYear}</strong>. Solo se usan años completos (12 meses
-          válidos), porque agregar por año elimina el ciclo estacional. Con menos
-          de {minWindow} años completos no se calcula tendencia.
+          Cada variable tiene su propio periodo:{' '}
+          {VARIABLE_IDS.map((id, i) => {
+            const [a, b] = periodOf(id)
+            return (
+              <span key={id}>
+                {i > 0 && (i === VARIABLE_IDS.length - 1 ? ' y ' : ', ')}
+                {VARIABLE_COPY[id].label.toLowerCase()} de <strong>{a}</strong> a <strong>{b}</strong>
+              </span>
+            )
+          })}
+          . Solo se usan años completos (12 meses válidos), porque agregar por año
+          elimina el ciclo estacional. Con menos de {minWindow} años completos no
+          se calcula tendencia. Un periodo más corto tiene menos años y, por tanto,
+          menos capacidad de distinguir una tendencia del azar.
         </p>
       </section>
 
@@ -113,7 +140,7 @@ export default function MethodsSheet() {
         <p>
           Aquí la prueba corrige la varianza usando solo la autocorrelación de
           primer orden (r₁). La corrección es imperfecta: en un experimento del
-          laboratorio con autocorrelación fuerte (φ&nbsp;=&nbsp;0,75) y series de
+          laboratorio con autocorrelación fuerte (φ&nbsp;=&nbsp;0.75) y series de
           30 a 45 años, la prueba corregida rechazaba la ausencia de tendencia
           entre el 9&nbsp;% y el 11&nbsp;% de las veces, en lugar del
           5&nbsp;% esperado. Con autocorrelación fuerte, un valor p cercano a α
@@ -165,7 +192,18 @@ export default function MethodsSheet() {
           {VARIABLE_IDS.map(id => (
             <div key={id} className="methods-variable-item">
               <dt>{VARIABLE_COPY[id].label}</dt>
-              <dd>{VARIABLE_COPY[id].definition}</dd>
+              <dd>
+                {definitionFor(catalog, id)}
+                {catalog && (() => {
+                  const v = catalog.variables.find(x => x.id === id)
+                  return v ? (
+                    <span className="methods-origin">
+                      {' '}Origen: {v.product_short_name ?? 'producto no declarado'}
+                      {v.product_version ? ` v${v.product_version}` : ''} ({KIND_LABEL[v.kind]}).
+                    </span>
+                  ) : null
+                })()}
+              </dd>
             </div>
           ))}
         </dl>
@@ -174,18 +212,27 @@ export default function MethodsSheet() {
       {/* Cómo citar */}
       <section className="methods-section">
         <h3>Cómo citar</h3>
+        <p>Cada variable procede de un producto de la NASA distinto. Al usar estos datos, cita:</p>
+        <ul className="methods-citations">
+          {VARIABLE_IDS.map(id => {
+            const v = catalog?.variables.find(x => x.id === id)
+            const short = v?.product_short_name ?? (id === 'air_temperature' ? 'M2TMNXSLV' : 'GPM_3IMERGM')
+            return (
+              <li key={id}>
+                <strong>{VARIABLE_COPY[id].label}</strong>: {productCitation(short, v?.product_version)}
+              </li>
+            )
+          })}
+        </ul>
         <p>
-          Los datos proceden de MERRA-2 (Modern-Era Retrospective analysis for
-          Research and Applications, Version 2), distribuido por el Goddard
-          Earth Sciences Data and Information Services Center (GES DISC) de la
-          NASA.
+          Cada valor es un <strong>promedio de área del estado</strong>, ponderado por
+          la latitud y por la parte de cada celda que cae dentro del estado; no es el
+          valor de un punto ni de una estación. La fecha de consulta de cada serie
+          aparece en «De dónde salen estos datos», dentro del análisis.
         </p>
         <p>
           Para citar esta herramienta:{' '}
-          <em>
-            Trend Detective, NASA Space Apps Challenge 2026. Datos: MERRA-2 /
-            NASA GES DISC.
-          </em>
+          <em>Trend Detective, NASA Space Apps Challenge 2026.</em>
         </p>
       </section>
 

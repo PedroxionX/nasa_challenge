@@ -65,11 +65,6 @@
   outline-offset: 2px;
 }
 
-.welcome-example-btn--pending {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
 .example-label {
   font-size: var(--text-xs);
   color: var(--muted);
@@ -188,4 +183,21 @@
 
 .methods-legend-note {
   font-style: italic;
+}
+
+.methods-citations {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding-left: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere; /* los DOI largos no desbordan en teléfono */
+}
+
+.methods-citations strong {
+  color: var(--text);
+  font-weight: 500;
 }

@@ -67,6 +67,49 @@ export const VARIABLE_COPY: Record<VariableId, VariableCopy> = {
   },
 }
 
+// ---------- Origen y citas (FR-C02, FR-C04) ----------
+
+/** Cómo se rotula la naturaleza del dato (`kind` del catálogo). */
+export const KIND_LABEL: Record<'reanalysis' | 'observation', string> = {
+  reanalysis: 'reanálisis: un modelo que combina observaciones; no es una medición directa',
+  observation: 'observación de satélite calibrada con pluviómetros',
+}
+
+/**
+ * Si el catálogo declara la precipitación como reanálisis (alternativa NASA POWER `PRECTOTCORR`,
+ * contrato de datos), la definición de VARIABLE_COPY no aplica y se muestra esta.
+ */
+export const PRECIPITATION_REANALYSIS_DEFINITION =
+  'Lluvia y nieve acumuladas a lo largo del año, en milímetros. ' +
+  'Aquí procede de un reanálisis (MERRA-2 vía NASA POWER), no de una observación: ' +
+  'su tendencia es bastante menos fiable que la de temperatura.'
+
+/**
+ * Cita de cada producto, por `product_short_name` del catálogo.
+ * Textos según la forma de cita de GES DISC; DOIs de research.md (comprobar en CMR antes de publicar).
+ */
+export const PRODUCT_CITATION: Record<string, string> = {
+  M2TMNXSLV:
+    'Global Modeling and Assimilation Office (GMAO) (2015), MERRA-2 tavgM_2d_slv_Nx: ' +
+    '2d, Monthly mean, Time-Averaged, Single-Level, Assimilation, Single-Level Diagnostics V5.12.4, ' +
+    'Greenbelt, MD, USA, Goddard Earth Sciences Data and Information Services Center (GES DISC). ' +
+    'doi:10.5067/AP1B0BA5PD2K',
+  GPM_3IMERGM:
+    'Huffman, G.J., E.F. Stocker, D.T. Bolvin, E.J. Nelkin, J. Tan (2023), ' +
+    'GPM IMERG Final Precipitation L3 1 month 0.1 degree x 0.1 degree V07, ' +
+    'Greenbelt, MD, Goddard Earth Sciences Data and Information Services Center (GES DISC). ' +
+    'doi:10.5067/GPM/IMERG/3B-MONTH/07',
+  POWER:
+    'The data was obtained from National Aeronautics and Space Administration (NASA) Langley Research ' +
+    "Center's Prediction Of Worldwide Energy Resources (POWER) project funded through the NASA Earth Science Division.",
+}
+
+/** Cita de un producto; si no se conoce, solo su nombre y versión, sin inventar autores ni DOI. */
+export function productCitation(shortName: string | undefined, version: string | undefined): string {
+  if (!shortName) return 'Producto no declarado en el catálogo.'
+  return PRODUCT_CITATION[shortName] ?? `${shortName}${version ? ` versión ${version}` : ''}.`
+}
+
 // ---------- GLOSARIO (FR-C03) ----------
 // Definiciones de los términos que aparecen en la frase del análisis.
 // Definiciones tomadas de research.md D6. El panel (004) debe ofrecerlas junto a la primera cifra.
@@ -140,13 +183,25 @@ const VERDICT_LABEL: Record<TrendStatus, string> = {
 
 const NBSP = '\u00a0'
 
-/** Formatea un número con signo y dos decimales: «+1,23» o «−0,45». */
-function fmt(n: number): string {
-  const abs = Math.abs(n).toFixed(2)
-  return n >= 0 ? `+${abs}` : `\u2212${abs}` // − es U+2212, no guion
+/**
+ * Decimales según la unidad, igual que el panel (004, `digitsFor`): dos en °C, uno en mm y %.
+ * Así la frase y las tarjetas muestran la misma cifra.
+ */
+function digitsFor(unit: string): number {
+  return unit.includes('°') ? 2 : 1
 }
 
-/** «p = 0.012»; los valores menores que 0,001 se muestran como «p < 0.001», nunca como «0.000». */
+/**
+ * Formatea un número con signo en es-MX (punto decimal, FR-A08): «+1.23» o «−0.45».
+ * El menos es U+2212, no guion. Un valor que redondea a cero se muestra sin signo.
+ */
+function fmt(n: number, digits: number): string {
+  const abs = Math.abs(n).toFixed(digits)
+  if (Number(abs) === 0) return abs
+  return n >= 0 ? `+${abs}` : `−${abs}`
+}
+
+/** «p = 0.012»; los valores menores que 0.001 se muestran como «p < 0.001», nunca como «0.000». */
 function fmtP(p: number): string {
   if (p < 0.001) return `p${NBSP}<${NBSP}0.001`
   return `p${NBSP}=${NBSP}${p.toFixed(3)}`
@@ -207,18 +262,22 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
   }
 
   // Variantes 1 y 2: increasing / decreasing — con cifras completas.
-  // La unidad ya trae «/década»; no se repite.
+  // La unidad ya trae «/década»; no se repite. El veredicto («Sube»/«Baja») va aparte:
+  // la frase no lo repite, la cuenta en palabras.
+  const digits = digitsFor(ctx.unit)
   const level = Math.round((1 - ctx.alpha) * 100)
   const slopeStr =
-    slope_decade !== null ? `${fmt(slope_decade)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
+    slope_decade !== null ? `${fmt(slope_decade, digits)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
   const ciStr =
     ci_low !== null && ci_high !== null
-      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low)} a ${fmt(ci_high)}${NBSP}${ctx.unit})`
+      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low, digits)} a ${fmt(ci_high, digits)}${NBSP}${ctx.unit})`
       : ''
   const pStr = p !== null ? `; ${fmtP(p)}` : ''
 
+  const verb = status === 'increasing' ? 'sube' : 'baja'
+  const label = VARIABLE_COPY[ctx.variableId].label.toLowerCase()
   const sentence =
-    `${slopeStr}${ciStr}` +
+    `En ${ctx.regionName}, la ${label} ${verb} ${slopeStr}${ciStr}` +
     ` entre ${ctx.from} y ${ctx.to} (${n}${NBSP}años)${pStr}. ` +
     `Un patrón así sería muy raro si no hubiera tendencia.`
 

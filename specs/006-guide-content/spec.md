@@ -50,7 +50,7 @@ Cinco personas del público objetivo hacen las cuatro tareas; se registra éxito
 Cubre de 001: FR-001 (definiciones), FR-009, FR-012 (texto de métodos), FR-013, y los criterios SC-001 a SC-004 y SC-009.
 
 - **FR-C01**: Las explicaciones distinguen significancia, magnitud, relevancia ambiental y causalidad.
-- **FR-C02**: La definición de precipitación dice que procede de un reanálisis y que su tendencia es menos fiable que la de temperatura.
+- **FR-C02**: La definición de precipitación dice de qué procede según el `kind` del catálogo —observación de satélite (IMERG, fuente principal desde la revisión de research.md D3 del 2026-11-14) o reanálisis (alternativa NASA POWER)— y que su tendencia es menos fiable que la de temperatura. *(Antes decía «procede de un reanálisis»; quedó desfasado por D3.)*
 - **FR-C03**: Todo término técnico se define la primera vez que aparece.
 - **FR-C04**: La hoja de métodos declara el límite de la corrección por autocorrelación y la atribución que entregue 003. El texto cualitativo (explicación del límite) es fijo y lo redacta 006; los valores numéricos (α, periodo, método de pendiente, prueba estadística) se leen del catálogo en tiempo de ejecución.
 - **FR-C05**: Guion de demostración de menos de 3 minutos con los dos casos. El guion incluye el texto exacto palabra por palabra para cada momento, con tiempo estimado por sección.
