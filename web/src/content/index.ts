@@ -438,7 +438,7 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
   const pStr = p !== null ? `; ${fmtP(p)}` : ''
 
   const verb = status === 'increasing' ? 'sube' : 'baja'
-  const label = VARIABLE_COPY[ctx.variableId].label.toLowerCase()
+  const label = variableCopy(ctx.variableId).label.toLowerCase()
   const sentence =
     `En ${ctx.regionName}, la ${label} ${verb} ${slopeStr}${ciStr}` +
     ` entre ${ctx.from} y ${ctx.to} (${n}${NBSP}años)${pStr}. ` +

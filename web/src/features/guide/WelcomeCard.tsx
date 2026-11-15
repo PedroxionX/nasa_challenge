@@ -53,7 +53,7 @@ export default function WelcomeCard() {
         >
           <span className="example-label">Ver un ejemplo</span>
           <span className="example-place">Chihuahua</span>
-          <span className="example-variable">{VARIABLE_COPY.air_temperature.short}</span>
+          <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>
       </div>
 
