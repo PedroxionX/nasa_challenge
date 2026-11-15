@@ -79,7 +79,7 @@
   box-shadow: inset 3px 0 0 var(--accent);
 }
 .region-search-option[data-current]::after {
-  content: 'elegido';
+  content: 'selected';
   margin-left: auto;
   font-size: var(--text-xs);
   color: var(--muted);

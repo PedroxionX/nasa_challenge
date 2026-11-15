@@ -84,7 +84,7 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
 
   let regionId = q.get('region')
   if (regionId !== null && !regionOk(regionId, limits)) {
-    notices.push(`La región «${regionId}» no existe; elige otra.`)
+    notices.push(`The region “${regionId}” does not exist; choose another one.`)
     regionId = null
   }
 
@@ -92,12 +92,12 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
   let compareId = q.get('vs')
   if (compareId !== null) {
     if (!regionOk(compareId, limits)) {
-      notices.push(`La región «${compareId}» no existe; se quitó la comparación.`)
+      notices.push(`The region “${compareId}” does not exist; the comparison was removed.`)
       compareId = null
     } else if (regionId === null) {
       compareId = null
     } else if (compareId === regionId) {
-      notices.push('Para comparar hacen falta dos regiones distintas; se quitó la comparación.')
+      notices.push('Comparing needs two different regions; the comparison was removed.')
       compareId = null
     }
   }
@@ -108,7 +108,7 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
     const legacy = Object.hasOwn(LEGACY_VARIABLE_IDS, rawVar) ? LEGACY_VARIABLE_IDS[rawVar] : null
     if (legacy !== null && variableOk(legacy, limits)) variableId = legacy
     else if (variableOk(rawVar, limits)) variableId = rawVar
-    else notices.push(`La variable «${rawVar}» no existe; se muestra la predeterminada.`)
+    else notices.push(`The variable “${rawVar}” does not exist; showing the default one.`)
   }
 
   const period = periodFor(variableId, limits)
@@ -120,7 +120,7 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
     const f = rawFrom === null ? from : Number(rawFrom)
     const t = rawTo === null ? to : Number(rawTo)
     if (yearsOk(f, t, period)) { from = f; to = t }
-    else notices.push(`El periodo ${rawFrom ?? '…'}–${rawTo ?? '…'} no es válido; se muestra ${from}–${to}.`)
+    else notices.push(`The period ${rawFrom ?? '…'}–${rawTo ?? '…'} is not valid; showing ${from}–${to}.`)
   }
 
   return { state: { regionId, compareId, variableId, from, to }, notices }

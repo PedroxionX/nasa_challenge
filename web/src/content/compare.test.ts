@@ -8,7 +8,7 @@ import type { DifferenceRow } from '../lib/data'
 const ctx: CompareContext = {
   firstName: 'Baja California',
   secondName: 'Texas',
-  unit: '°C/década',
+  unit: '°C/decade',
   basis: 'absolute',
   from: 1980,
   to: 2025,
@@ -26,28 +26,28 @@ const row = (over: Partial<DifferenceRow> = {}): DifferenceRow => ({
 const NO_FIGURES = { diff_decade: null, ci_low: null, ci_high: null, p: null }
 
 /** Lo que ninguna variante puede decir (constitución I y FR-K08). */
-const FORBIDDEN = /cambian igual|no hay diferencia|son iguales|mejor|peor|debido a|porque|seguirá|años para/i
+const FORBIDDEN = /the trends are the same|trends match|there is no difference|are the same\.|better|worse|due to|because|will keep|years to be/i
 
 const everyText = (e: ReturnType<typeof explainComparison>) => [e.verdict, e.sentence, e.pattern ?? '', ...e.caveats].join(' ')
 
 describe('explainComparison', () => {
   it('differ: diferencia en el orden del archivo, con intervalo, p, años comunes y unidad', () => {
     const e = explainComparison(row(), ctx)
-    expect(e.verdict).toBe('Las tendencias difieren')
+    expect(e.verdict).toBe('The trends differ')
     expect(e.sentence).toContain('Baja California − Texas')
-    expect(e.sentence).toContain('+0.17 °C/década')
-    expect(e.sentence).toMatch(/IC 95 %: de \+0\.05 a \+0\.29/)
+    expect(e.sentence).toContain('+0.17 °C/decade')
+    expect(e.sentence).toMatch(/95%\u00a0CI: \+0\.05 to \+0\.29/)
     expect(e.sentence).toContain('p = 0.004')
-    expect(e.sentence).toContain('46 años completos comunes')
-    expect(e.pattern).toMatch(/en los dos sube, con evidencia/)
+    expect(e.sentence).toContain('46 complete years in common')
+    expect(e.pattern).toMatch(/both rise, with evidence/)
     expect(e.caveats).toContain(COMPARE_COPY.manyPairs)
     expect(e.caveats).toContain(COMPARE_COPY.notCause)
   })
 
   it('inconclusive: no afirma que coincidan ni da la cifra de la diferencia', () => {
     const e = explainComparison(row({ status: 'inconclusive', p: 0.31 }), ctx)
-    expect(e.verdict).toBe('Sin evidencia suficiente de que difieran')
-    expect(e.sentence).toContain('Esto no demuestra que cambien igual')
+    expect(e.verdict).toBe('Not enough evidence that they differ')
+    expect(e.sentence).toContain('This does not prove that they change alike')
     expect(e.sentence).toContain('p = 0.310')
     expect(e.sentence).not.toContain('0.17')
   })
@@ -56,7 +56,7 @@ describe('explainComparison', () => {
     const e = explainComparison(row({ status: 'inconclusive', p: 0.2 }), {
       ...ctx, first: { status: 'inconclusive', slope: 0.1 }, second: { status: 'inconclusive', slope: -0.2 },
     })
-    expect(e.pattern).toMatch(/signo opuesto/)
+    expect(e.pattern).toMatch(/opposite signs/)
     expect(e.caveats).toContain(COMPARE_COPY.oppositeSigns)
     // Con evidencia de que difieren, el aviso sobra.
     expect(explainComparison(row(), { ...ctx, second: { status: 'decreasing', slope: -0.2 } }).caveats)
@@ -65,7 +65,7 @@ describe('explainComparison', () => {
 
   it('signos opuestos con evidencia en ambas: nombra la dirección de cada región', () => {
     const e = explainComparison(row(), { ...ctx, second: { status: 'decreasing', slope: -0.2 } })
-    expect(e.pattern).toBe('Baja California sube y Texas baja, cada uno con evidencia de tendencia.')
+    expect(e.pattern).toBe('Baja California rises and Texas falls, each with evidence of a trend.')
   })
 
   it('sin resultado individual de una región no describe ningún patrón', () => {
@@ -75,11 +75,11 @@ describe('explainComparison', () => {
 
   it('insufficient e invalid: sin cifras de la diferencia', () => {
     const few = explainComparison(row({ status: 'insufficient', n: 7, ...NO_FIGURES }), ctx)
-    expect(few.verdict).toBe('Datos insuficientes para comparar')
-    expect(few.sentence).toMatch(/comparten 7 años completos/)
-    expect(few.sentence).toContain('menos de 10')
+    expect(few.verdict).toBe('Not enough data to compare')
+    expect(few.sentence).toMatch(/share 7 complete years/)
+    expect(few.sentence).toContain('fewer than 10')
     const bad = explainComparison(row({ status: 'invalid', ...NO_FIGURES }), ctx)
-    expect(bad.verdict).toBe('Comparación no válida')
+    expect(bad.verdict).toBe('Comparison not valid')
     for (const e of [few, bad]) {
       expect(e.pattern).toBeNull()
       expect(everyText(e)).not.toMatch(/IC|p [=<]/)
@@ -88,9 +88,9 @@ describe('explainComparison', () => {
 
   it('la base relativa se explica y la unidad es la del archivo', () => {
     const e = explainComparison(row({ diff_decade: -22.57, ci_low: -34.58, ci_high: -9.36 }), {
-      ...ctx, basis: 'relative', unit: 'puntos porcentuales/década',
+      ...ctx, basis: 'relative', unit: 'percentage points/decade',
     })
-    expect(e.sentence).toContain('−22.57 puntos porcentuales/década')
+    expect(e.sentence).toContain('−22.57 percentage points/decade')
     expect(e.caveats[0]).toBe(COMPARE_COPY.relativeBasis)
     expect(explainComparison(row(), ctx).caveats[0]).toBe(COMPARE_COPY.absoluteBasis)
   })
@@ -117,7 +117,7 @@ describe('explainComparison', () => {
 
 describe('variableCopy (007 FR-K14)', () => {
   it('usa los textos de 006 si existen', () => {
-    expect(variableCopy('air_temperature', { label: 'X', definition: 'Y' }).short).toBe('Temperatura')
+    expect(variableCopy('air_temperature', { label: 'X', definition: 'Y' }).short).toBe('Temperature')
   })
   it('sin textos propios usa los del catálogo', () => {
     expect(variableCopy('algo_nuevo', { label: 'Algo nuevo', definition: 'Su definición.' }))

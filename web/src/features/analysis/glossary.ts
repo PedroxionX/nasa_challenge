@@ -7,19 +7,19 @@ export type TermKey = 'ci' | 'p' | 'alpha' | 'sen'
 
 export const GLOSSARY: Record<TermKey, { term: string; definition: string }> = {
   ci: {
-    term: 'Intervalo del 95 %',
-    definition: 'Rango de pendientes compatibles con los datos según Sen (1968), ensanchado por la autocorrelación.',
+    term: '95% interval',
+    definition: 'Range of slopes compatible with the data following Sen (1968), widened by autocorrelation.',
   },
   p: {
-    term: 'Valor p',
-    definition: 'Probabilidad de ver un patrón monótono al menos tan marcado si no hubiera tendencia.',
+    term: 'p-value',
+    definition: 'Probability of seeing a monotonic pattern at least this marked if there were no trend.',
   },
   alpha: {
-    term: 'α (alfa)',
-    definition: 'Umbral fijado antes de mirar los datos: si p es menor que α, se dice que hay evidencia de tendencia.',
+    term: 'α (alpha)',
+    definition: 'Threshold set before looking at the data: if p is smaller than α, we say there is evidence of a trend.',
   },
   sen: {
-    term: 'Recta de Sen',
-    definition: 'Recta con la pendiente de Theil-Sen: la mediana de las pendientes entre todos los pares de años.',
+    term: 'Sen line',
+    definition: 'Line with the Theil-Sen slope: the median of the slopes between every pair of years.',
   },
 }

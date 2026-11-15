@@ -3,7 +3,7 @@
  * Las cifras son las filas de `windows` de cada serie, las mismas que enseña el panel de 004.
  */
 import type { SeriesFile } from '../../lib/data'
-import { COMPARE_COPY } from '../../content'
+import { COMPARE_COPY, localizeSource } from '../../content'
 import { HAS_TREND, type Individual } from './compareData'
 import { digitsFor, fmtInterval, fmtP, fmtSigned, MISSING } from './format'
 
@@ -25,12 +25,12 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
         <table className="compare-table">
           <thead>
             <tr>
-              <th scope="col">Estado</th>
-              <th scope="col">Resultado</th>
-              <th scope="col">{`Cambio por década (${unit})`}</th>
-              <th scope="col">Intervalo</th>
-              <th scope="col">Valor p</th>
-              <th scope="col">Años</th>
+              <th scope="col">State</th>
+              <th scope="col">Result</th>
+              <th scope="col">{`Change per decade (${unit})`}</th>
+              <th scope="col">Interval</th>
+              <th scope="col">p-value</th>
+              <th scope="col">Years</th>
             </tr>
           </thead>
           <tbody>
@@ -61,23 +61,23 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
 
 function provenanceLine(series: SeriesFile): string {
   const p = series.provenance
-  const product = [p.short_name ?? p.product, p.version ? `versión ${p.version}` : null].filter(Boolean).join(' ')
-  const parts = [p.source, product, `variable ${p.parameter}`, p.grid ? `malla ${p.grid}` : null,
-    `${p.n_cells} celdas`, p.retrieved_at_utc ? `consultado el ${p.retrieved_at_utc.slice(0, 10)}` : null]
+  const product = [p.short_name ?? p.product, p.version ? `version ${p.version}` : null].filter(Boolean).join(' ')
+  const parts = [localizeSource(p.source), product, `variable ${p.parameter}`, p.grid ? `grid ${p.grid}` : null,
+    `${p.n_cells} cells`, p.retrieved_at_utc ? `retrieved ${p.retrieved_at_utc.slice(0, 10)}` : null]
   return parts.filter(Boolean).join(' · ')
 }
 
 export function PairProvenance({ sides }: { sides: Side[] }) {
   return (
     <details className="compare-details">
-      <summary>Procedencia de las dos series</summary>
+      <summary>Where the two series come from</summary>
       <dl className="compare-facts">
         {sides.map(({ tag, name, series }) => (
           <div key={tag}>
             <dt><span className="compare-tag">{tag}</span>{name}</dt>
             <dd>
               {provenanceLine(series)}
-              {series.provenance.is_synthetic && ' · datos de ejemplo sintéticos'}
+              {series.provenance.is_synthetic && ' · synthetic sample data'}
             </dd>
           </div>
         ))}

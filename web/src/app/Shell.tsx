@@ -21,7 +21,7 @@ export const DESKTOP_QUERY = '(min-width: 900px)'
 
 type Sheet = 'peek' | 'half' | 'full'
 const NEXT_SHEET: Record<Sheet, Sheet> = { peek: 'half', half: 'full', full: 'peek' }
-const SHEET_LABEL: Record<Sheet, string> = { peek: 'Mostrar más', half: 'Ampliar', full: 'Reducir' }
+const SHEET_LABEL: Record<Sheet, string> = { peek: 'Show more', half: 'Expand', full: 'Collapse' }
 
 function setInsets(right: number, bottom: number) {
   const s = document.documentElement.style
@@ -106,10 +106,10 @@ export default function Shell() {
           <p>{UI_COPY.tagline}</p>
         </div>
         <div className="shell-query">
-          <ErrorBoundary zone="buscador"><QueryBar /></ErrorBoundary>
+          <ErrorBoundary zone="search"><QueryBar /></ErrorBoundary>
         </div>
         <button type="button" className="shell-help" onClick={openMethods} aria-haspopup="dialog">
-          Métodos
+          Methods
         </button>
       </header>
 
@@ -118,31 +118,31 @@ export default function Shell() {
           {notice && (
             <p className="shell-notice" role="status">
               {notice}
-              <button type="button" onClick={dismissStateNotice} aria-label="Cerrar aviso">✕</button>
+              <button type="button" onClick={dismissStateNotice} aria-label="Dismiss notice">✕</button>
             </p>
           )}
           {catalogFailed && (
             <p className="shell-notice" role="alert">
-              No pudimos cargar el catálogo de datos.
+              We could not load the data catalog.
               <button type="button" onClick={() => setCatalogAttempt(a => a + 1)}>{UI_COPY.retry}</button>
             </p>
           )}
         </div>
       )}
 
-      <main className="shell-stage" ref={stageRef} aria-label="Globo" data-webgl={webgl}>
-        <ErrorBoundary zone="globo" onError={markWebglUnavailable} resetKeys={[webgl]}>
+      <main className="shell-stage" ref={stageRef} aria-label="Globe" data-webgl={webgl}>
+        <ErrorBoundary zone="globe" onError={markWebglUnavailable} resetKeys={[webgl]}>
           <GlobeStage />
         </ErrorBoundary>
         {!regionId && (
-          <section className="shell-welcome" aria-label="Bienvenida">
-            <ErrorBoundary zone="bienvenida"><WelcomeCard /></ErrorBoundary>
+          <section className="shell-welcome" aria-label="Welcome">
+            <ErrorBoundary zone="welcome"><WelcomeCard /></ErrorBoundary>
           </section>
         )}
       </main>
 
       {regionId && (
-        <aside className="shell-panel" ref={panelRef} aria-label="Análisis">
+        <aside className="shell-panel" ref={panelRef} aria-label="Analysis">
           <button
             type="button"
             className="shell-sheet-handle"
@@ -154,20 +154,20 @@ export default function Shell() {
           <div className="shell-panel-body">
             {/* 007: con una segunda región (vs=) el panel muestra la comparación; sin ella, el análisis y su entrada. */}
             {compareId ? (
-              <ErrorBoundary zone="comparación" resetKeys={[regionId, compareId]}><ComparePanel /></ErrorBoundary>
+              <ErrorBoundary zone="comparison" resetKeys={[regionId, compareId]}><ComparePanel /></ErrorBoundary>
             ) : (
               <>
-                <ErrorBoundary zone="análisis" resetKeys={[regionId]}><AnalysisPanel /></ErrorBoundary>
-                <ErrorBoundary zone="comparación" resetKeys={[regionId]}><CompareEntry /></ErrorBoundary>
+                <ErrorBoundary zone="analysis" resetKeys={[regionId]}><AnalysisPanel /></ErrorBoundary>
+                <ErrorBoundary zone="comparison" resetKeys={[regionId]}><CompareEntry /></ErrorBoundary>
               </>
             )}
           </div>
         </aside>
       )}
 
-      <dialog className="shell-methods" ref={methodsRef} aria-label="Métodos y fuentes">
-        <button type="button" className="shell-methods-close" onClick={closeMethods}>Cerrar</button>
-        <ErrorBoundary zone="métodos"><MethodsSheet /></ErrorBoundary>
+      <dialog className="shell-methods" ref={methodsRef} aria-label="Methods and sources">
+        <button type="button" className="shell-methods-close" onClick={closeMethods}>{UI_COPY.close}</button>
+        <ErrorBoundary zone="methods"><MethodsSheet /></ErrorBoundary>
       </dialog>
     </div>
   )

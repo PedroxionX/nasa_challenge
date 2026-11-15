@@ -7,6 +7,7 @@
  * El navegador NO calcula estadística: solo lee y elige la fila ya calculada (constitución, principio I).
  */
 import { asset } from './assets'
+import { regionName } from '../content/names'
 
 // ---------- Tipos del contrato ----------
 
@@ -289,7 +290,9 @@ function validateCatalog(raw: unknown, url: string): Catalog {
   if (!Array.isArray(c.variables) || !Array.isArray(c.regions)) {
     throw new DataError('invalid', url, `${url}: «variables» y «regions» deben ser listas`)
   }
-  return c as unknown as Catalog
+  const catalog = c as unknown as Catalog
+  // Nombre para mostrar (interfaz en inglés): el archivo no se toca.
+  return { ...catalog, regions: catalog.regions.map(r => ({ ...r, name: regionName(r.id, r.name) })) }
 }
 
 function validateSeries(raw: unknown, url: string): SeriesFile {

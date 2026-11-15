@@ -59,7 +59,7 @@ export function senSegment(row: TrendRow | null): [YearPoint, YearPoint] | null 
 /** Id fijo de la lista de la entrada: la vista de comparación le devuelve el foco al cerrarse. */
 export const ENTRY_SELECT_ID = 'compare-region'
 
-const COUNTRY_NAMES: Record<string, string> = { MX: 'México', US: 'Estados Unidos' }
+const COUNTRY_NAMES: Record<string, string> = { MX: 'Mexico', US: 'United States' }
 
 /** Regiones agrupadas por país y ordenadas por nombre; sin la principal. */
 export function groupRegions(regions: RegionInfo[], exclude: string | null): [country: string, regions: RegionInfo[]][] {
@@ -72,6 +72,6 @@ export function groupRegions(regions: RegionInfo[], exclude: string | null): [co
   }
   return [...groups.entries()].map(([country, list]) => [
     COUNTRY_NAMES[country] ?? country,
-    list.sort((a, b) => a.name.localeCompare(b.name, 'es')),
+    list.sort((a, b) => a.name.localeCompare(b.name, 'en')),
   ])
 }

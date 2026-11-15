@@ -10,7 +10,7 @@ import { textureUrls } from './textures'
 const MAP: MapFile = {
   schema_version: 1,
   variable: 'air_temperature',
-  unit: '°C/década',
+  unit: '°C/decade',
   regions: ['MX-BCN', 'MX-SON', 'US-TX'],
   windows: { '1981-2025': [0.46, null, -0.12] },
   classes: { breaks: [-0.4, -0.1, 0.1, 0.4], labels: ['Baja mucho', 'Baja', 'Casi sin cambio', 'Sube', 'Sube mucho'] },
@@ -36,7 +36,7 @@ describe('clases del mapa', () => {
 
   it('describe el intervalo de cada clase', () => {
     expect(classRanges(MAP.classes.breaks, formatBreak)).toEqual([
-      'menos de −0,4', 'de −0,4 a −0,1', 'de −0,1 a 0,1', 'de 0,1 a 0,4', '0,4 o más',
+      'below −0,4', '−0,4 to −0,1', '−0,1 to 0,1', '0,1 to 0,4', '0,4 or more',
     ])
   })
 
@@ -54,9 +54,9 @@ describe('clases del mapa', () => {
 
 describe('formato y tabla', () => {
   const rows: RegionRow[] = [
-    { id: 'US-TX', name: 'Texas', country: 'Estados Unidos', value: -0.12, label: 'Baja' },
-    { id: 'MX-SON', name: 'Sonora', country: 'México', value: null, label: null },
-    { id: 'MX-BCN', name: 'Baja California', country: 'México', value: 0.46, label: 'Sube mucho' },
+    { id: 'US-TX', name: 'Texas', country: 'United States', value: -0.12, label: 'Baja' },
+    { id: 'MX-SON', name: 'Sonora', country: 'Mexico', value: null, label: null },
+    { id: 'MX-BCN', name: 'Baja California', country: 'Mexico', value: 0.46, label: 'Sube mucho' },
   ]
 
   it('escribe la pendiente con signo y coma decimal', () => {

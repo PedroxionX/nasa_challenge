@@ -11,7 +11,7 @@ import type { TrendRow } from '../lib/data'
 const baseCtx: ExplainContext = {
   regionName: 'Baja California',
   variableId: 'air_temperature',
-  unit: '°C/década',
+  unit: '°C/decade',
   from: 1981,
   to: 2025,
   alpha: 0.05,
@@ -39,7 +39,7 @@ function makeRow(overrides: Partial<TrendRow>): TrendRow {
   }
 }
 
-const FORBIDDEN_CAUSE = /porque|causa|provoca|continuará|seguirá|predic/
+const FORBIDDEN_CAUSE = /because|caused|causes|due to|will keep|predict|forecast/
 
 // ---------- Variante 1: increasing ----------
 
@@ -48,7 +48,7 @@ describe('increasing', () => {
   const result = explainTrend(row, baseCtx)
 
   it('veredicto es "Sube"', () => {
-    expect(result.verdict).toBe('Sube')
+    expect(result.verdict).toBe('Rising')
   })
 
   it('la frase contiene la pendiente con signo', () => {
@@ -75,23 +75,23 @@ describe('increasing', () => {
 
   // Regresión: «+0.32 °C/década por década»
   it('no repite la base temporal: la unidad ya trae «/década»', () => {
-    expect(result.sentence).not.toMatch(/década por década/)
-    expect(result.sentence).not.toMatch(/por década/)
+    expect(result.sentence).not.toMatch(/decade per decade/)
+    expect(result.sentence).not.toMatch(/per decade/)
     // pendiente + los dos extremos del IC = 2 apariciones de la unidad
-    expect(result.sentence.match(/°C\/década/g)).toHaveLength(2)
+    expect(result.sentence.match(/°C\/decade/g)).toHaveLength(2)
   })
 
   // Regresión: «fuerte» / «moderada» no estaban definidos en ningún spec
   it('no gradúa la evidencia con niveles inventados', () => {
-    expect(result.sentence.toLowerCase()).not.toMatch(/fuerte|moderada|débil/)
-    expect(result.sentence).toContain('sería muy raro si no hubiera tendencia')
+    expect(result.sentence.toLowerCase()).not.toMatch(/strong|moderate|weak/)
+    expect(result.sentence).toContain('would be very unlikely if there were no trend')
   })
 
   it('el nivel del IC sale de alpha, no es fijo', () => {
     const r95 = explainTrend(row, { ...baseCtx, alpha: 0.05 })
     const r90 = explainTrend(row, { ...baseCtx, alpha: 0.1 })
-    expect(r95.sentence).toContain('IC\u00a095\u00a0%')
-    expect(r90.sentence).toContain('IC\u00a090\u00a0%')
+    expect(r95.sentence).toContain('95%\u00a0CI')
+    expect(r90.sentence).toContain('90%\u00a0CI')
   })
 
   it('p muy pequeño se muestra como «p < 0.001», no «0.000»', () => {
@@ -101,7 +101,7 @@ describe('increasing', () => {
   })
 
   it('el número de años es el n del archivo', () => {
-    expect(result.sentence).toContain('45\u00a0años')
+    expect(result.sentence).toContain('45\u00a0years')
   })
 
   it('todas las cifras con signo del texto son las del archivo (SC-C02)', () => {
@@ -121,20 +121,20 @@ describe('formato y redacción (FR-A08, coherencia con el panel)', () => {
 
   it('en mm usa un decimal, como las tarjetas del panel', () => {
     const r = explainTrend(makeRow({ status: 'decreasing', slope_decade: -30.15, ci_low: -40.35, ci_high: -15.93 }),
-      { ...baseCtx, variableId: 'precipitation', unit: 'mm/década' })
-    expect(r.sentence).toContain('−30.1 mm/década')
-    expect(r.sentence).toContain('de −40.4 a −15.9')
+      { ...baseCtx, variableId: 'precipitation', unit: 'mm/decade' })
+    expect(r.sentence).toContain('−30.1 mm/decade')
+    expect(r.sentence).toContain('−40.4 to −15.9')
   })
 
   it('la frase no repite el veredicto al inicio y nombra lugar y variable', () => {
     const r = explainTrend(row, baseCtx)
-    expect(r.sentence).not.toMatch(/^(Sube|Baja)\b/)
-    expect(r.sentence).toMatch(/^En Baja California, la temperatura del aire sube /)
+    expect(r.sentence).not.toMatch(/^(Rising|Falling)\b/)
+    expect(r.sentence).toMatch(/^In Baja California, air temperature rises by /)
   })
 
   it('un valor que redondea a cero no lleva signo', () => {
     const r = explainTrend(makeRow({ status: 'increasing', slope_decade: 0.32, ci_low: 0.001, ci_high: 0.46 }), baseCtx)
-    expect(r.sentence).toContain('de 0.00 a +0.46')
+    expect(r.sentence).toContain('0.00 to +0.46')
   })
 })
 
@@ -145,7 +145,7 @@ describe('decreasing', () => {
   const result = explainTrend(row, baseCtx)
 
   it('veredicto es "Baja"', () => {
-    expect(result.verdict).toBe('Baja')
+    expect(result.verdict).toBe('Falling')
   })
 
   it('la frase contiene la pendiente negativa con el signo menos U+2212', () => {
@@ -159,12 +159,12 @@ describe('decreasing', () => {
   })
 
   it('no repite la base temporal', () => {
-    expect(result.sentence).not.toMatch(/por década/)
+    expect(result.sentence).not.toMatch(/per decade/)
   })
 
   it('con precipitación relativa, la unidad que pasa quien llama se respeta', () => {
-    const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/década' })
-    expect(r.sentence).toContain('\u22120.1\u00a0%/década') // un decimal fuera de °C, como el panel
+    const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/decade' })
+    expect(r.sentence).toContain('\u22120.1\u00a0%/decade') // un decimal fuera de °C, como el panel
     expect(r.sentence).not.toContain('°C')
   })
 })
@@ -176,18 +176,18 @@ describe('inconclusive', () => {
   const result = explainTrend(row, baseCtx)
 
   it('veredicto es "Sin evidencia suficiente"', () => {
-    expect(result.verdict).toBe('Sin evidencia suficiente')
+    expect(result.verdict).toBe('Not enough evidence')
   })
 
   it('NO menciona la dirección estimada (clarification 2026-11-14)', () => {
     const lower = result.sentence.toLowerCase()
-    expect(lower).not.toContain('sube')
+    expect(lower).not.toContain('rises')
     expect(lower).not.toContain('+0.05')
-    expect(result.sentence).not.toMatch(/^Baja[.,]/)
+    expect(result.sentence).not.toMatch(/^Falling[.,]/)
   })
 
   it('afirma que no demuestra ausencia de cambio (SC-C02 AS-1)', () => {
-    expect(result.sentence.toLowerCase()).toContain('no demuestra')
+    expect(result.sentence.toLowerCase()).toContain('does not prove')
   })
 
   it('no afirma causa ni pronóstico', () => {
@@ -195,7 +195,7 @@ describe('inconclusive', () => {
   })
 
   it('no dice «no hay cambio»', () => {
-    expect(result.sentence.toLowerCase()).not.toMatch(/no hay cambio|sin cambio/)
+    expect(result.sentence.toLowerCase()).not.toMatch(/shows no change|has not changed|is not changing|unchanged/)
   })
 })
 
@@ -204,19 +204,19 @@ describe('inconclusive', () => {
 describe('insufficient', () => {
   it('veredicto es "Datos insuficientes" cuando row es null', () => {
     const result = explainTrend(null, baseCtx)
-    expect(result.verdict).toBe('Datos insuficientes')
+    expect(result.verdict).toBe('Not enough data')
     expect(result.sentence).toBe(UI_COPY.insufficientData)
   })
 
   it('veredicto es "Datos insuficientes" cuando status es insufficient', () => {
     const row = makeRow({ status: 'insufficient', slope_decade: null, ci_low: null, ci_high: null, p: null })
     const result = explainTrend(row, baseCtx)
-    expect(result.verdict).toBe('Datos insuficientes')
+    expect(result.verdict).toBe('Not enough data')
   })
 
   it('no dice "no hay cambio" (constitución Principio I)', () => {
     const result = explainTrend(null, baseCtx)
-    expect(result.sentence.toLowerCase()).not.toMatch(/no hay cambio|sin cambio/)
+    expect(result.sentence.toLowerCase()).not.toMatch(/shows no change|has not changed|is not changing|unchanged/)
   })
 })
 
@@ -225,21 +225,21 @@ describe('invalid', () => {
 
   it('veredicto es "Análisis no válido"', () => {
     const result = explainTrend(makeRow({ status: 'invalid', ...nulls }), baseCtx)
-    expect(result.verdict).toBe('Análisis no válido')
+    expect(result.verdict).toBe('Analysis not valid')
   })
 
   // Regresión: antes decía «menos de 10 años» aunque la serie tuviera 45
   it('con escalón explica el salto y NO dice que faltan años', () => {
     const result = explainTrend(makeRow({ status: 'invalid', flags: ['step'], ...nulls }), baseCtx)
     expect(result.sentence).toBe(UI_COPY.invalidStep)
-    expect(result.sentence.toLowerCase()).toContain('salto')
-    expect(result.sentence).not.toMatch(/10 años|faltan/i)
+    expect(result.sentence.toLowerCase()).toContain('jump')
+    expect(result.sentence).not.toMatch(/10 complete years|years are missing/i)
   })
 
   it('sin marca de escalón usa el texto genérico, tampoco habla de años', () => {
     const result = explainTrend(makeRow({ status: 'invalid', flags: [], ...nulls }), baseCtx)
     expect(result.sentence).toBe(UI_COPY.invalidGeneric)
-    expect(result.sentence).not.toMatch(/10 años|faltan/i)
+    expect(result.sentence).not.toMatch(/10 complete years|years are missing/i)
   })
 
   it('no muestra cifras de pendiente', () => {
@@ -252,11 +252,11 @@ describe('invalid', () => {
 
 describe('caveats', () => {
   const row = makeRow({ status: 'increasing' })
-  const small = (c: string) => c.toLowerCase().includes('más pequeño') || c.toLowerCase().includes('celda')
+  const small = (c: string) => c.toLowerCase().includes('smaller than') || c.toLowerCase().includes('model cell')
 
   it('aviso de sintético cuando isSynthetic es true', () => {
     const result = explainTrend(row, { ...baseCtx, isSynthetic: true })
-    expect(result.caveats.some(c => c.toLowerCase().includes('sintétic'))).toBe(true)
+    expect(result.caveats.some(c => c.toLowerCase().includes('synthetic'))).toBe(true)
   })
 
   it('aviso de periodo cuando fullPeriod es false', () => {
@@ -307,19 +307,19 @@ describe('textos fijos', () => {
     for (const key of ['slope', 'ci', 'p', 'alpha'] as const) {
       expect(GLOSSARY[key].length).toBeGreaterThan(30)
     }
-    expect(GLOSSARY.ci).toContain('Intervalo de confianza')
-    expect(GLOSSARY.p).toContain('Valor p')
+    expect(GLOSSARY.ci).toContain('Confidence interval')
+    expect(GLOSSARY.p).toContain('p-value')
   })
 
   it('distingue significancia, magnitud y relevancia, sin causalidad (FR-C01)', () => {
     const t = UI_COPY.significanceNote.toLowerCase()
-    expect(t).toContain('significativ')
-    expect(t).toContain('cuánto cambia')
+    expect(t).toContain('significant')
+    expect(t).toContain('how much it changes')
     expect(t).not.toMatch(FORBIDDEN_CAUSE)
   })
 
   it('la leyenda avisa de las comparaciones múltiples (UX §7, D8)', () => {
-    expect(UI_COPY.legendNote).toContain('azar')
+    expect(UI_COPY.legendNote).toContain('chance')
   })
 
   it('ningún texto fijo afirma causa o pronóstico', () => {
@@ -327,7 +327,7 @@ describe('textos fijos', () => {
       UI_COPY.invalidStep, UI_COPY.invalidGeneric, UI_COPY.insufficientData,
       UI_COPY.legendNote, UI_COPY.smallRegion, UI_COPY.significanceNote,
     ]
-    for (const t of fixed) expect(t.toLowerCase()).not.toMatch(/porque|provoca|continuará|seguirá|predic/)
+    for (const t of fixed) expect(t.toLowerCase()).not.toMatch(/because|causes|will keep|predict|forecast/)
   })
 })
 // ---------- Citas (FR-C04) ----------
@@ -340,11 +340,11 @@ describe('productCitation', () => {
 
   it('un producto desconocido se nombra tal cual, sin inventar autores ni DOI', () => {
     const c = productCitation('OTRO_PRODUCTO', '3')
-    expect(c).toBe('OTRO_PRODUCTO versión 3.')
+    expect(c).toBe('OTRO_PRODUCTO version 3.')
     expect(c).not.toMatch(/doi/i)
   })
 
   it('sin producto lo dice', () => {
-    expect(productCitation(undefined, undefined)).toMatch(/no declarado/)
+    expect(productCitation(undefined, undefined)).toMatch(/not declared/)
   })
 })

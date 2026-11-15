@@ -34,7 +34,7 @@ describe('format (FR-A08, es-MX)', () => {
     expect(fmtP(0.001)).toBe('p = 0.001')
     expect(fmtP(0.0234)).toBe('p = 0.023')
     expect(fmtP(0.5)).toBe('p = 0.500')
-    expect(fmtP(null)).toBe('p no evaluable')
+    expect(fmtP(null)).toBe('p not available')
   })
 
   it('formatea α sin ceros de relleno', () => {
@@ -43,12 +43,12 @@ describe('format (FR-A08, es-MX)', () => {
   })
 
   it('compone pendiente por década con unidad', () => {
-    expect(fmtSlope(0.46, '°C')).toBe('+0.46 °C por década')
-    expect(fmtSlope(-12.34, 'mm/año', 1)).toBe('−12.3 mm/año por década')
+    expect(fmtSlope(0.46, '°C')).toBe('+0.46 °C per decade')
+    expect(fmtSlope(-12.34, 'mm/año', 1)).toBe('−12.3 mm/año per decade')
   })
 
   it('compone el intervalo con signos', () => {
-    expect(fmtInterval(-0.1, 0.3)).toBe('de −0.10 a +0.30')
+    expect(fmtInterval(-0.1, 0.3)).toBe('−0.10 to +0.30')
   })
 
   it('formatea porcentajes sin calcularlos', () => {

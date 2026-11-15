@@ -50,7 +50,7 @@ describe('filterRegions', () => {
 describe('RegionSearch (T001)', () => {
   it('se elige «Sonora» solo con teclado', async () => {
     await renderQuery()
-    const input = screen.getByRole('combobox', { name: 'Buscar un estado' })
+    const input = screen.getByRole('combobox', { name: 'Search for a state' })
     input.focus()
     fireEvent.change(input, { target: { value: 'sono' } })
     expect(input.getAttribute('aria-expanded')).toBe('true')
@@ -64,11 +64,11 @@ describe('RegionSearch (T001)', () => {
 
   it('agrupa por país y se recorre con flechas, Inicio y Fin', async () => {
     await renderQuery()
-    const input = screen.getByRole('combobox', { name: 'Buscar un estado' })
+    const input = screen.getByRole('combobox', { name: 'Search for a state' })
     fireEvent.keyDown(input, { key: 'ArrowDown' })
-    expect(screen.getByRole('group', { name: 'México' })).toBeTruthy()
-    expect(screen.getByRole('group', { name: 'Estados Unidos' })).toBeTruthy()
-    const options = within(screen.getByRole('listbox', { name: 'Estados' })).getAllByRole('option')
+    expect(screen.getByRole('group', { name: 'Mexico' })).toBeTruthy()
+    expect(screen.getByRole('group', { name: 'United States' })).toBeTruthy()
+    const options = within(screen.getByRole('listbox', { name: 'States' })).getAllByRole('option')
     expect(options.length).toBe(84)
     expect(input.getAttribute('aria-activedescendant')).toBe(options[0].id)
     fireEvent.keyDown(input, { key: 'ArrowDown' })
@@ -81,7 +81,7 @@ describe('RegionSearch (T001)', () => {
 
   it('sin coincidencias muestra el texto de ux.md §7 y lo anuncia', async () => {
     await renderQuery()
-    const input = screen.getByRole('combobox', { name: 'Buscar un estado' })
+    const input = screen.getByRole('combobox', { name: 'Search for a state' })
     fireEvent.change(input, { target: { value: 'atlantida' } })
     expect(document.querySelectorAll('[role="listbox"] [role="option"]')).toHaveLength(0)
     expect(screen.getByRole('status').textContent).toBe(NO_MATCH)
@@ -90,7 +90,7 @@ describe('RegionSearch (T001)', () => {
 
   it('Escape cierra la lista y vuelve a mostrar el estado elegido', async () => {
     await renderQuery('?region=MX-BCN')
-    const input = screen.getByRole('combobox', { name: 'Buscar un estado' }) as HTMLInputElement
+    const input = screen.getByRole('combobox', { name: 'Search for a state' }) as HTMLInputElement
     expect(input.value).toBe('Baja California')
     fireEvent.change(input, { target: { value: 'tex' } })
     fireEvent.keyDown(input, { key: 'Escape' })
@@ -107,7 +107,7 @@ describe('RegionSearch (T001)', () => {
       return <button type="button" onClick={() => setRegion('US-TX')}>Texas en el globo</button>
     }
     await act(async () => { render(<FakeGlobe />) })
-    const input = screen.getByRole('combobox', { name: 'Buscar un estado' }) as HTMLInputElement
+    const input = screen.getByRole('combobox', { name: 'Search for a state' }) as HTMLInputElement
     expect(input.value).toBe('')
     fireEvent.click(screen.getByRole('button', { name: 'Texas en el globo' }))
     expect(input.value).toBe('Texas')
@@ -129,14 +129,14 @@ describe('VariablePicker (T002)', () => {
 
   it('la definición se abre y se cierra sin salir de la pantalla', async () => {
     await renderQuery()
-    const info = screen.getByRole('button', { name: /Qué es temperatura del aire/ })
+    const info = screen.getByRole('button', { name: /What is air temperature/ })
     expect(info.getAttribute('aria-expanded')).toBe('false')
     const definition = document.getElementById(info.getAttribute('aria-controls')!)!
     expect(definition.hidden).toBe(true)
     fireEvent.click(info)
     expect(info.getAttribute('aria-expanded')).toBe('true')
     expect(definition.hidden).toBe(false)
-    expect(definition.textContent).toMatch(/Temperatura del aire:/)
+    expect(definition.textContent).toMatch(/Air temperature:/)
     fireEvent.keyDown(info, { key: 'Escape' })
     expect(definition.hidden).toBe(true)
   })
@@ -145,14 +145,14 @@ describe('VariablePicker (T002)', () => {
     const catalog = JSON.parse(TREND_FIXTURES['data/trends/catalog.json'])
     const temp = catalog.variables.find((v: { id: string }) => v.id === 'air_temperature')
     await renderQuery()
-    fireEvent.click(screen.getByRole('button', { name: /Qué es temperatura del aire/ }))
+    fireEvent.click(screen.getByRole('button', { name: /What is air temperature/ }))
     const definition = document.getElementById(
-      screen.getByRole('button', { name: /Qué es temperatura del aire/ }).getAttribute('aria-controls')!,
+      screen.getByRole('button', { name: /What is air temperature/ }).getAttribute('aria-controls')!,
     )!
     const text = definition.textContent ?? ''
-    expect(text).toContain(`Unidad${temp.unit_annual} (promedio anual)`)
-    expect(text).toMatch(/Origenreanálisis/)
+    expect(text).toContain(`Unit${temp.unit_annual} (yearly mean)`)
+    expect(text).toMatch(/Sourcereanalysis/)
     expect(text).toContain(temp.product_short_name)
-    expect(text).toContain(`Años${temp.first_year}–${temp.last_complete_year}`)
+    expect(text).toContain(`Years${temp.first_year}–${temp.last_complete_year}`)
   })
 })

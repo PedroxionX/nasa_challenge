@@ -27,7 +27,7 @@ export default function RegionSearch() {
     loadCatalog()
       .then(c => {
         if (!live) return
-        setRegions([...c.regions].sort((a, b) => a.name.localeCompare(b.name, 'es')))
+        setRegions([...c.regions].sort((a, b) => a.name.localeCompare(b.name, 'en')))
         setFailed(false)
       })
       .catch(() => live && setFailed(true))
@@ -102,11 +102,11 @@ export default function RegionSearch() {
     ? ''
     : visible.length === 0
       ? NO_MATCH
-      : `${visible.length} ${visible.length === 1 ? 'estado' : 'estados'}`
+      : `${visible.length} ${visible.length === 1 ? 'state' : 'states'}`
 
   return (
     <div className="region-search">
-      <label className="query-vh" htmlFor={REGION_SEARCH_ID}>Buscar un estado</label>
+      <label className="query-vh" htmlFor={REGION_SEARCH_ID}>Search for a state</label>
       <input
         id={REGION_SEARCH_ID}
         ref={inputRef}
@@ -128,7 +128,7 @@ export default function RegionSearch() {
         onKeyDown={onKeyDown}
       />
       <div className="region-search-popup" hidden={!open}>
-      <div id={listId} role="listbox" aria-label="Estados" className="region-search-list">
+      <div id={listId} role="listbox" aria-label="States" className="region-search-list">
         {COUNTRIES.map(c => {
           const items = visible.filter(r => r.country === c.code)
           if (!items.length) return null
@@ -157,7 +157,7 @@ export default function RegionSearch() {
       {visible.length === 0 && <p className="region-search-empty">{NO_MATCH}</p>}
       </div>
       <p className="query-vh" role="status" aria-live="polite">{status}</p>
-      {failed && <p className="region-search-error" role="alert">No pudimos cargar la lista de estados.</p>}
+      {failed && <p className="region-search-error" role="alert">We could not load the list of states.</p>}
     </div>
   )
 }

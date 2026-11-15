@@ -55,7 +55,7 @@ export const fmtYear = (year: number) => String(year)
 export const fmtYears = (from: number, to: number) => `${fmtYear(from)}–${fmtYear(to)}`
 
 export function fmtP(p: number | null | undefined): string {
-  if (!usable(p)) return 'p no evaluable'
+  if (!usable(p)) return 'p not available'
   if (p < 0.001) return 'p < 0.001'
   return `p = ${fmtNumber(p, 3)}`
 }
@@ -67,11 +67,11 @@ export function fmtAlpha(alpha: number): string {
 
 /** «+0.46 °C por década». `unit` es `unit_annual` del catálogo. */
 export const fmtSlope = (x: number | null | undefined, unit: string, digits = 2) =>
-  usable(x) ? `${fmtSigned(x, digits)} ${unit} por década` : MISSING
+  usable(x) ? `${fmtSigned(x, digits)} ${unit} per decade` : MISSING
 
 /** «de −0.10 a +0.30». */
 export const fmtInterval = (low: number | null | undefined, high: number | null | undefined, digits = 2) =>
-  usable(low) && usable(high) ? `de ${fmtSigned(low, digits)} a ${fmtSigned(high, digits)}` : MISSING
+  usable(low) && usable(high) ? `${fmtSigned(low, digits)} to ${fmtSigned(high, digits)}` : MISSING
 
 /** Porcentaje ya calculado por el pipeline (FR-A09): «+3.1 %». */
 export const fmtPercent = (x: number | null | undefined, digits = 1) =>

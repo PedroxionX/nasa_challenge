@@ -23,7 +23,7 @@ export type SortKey = 'name' | 'value'
 
 /** Ordena sin mutar. Las regiones sin datos van siempre al final. */
 export function sortRows(rows: RegionRow[], key: SortKey, dir: 1 | -1): RegionRow[] {
-  const byName = (a: RegionRow, b: RegionRow) => a.name.localeCompare(b.name, 'es')
+  const byName = (a: RegionRow, b: RegionRow) => a.name.localeCompare(b.name, 'en')
   return [...rows].sort((a, b) => {
     if (key === 'name') return dir * byName(a, b)
     if (a.value === null && b.value === null) return byName(a, b)

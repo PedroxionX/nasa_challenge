@@ -20,7 +20,7 @@ async function renderPanel(search: string) {
   configureLikeShell(await import('../../app/state'), data, catalog)
   const { default: AnalysisPanel } = await import('./AnalysisPanel')
   await act(async () => { render(<AnalysisPanel />) })
-  await screen.findByRole('group', { name: 'Periodo' })
+  await screen.findByRole('group', { name: 'Period' })
 }
 
 const params = () => new URLSearchParams(window.location.search)
@@ -73,57 +73,57 @@ describe('windowsEndingAt (FR-A07)', () => {
 describe('PeriodControl (T007)', () => {
   it('dos listas nativas «Desde» y «Hasta»; «Usar todo el periodo» inactivo con el periodo completo', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature')
-    expect(optionYears(select('Desde')).at(-1)).toBe(2016)
-    expect(optionYears(select('Hasta'))[0]).toBe(1989)
-    expect((screen.getByRole('button', { name: 'Usar todo el periodo' }) as HTMLButtonElement).disabled).toBe(true)
-    expect(screen.queryByText(/Estás viendo/)).toBeNull()
+    expect(optionYears(select('From')).at(-1)).toBe(2016)
+    expect(optionYears(select('To'))[0]).toBe(1989)
+    expect((screen.getByRole('button', { name: 'Use full period' }) as HTMLButtonElement).disabled).toBe(true)
+    expect(screen.queryByText(/You are viewing/)).toBeNull()
   })
 
   it('cambiar «Desde» actualiza el periodo y restringe «Hasta»; nunca queda invertido', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature')
-    await act(async () => { fireEvent.change(select('Desde'), { target: { value: '2000' } }) })
+    await act(async () => { fireEvent.change(select('From'), { target: { value: '2000' } }) })
     expect(params().get('from')).toBe('2000')
-    const ends = optionYears(select('Hasta'))
+    const ends = optionYears(select('To'))
     expect(Math.min(...ends)).toBe(2009)
-    await act(async () => { fireEvent.change(select('Hasta'), { target: { value: '2009' } }) })
+    await act(async () => { fireEvent.change(select('To'), { target: { value: '2009' } }) })
     expect(params().get('to')).toBe('2009')
-    expect(Math.max(...optionYears(select('Desde')))).toBe(2000)
-    for (const f of optionYears(select('Desde'))) expect(2009 - f + 1).toBeGreaterThanOrEqual(10)
+    expect(Math.max(...optionYears(select('From')))).toBe(2000)
+    for (const f of optionYears(select('From'))) expect(2009 - f + 1).toBeGreaterThanOrEqual(10)
   })
 
   it('«Usar todo el periodo» vuelve al periodo completo de la variable', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature&from=2000&to=2020')
-    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Usar todo el periodo' })) })
+    await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Use full period' })) })
     expect(params().get('from')).toBe('1980')
     expect(params().get('to')).toBe('2025')
   })
 
   it('en precipitación las listas empiezan en 2001 (periodo propio de la variable)', async () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
-    expect(optionYears(select('Desde'))[0]).toBe(2001)
-    expect(optionYears(select('Hasta'))[0]).toBe(2010)
-    expect((screen.getByRole('button', { name: 'Usar todo el periodo' }) as HTMLButtonElement).disabled).toBe(true)
+    expect(optionYears(select('From'))[0]).toBe(2001)
+    expect(optionYears(select('To'))[0]).toBe(2010)
+    expect((screen.getByRole('button', { name: 'Use full period' }) as HTMLButtonElement).disabled).toBe(true)
   })
 })
 
 describe('PeriodVariation (T008)', () => {
   it('el aviso solo aparece fuera del periodo completo', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature&from=2000&to=2025')
-    expect(screen.getByText('Estás viendo 2000–2025.')).toBeTruthy()
-    expect(screen.getAllByText(/Estás viendo/)).toHaveLength(1) // no se repite en «En palabras»
+    expect(screen.getByText('You are viewing 2000–2025.')).toBeTruthy()
+    expect(screen.getAllByText(/You are viewing/)).toHaveLength(1) // no se repite en «En palabras»
   })
 
   it('la vista de variación marca el año elegido y su tabla coincide con las filas del archivo', async () => {
     await renderPanel('?region=MX-BCN&var=air_temperature&from=2000&to=2025')
-    const toggle = screen.getByRole('button', { name: 'Ver cómo cambia según el año inicial' })
+    const toggle = screen.getByRole('button', { name: 'See how it changes with the start year' })
     expect(document.querySelector('.variation-chart')).toBeNull()
     fireEvent.click(toggle)
     expect(toggle.getAttribute('aria-expanded')).toBe('true')
     expect(document.querySelector('.variation-chart')).not.toBeNull()
     expect(document.querySelector('.variation-current')).not.toBeNull()
 
-    const section = screen.getByRole('region', { name: 'Aviso de periodo' })
-    fireEvent.click(within(section).getByRole('button', { name: 'Ver como tabla' }))
+    const section = screen.getByRole('region', { name: 'Period notice' })
+    fireEvent.click(within(section).getByRole('button', { name: 'View as table' }))
     const table = within(section).getByRole('table')
     const bodyRows = within(table).getAllByRole('row').slice(1)
     expect(bodyRows).toHaveLength(windowsEndingAt(bcn, 2025).length)

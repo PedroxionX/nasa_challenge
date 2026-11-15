@@ -37,8 +37,8 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (!this.state.error) return this.props.children
     return (
       <div className="zone-error" role="alert">
-        <p>Esta parte ({this.props.zone}) no se pudo mostrar.</p>
-        <button type="button" onClick={() => this.setState({ error: null })}>Reintentar</button>
+        <p>This part ({this.props.zone}) could not be shown.</p>
+        <button type="button" onClick={() => this.setState({ error: null })}>Retry</button>
       </div>
     )
   }

@@ -4,7 +4,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { markWebglUnavailable, toSearch, useAppState } from '../../app/state'
-import { UI_COPY, variableCopy } from '../../content'
+import { localizeClassLabel, localizeUnit, UI_COPY, variableCopy } from '../../content'
 import { loadCatalog, loadMap, windowKey, type Catalog, type MapFile } from '../../lib/data'
 import { GLOBE_COPY } from './copy'
 import EarthGlobe, { type EarthGlobeHandle } from './EarthGlobe'
@@ -70,8 +70,9 @@ export default function GlobeStage() {
   )
   const status: LayerStatus = map.value === undefined ? 'loading' : map.value === null ? 'error' : values ? 'ready' : 'no-window'
   const breaks = map.value?.classes.breaks ?? NO_BREAKS
-  const labels = map.value?.classes.labels ?? NO_LABELS
-  const unit = map.value?.unit ?? null
+  const rawLabels = map.value?.classes.labels ?? NO_LABELS
+  const labels = useMemo(() => rawLabels.map(localizeClassLabel), [rawLabels])
+  const unit = map.value ? localizeUnit(map.value.unit) : null
   const classCount = breaks.length + 1
 
   const fills = useMemo(() => ({

@@ -1,3 +1,4 @@
+import { regionName } from '../../content/names'
 import { asset } from '../../lib/assets'
 
 // Tipos y utilidades geográficas del globo.
@@ -14,7 +15,7 @@ export type CountryCode = 'MX' | 'US'
 
 export const COUNTRY_NAMES: Record<CountryCode, string> = {
   MX: 'México',
-  US: 'Estados Unidos',
+  US: 'United States',
 }
 
 export interface RegionProps {
@@ -106,7 +107,7 @@ export async function loadGlobeFeatures(): Promise<GlobeFeature[]> {
     ...regionSets.flatMap((set, i) =>
       set.features.map(f => ({
         kind: 'region' as const,
-        properties: { id: f.properties.id, name: f.properties.name, country: REGION_SOURCES[i].country },
+        properties: { id: f.properties.id, name: regionName(f.properties.id, f.properties.name), country: REGION_SOURCES[i].country },
         geometry: f.geometry,
       })),
     ),

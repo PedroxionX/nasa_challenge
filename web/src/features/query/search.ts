@@ -5,11 +5,11 @@ import type { CountryCode, RegionInfo } from '../../lib/data'
 export const REGION_SEARCH_ID = 'region-search'
 
 export const COUNTRIES: { code: CountryCode; label: string }[] = [
-  { code: 'MX', label: 'México' },
-  { code: 'US', label: 'Estados Unidos' },
+  { code: 'MX', label: 'Mexico' },
+  { code: 'US', label: 'United States' },
 ]
 
-export const NO_MATCH = 'No hay ningún estado con ese nombre. Prueba con otro o tócalo en el globo.'
+export const NO_MATCH = 'No state has that name. Try another one or tap it on the globe.'
 
 /** Minúsculas y sin acentos: «Nuevo León» ≈ «nuevo leon». */
 export const normalize = (s: string) => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()

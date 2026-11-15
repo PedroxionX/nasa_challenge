@@ -6,28 +6,28 @@
 import { useEffect, useId, useState, type KeyboardEvent } from 'react'
 import { useAppState } from '../../app/state'
 import { loadCatalog, variablePeriod, type Catalog, type VariableInfo } from '../../lib/data'
-import { variableCopy } from '../../content'
+import { localizeUnit, variableCopy } from '../../content'
 
 const KIND: Record<string, string> = {
-  reanalysis: 'reanálisis (un modelo que combina observaciones)',
-  observation: 'observación',
+  reanalysis: 'reanalysis (a model that combines observations)',
+  observation: 'observation',
 }
 const AGGREGATION: Record<string, string> = {
-  mean_day_weighted: 'promedio anual',
-  sum_from_rate: 'acumulado anual',
+  mean_day_weighted: 'yearly mean',
+  sum_from_rate: 'yearly total',
 }
 
 /** Unidad, origen y años de la variable según el catálogo (FR-001: nombre, definición, unidades y origen). */
 function VariableFacts({ catalog, info }: { catalog: Catalog; info: VariableInfo }) {
   const { firstYear, lastYear } = variablePeriod(catalog, info.id)
   const product = info.product_short_name
-    ? `${info.product_short_name}${info.product_version ? ` versión ${info.product_version}` : ''}`
+    ? `${info.product_short_name}${info.product_version ? ` version ${info.product_version}` : ''}`
     : null
   return (
     <dl className="variable-picker-facts">
-      <dt>Unidad</dt><dd>{AGGREGATION[info.aggregation] ? `${info.unit_annual} (${AGGREGATION[info.aggregation]})` : info.unit_annual}</dd>
-      <dt>Origen</dt><dd>{product ? `${KIND[info.kind] ?? info.kind} · ${product}` : KIND[info.kind] ?? info.kind}</dd>
-      <dt>Años</dt><dd>{`${firstYear}–${lastYear}`}</dd>
+      <dt>Unit</dt><dd>{AGGREGATION[info.aggregation] ? `${localizeUnit(info.unit_annual)} (${AGGREGATION[info.aggregation]})` : localizeUnit(info.unit_annual)}</dd>
+      <dt>Source</dt><dd>{product ? `${KIND[info.kind] ?? info.kind} · ${product}` : KIND[info.kind] ?? info.kind}</dd>
+      <dt>Years</dt><dd>{`${firstYear}–${lastYear}`}</dd>
     </dl>
   )
 }
@@ -74,7 +74,7 @@ export default function VariablePicker() {
         className="variable-picker-info"
         aria-expanded={showDefinition}
         aria-controls={definitionId}
-        aria-label={`Qué es ${copy.label.toLowerCase()}`}
+        aria-label={`What is ${copy.label.toLowerCase()}`}
         onClick={() => setShowDefinition(s => !s)}
       >
         <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">

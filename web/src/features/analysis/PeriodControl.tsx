@@ -19,19 +19,19 @@ export default function PeriodControl({ catalog, showReset = true }: { catalog: 
 
   return (
     <fieldset className="period-control">
-      <legend>Periodo</legend>
+      <legend>Period</legend>
       <div className="period-control-row">
-        <label htmlFor={`${uid}-from`}>Desde</label>
+        <label htmlFor={`${uid}-from`}>From</label>
         <select id={`${uid}-from`} value={from} onChange={e => setPeriod(Number(e.target.value), to)}>
           {starts.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
         </select>
-        <label htmlFor={`${uid}-to`}>Hasta</label>
+        <label htmlFor={`${uid}-to`}>To</label>
         <select id={`${uid}-to`} value={to} onChange={e => setPeriod(from, Number(e.target.value))}>
           {ends.map(y => <option key={y} value={y}>{fmtYear(y)}</option>)}
         </select>
         {showReset && <button type="button" onClick={resetPeriod} disabled={full}>{UI_COPY.useFullPeriod}</button>}
       </div>
-      <p className="period-control-hint">{`El periodo debe tener al menos ${min} años.`}</p>
+      <p className="period-control-hint">{`The period must span at least ${min} years.`}</p>
     </fieldset>
   )
 }

@@ -25,7 +25,7 @@ export default function WelcomeCard() {
       <p className="welcome-lead">{UI_COPY.welcome}</p>
 
       <p className="welcome-hint">
-        O empieza con uno de estos ejemplos:
+        Or start with one of these examples:
       </p>
 
       <div className="welcome-examples">
@@ -35,7 +35,7 @@ export default function WelcomeCard() {
           className="welcome-example-btn"
           onClick={() => openExample('MX-BCN', 'air_temperature')}
         >
-          <span className="example-label">Ver un ejemplo</span>
+          <span className="example-label">See an example</span>
           <span className="example-place">Baja California</span>
           <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>
@@ -51,7 +51,7 @@ export default function WelcomeCard() {
           className="welcome-example-btn"
           onClick={() => openExample('MX-CHH', 'air_temperature')}
         >
-          <span className="example-label">Ver un ejemplo</span>
+          <span className="example-label">See an example</span>
           <span className="example-place">Chihuahua</span>
           <span className="example-variable">{variableCopy('air_temperature').short}</span>
         </button>

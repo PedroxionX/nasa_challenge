@@ -10,7 +10,7 @@
  */
 import { useEffect, useState } from 'react'
 import { loadCatalog, loadSeries, variablePeriod, type Catalog } from '../../lib/data'
-import { variableCopy, UI_COPY, GLOSSARY, productCitation } from '../../content'
+import { variableCopy, UI_COPY, GLOSSARY, productCitation, COMPARE_COPY } from '../../content'
 import './guide.css'
 
 // Códigos del contrato: specs/001-trend-explorer-mvp/contracts/data-files.md
@@ -22,22 +22,22 @@ const DEFAULT_METHOD = {
 } as const
 
 const SLOPE_TEXT: Record<string, string> = {
-  'theil-sen': 'Pendiente de Theil-Sen',
+  'theil-sen': 'Theil-Sen slope',
 }
 const TEST_TEXT: Record<string, string> = {
   'mann-kendall-ar1-corrected':
-    'Prueba de Mann-Kendall con la varianza corregida por la autocorrelación de primer orden (r₁)',
+    'Mann-Kendall test with the variance corrected for first-order autocorrelation (r₁)',
 }
 const INTERVAL_TEXT: Record<string, string> = {
-  'sen-1968-95': 'Intervalo de Sen (1968), ensanchado por la autocorrelación',
+  'sen-1968-95': 'Sen (1968) interval, widened by autocorrelation',
 }
 const CONTRAST_TEXT: Record<string, string> = {
-  'ols-santer-2000': 'regresión ordinaria con el ajuste de Santer et al. (2000)',
+  'ols-santer-2000': 'an ordinary regression with the adjustment of Santer et al. (2000)',
 }
 
 /** Texto legible para un código del catálogo; si no se conoce, el código tal cual. */
 function describe(table: Record<string, string>, code: string): string {
-  return table[code] ?? `método «${code}»`
+  return table[code] ?? `method “${code}”`
 }
 
 interface ProductSource {
@@ -102,97 +102,110 @@ export default function MethodsSheet() {
   const retrieved = useRetrievedDates(catalog)
 
   return (
-    <article className="methods-sheet" aria-label="Métodos y fuentes">
-      <h2 className="methods-title">Métodos y fuentes</h2>
+    <article className="methods-sheet" aria-label="Methods and sources">
+      <h2 className="methods-title">Methods and sources</h2>
 
       {error && (
         <p className="methods-warning" role="alert">
-          No se pudo cargar el catálogo. Se muestran los valores del contrato.
+          The catalog could not be loaded. Showing the values from the data contract.
         </p>
       )}
 
       {/* Periodo */}
       <section className="methods-section">
-        <h3>Periodo analizado</h3>
+        <h3>Period analyzed</h3>
         <p>
-          Cada variable tiene su propio periodo, según el producto del que procede;
-          aparece junto a cada una en «Variables disponibles». Solo se usan años completos (12 meses válidos), porque agregar por año
-          elimina el ciclo estacional. Con menos de {minWindow} años completos no
-          se calcula tendencia. Un periodo más corto tiene menos años y, por tanto,
-          menos capacidad de distinguir una tendencia del azar.
+          Each variable has its own period, set by the product it comes from; it is listed
+          next to each one under “Available variables”. Only complete years (12 valid months) are used,
+          because aggregating by year removes the seasonal cycle. With fewer than {minWindow} complete
+          years no trend is computed. A shorter period has fewer years and therefore
+          less power to tell a trend from chance.
         </p>
       </section>
 
       {/* Tendencia */}
       <section className="methods-section">
-        <h3>Cálculo de la tendencia</h3>
+        <h3>How the trend is computed</h3>
         <p>
-          <strong>Pendiente</strong>: {describe(SLOPE_TEXT, method.slope)}.{' '}
+          <strong>Slope</strong>: {describe(SLOPE_TEXT, method.slope)}.{' '}
           {GLOSSARY.slope}
         </p>
         <p>
-          <strong>Prueba de significancia</strong>: {describe(TEST_TEXT, method.test)}.
-          No exige que los datos sigan una distribución normal. El nivel de
-          significancia es α&nbsp;=&nbsp;{alpha}.
+          <strong>Significance test</strong>: {describe(TEST_TEXT, method.test)}.
+          It does not require the data to follow a normal distribution. The significance
+          level is α&nbsp;=&nbsp;{alpha}.
         </p>
         <p>
-          <strong>Intervalo de confianza</strong>: {describe(INTERVAL_TEXT, method.interval)},
-          al {level}&nbsp;%.
+          <strong>Confidence interval</strong>: {describe(INTERVAL_TEXT, method.interval)},
+          at {level}%.
         </p>
         <p>
-          <strong>Contraste</strong>: junto a la prueba principal se calcula una{' '}
-          {describe(CONTRAST_TEXT, method.contrast)}. Sirve para comparar, no es el
-          resultado que se muestra como veredicto.
+          <strong>Cross-check</strong>: alongside the main test, the pipeline also computes{' '}
+          {describe(CONTRAST_TEXT, method.contrast)}. It is there for comparison; it is not the
+          result shown as the verdict.
+        </p>
+      </section>
+
+      {/* Comparación entre regiones (007, T020) */}
+      <section className="methods-section">
+        <h3>Comparing two regions</h3>
+        <p>{COMPARE_COPY.method}</p>
+        <p>
+          {COMPARE_COPY.absoluteBasis} For variables read as a relative change
+          (such as precipitation), {COMPARE_COPY.relativeBasis.charAt(0).toLowerCase() + COMPARE_COPY.relativeBasis.slice(1)}
+        </p>
+        <p>
+          {COMPARE_COPY.oppositeSigns} {COMPARE_COPY.manyPairs} {COMPARE_COPY.notCause}
         </p>
       </section>
 
       {/* Autocorrelación — texto cualitativo fijo (FR-C04) */}
       <section className="methods-section">
-        <h3>Límite de la corrección por autocorrelación</h3>
+        <h3>Limits of the autocorrelation correction</h3>
         <p>
-          Las series climáticas no son independientes: un año cálido tiende a ir
-          seguido de otro cálido. Si no se corrige, esa autocorrelación hace que
-          la tendencia parezca más significativa de lo que es.
+          Climate series are not independent: a warm year tends to be followed by
+          another warm one. Left uncorrected, that autocorrelation makes a trend
+          look more significant than it is.
         </p>
         <p>
-          Aquí la prueba corrige la varianza usando solo la autocorrelación de
-          primer orden (r₁). La corrección es imperfecta: en un experimento del
-          laboratorio con autocorrelación fuerte (φ&nbsp;=&nbsp;0.75) y series de
-          30 a 45 años, la prueba corregida rechazaba la ausencia de tendencia
-          entre el 9&nbsp;% y el 11&nbsp;% de las veces, en lugar del
-          5&nbsp;% esperado. Con autocorrelación fuerte, un valor p cercano a α
-          debe leerse con cautela.
+          Here the test corrects the variance using only first-order
+          autocorrelation (r₁). The correction is imperfect: in a lab experiment
+          with strong autocorrelation (φ&nbsp;=&nbsp;0.75) and series of
+          30 to 45 years, the corrected test rejected the absence of a trend
+          between 9% and 11% of the time, instead of the expected
+          5%. With strong autocorrelation, a p-value close to α
+          should be read with caution.
         </p>
         <p>
-          Cuando r₁ es significativo, el resultado lleva la marca «autocorr» en
-          los datos. Si la serie tiene un salto brusco (cambio de instrumento,
-          corrección tardía de sesgo), la autocorrelación calculada puede ser
-          errónea: el diagnóstico de salto se guarda en el campo de diagnóstico de
-          cada serie y el análisis se marca como no válido.
+          When r₁ is significant, the result carries the “autocorr” flag in
+          the data. If the series has an abrupt jump (a change of instrument, a
+          late bias correction), the computed autocorrelation can be
+          wrong: the jump diagnostic is stored in the diagnostics field of
+          each series and the analysis is marked as not valid.
         </p>
       </section>
 
       {/* Qué significa un resultado — FR-C01 */}
       <section className="methods-section">
-        <h3>Qué significa y qué no</h3>
+        <h3>What a result means, and what it does not</h3>
         <p>{UI_COPY.significanceNote}</p>
         <p>{UI_COPY.notCause}</p>
       </section>
 
       {/* Términos — FR-C03 */}
       <section className="methods-section">
-        <h3>Términos</h3>
+        <h3>Terms</h3>
         <dl className="methods-variables">
           <div className="methods-variable-item">
-            <dt>Pendiente</dt>
+            <dt>Slope</dt>
             <dd>{GLOSSARY.slope}</dd>
           </div>
           <div className="methods-variable-item">
-            <dt>Intervalo de confianza</dt>
+            <dt>Confidence interval</dt>
             <dd>{GLOSSARY.ci}</dd>
           </div>
           <div className="methods-variable-item">
-            <dt>Valor p</dt>
+            <dt>p-value</dt>
             <dd>{GLOSSARY.p}</dd>
           </div>
           <div className="methods-variable-item">
@@ -204,7 +217,7 @@ export default function MethodsSheet() {
 
       {/* Variables */}
       <section className="methods-section">
-        <h3>Variables disponibles</h3>
+        <h3>Available variables</h3>
         <dl className="methods-variables">
           {(catalog?.variables ?? []).map(v => {
             const copy = variableCopy(v.id, v)
@@ -215,8 +228,8 @@ export default function MethodsSheet() {
                 <dd>
                   {copy.definition}
                   <span className="methods-origin">
-                    {' '}Origen: {v.product_short_name ?? 'producto no declarado'}
-                    {v.product_version ? ` v${v.product_version}` : ''}. Periodo: {firstYear}–{lastYear}.
+                    {' '}Source: {v.product_short_name ?? 'product not declared'}
+                    {v.product_version ? ` v${v.product_version}` : ''}. Period: {firstYear}–{lastYear}.
                   </span>
                 </dd>
               </div>
@@ -227,33 +240,33 @@ export default function MethodsSheet() {
 
       {/* Cómo citar */}
       <section className="methods-section">
-        <h3>Cómo citar</h3>
+        <h3>How to cite</h3>
         <p>
-          Los datos proceden de productos de la NASA distribuidos por el Goddard
-          Earth Sciences Data and Information Services Center (GES DISC): el
-          reanálisis MERRA-2 (Modern-Era Retrospective analysis for Research and
-          Applications, Version 2), GPM IMERG y el modelo GLDAS Noah. El promedio
-          de cada estado lo calcula Trend Detective.
+          The data come from NASA products distributed by the Goddard
+          Earth Sciences Data and Information Services Center (GES DISC): the
+          MERRA-2 reanalysis (Modern-Era Retrospective analysis for Research and
+          Applications, Version 2), GPM IMERG and the GLDAS Noah model. The average
+          for each state is computed by Trend Detective.
         </p>
         <p>
-          Cada valor es un <strong>promedio de área del estado</strong>, ponderado por
-          la latitud y por la parte de cada celda que cae dentro del estado; no es el
-          valor de un punto ni de una estación. La fecha de consulta de cada serie
-          aparece también en «De dónde salen estos datos», dentro del análisis.
+          Each value is an <strong>area average over the state</strong>, weighted by
+          latitude and by the part of each cell that falls inside the state; it is not the
+          value at a point or at a station. The retrieval date of each series
+          is also shown under “Where these data come from”, inside the analysis.
         </p>
         <ul className="methods-citations">
           {products.map(p => (
             <li key={p.shortName}>
               {productCitation(p.shortName, p.version)}
-              {retrieved[p.shortName] && <> Fecha de consulta: {retrieved[p.shortName]}.</>}
+              {retrieved[p.shortName] && <> Retrieved: {retrieved[p.shortName]}.</>}
             </li>
           ))}
         </ul>
         <p>
-          Para citar esta herramienta:{' '}
+          To cite this tool:{' '}
           <em>
-            Trend Detective, NASA Space Apps Challenge 2026. Datos: MERRA-2, GPM
-            IMERG y GLDAS / NASA GES DISC.
+            Trend Detective, NASA Space Apps Challenge 2026 (Earth System Trend Detective). Data: MERRA-2, GPM
+            IMERG and GLDAS / NASA GES DISC.
           </em>
         </p>
       </section>

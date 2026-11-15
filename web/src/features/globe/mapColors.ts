@@ -78,10 +78,10 @@ export function valuesForWindow(map: MapFile, key: string): Map<string, RegionVa
 
 /** Texto del intervalo de cada clase a partir de los cortes. */
 export function classRanges(breaks: number[], format: (v: number) => string): string[] {
-  if (breaks.length === 0) return ['todos los valores']
-  const out = [`menos de ${format(breaks[0])}`]
-  for (let i = 1; i < breaks.length; i++) out.push(`de ${format(breaks[i - 1])} a ${format(breaks[i])}`)
-  out.push(`${format(breaks[breaks.length - 1])} o más`)
+  if (breaks.length === 0) return ['all values']
+  const out = [`below ${format(breaks[0])}`]
+  for (let i = 1; i < breaks.length; i++) out.push(`${format(breaks[i - 1])} to ${format(breaks[i])}`)
+  out.push(`${format(breaks[breaks.length - 1])} or more`)
   return out
 }
 

@@ -26,7 +26,7 @@ export default function Term({ k, children }: { k: TermKey; children?: ReactNode
         className="term-button"
         aria-expanded={open}
         aria-controls={id}
-        aria-label={`Qué significa «${term}»`}
+        aria-label={`What “${term}” means`}
         onClick={() => setOpen(o => !o)}
       >
         <span aria-hidden="true">?</span>

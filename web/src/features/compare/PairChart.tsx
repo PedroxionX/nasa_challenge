@@ -44,7 +44,7 @@ function Mini({ item, unit, from, to, domain, withAxis }: {
   const inPeriod = (year: number) => year >= from && year <= to
   return (
     <svg className="compare-chart-svg" viewBox={`0 0 ${W} ${height}`} role="img"
-      aria-label={`Valores anuales de ${item.name}, en ${unit}. Los valores están en la tabla.`}>
+      aria-label={`Yearly values for ${item.name}, in ${unit}. The values are in the table.`}>
       <text className="compare-chart-title" x={0} y={12}>
         <tspan className="compare-chart-tag">{item.tag}</tspan>{` · ${item.name}`}
       </text>
@@ -88,20 +88,20 @@ export default function PairChart({ items, unit, from, to }: { items: ChartItem[
         <Mini key={item.tag} item={item} unit={unit} from={from} to={to} domain={domain} withAxis={i === items.length - 1} />
       ))}
       <figcaption className="compare-chart-legend">
-        <span><i className="compare-swatch compare-swatch--point" aria-hidden="true" />Valor anual</span>
+        <span><i className="compare-swatch compare-swatch--point" aria-hidden="true" />Yearly value</span>
         {anySen
-          ? <span><i className="compare-swatch compare-swatch--sen" aria-hidden="true" />Recta de tendencia del periodo</span>
-          : <span>Sin recta de tendencia en este periodo</span>}
-        <span>Cada gráfica tiene su propia escala vertical.</span>
+          ? <span><i className="compare-swatch compare-swatch--sen" aria-hidden="true" />Trend line for the period</span>
+          : <span>No trend line for this period</span>}
+        <span>Each chart has its own vertical scale.</span>
       </figcaption>
       <button type="button" className="compare-link" aria-expanded={showTable} aria-controls={tableId} onClick={() => setShowTable(s => !s)}>
-        {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
+        {showTable ? 'Hide table' : 'View as table'}
       </button>
       <div id={tableId} className="compare-table-wrap" hidden={!showTable}>
         <table className="compare-table">
-          <caption className="compare-vh">{`Valores anuales (${unit})`}</caption>
+          <caption className="compare-vh">{`Yearly values (${unit})`}</caption>
           <thead>
-            <tr><th scope="col">Año</th>{items.map(i => <th key={i.tag} scope="col">{`${i.tag} · ${i.name}`}</th>)}</tr>
+            <tr><th scope="col">Year</th>{items.map(i => <th key={i.tag} scope="col">{`${i.tag} · ${i.name}`}</th>)}</tr>
           </thead>
           <tbody>
             {years.map(year => (

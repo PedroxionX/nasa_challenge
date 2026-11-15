@@ -12,7 +12,7 @@ import { useAppState } from '../../app/state'
 import {
   pickComparison, type Catalog, type CompareVariableInfo, type DifferenceRow, type PairLookup, type SeriesFile,
 } from '../../lib/data'
-import { COMPARE_COPY, UI_COPY, explainComparison, explainTrend, variableCopy, type ComparisonExplanation } from '../../content'
+import { COMPARE_COPY, UI_COPY, explainComparison, explainTrend, localizeUnit, variableCopy, type ComparisonExplanation } from '../../content'
 import { RegionSelect } from './CompareEntry'
 import { ENTRY_SELECT_ID, individual, nearestStart, yearPoints, type Individual } from './compareData'
 import { digitsFor, fmtAlpha, fmtInterval, fmtP, fmtSigned, fmtYears, perDecade } from './format'
@@ -51,12 +51,12 @@ function Difference({ row, explanation, pairLabel, unit, basisText, alpha }: {
       <dl className="compare-facts">
         {figures && (
           <>
-            <div><dt>{`Intervalo de confianza del ${level} %`}</dt><dd>{fmtInterval(row.ci_low, row.ci_high, digits)}</dd></div>
-            <div><dt>Evidencia</dt><dd>{`${fmtP(row.p)}; ${fmtAlpha(alpha)}`}</dd></div>
+            <div><dt>{`${level}% confidence interval`}</dt><dd>{fmtInterval(row.ci_low, row.ci_high, digits)}</dd></div>
+            <div><dt>Evidence</dt><dd>{`${fmtP(row.p)}; ${fmtAlpha(alpha)}`}</dd></div>
           </>
         )}
-        <div><dt>Periodo</dt><dd>{`${fmtYears(row.start, row.end)} · ${COMPARE_COPY.commonYears(row.n)}`}</dd></div>
-        <div><dt>Cómo se mide</dt><dd>{basisText}</dd></div>
+        <div><dt>Period</dt><dd>{`${fmtYears(row.start, row.end)} · ${COMPARE_COPY.commonYears(row.n)}`}</dd></div>
+        <div><dt>How it is measured</dt><dd>{basisText}</dd></div>
       </dl>
     </section>
   )
@@ -65,7 +65,7 @@ function Difference({ row, explanation, pairLabel, unit, basisText, alpha }: {
 function Skeleton() {
   return (
     <div className="compare-skeleton">
-      <span className="compare-vh">Cargando…</span>
+      <span className="compare-vh">Loading…</span>
       <div className="compare-sk compare-sk--verdict" />
       <div className="compare-sk compare-sk--chart" />
       <div className="compare-sk compare-sk--line" />
@@ -79,13 +79,13 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
 }) {
   const { regionId, compareId, variableId, from, to, setPeriod } = useAppState()
   const variable = catalog.variables.find(v => v.id === variableId)
-  const unit = variable?.unit_annual ?? seriesA.unit
+  const unit = localizeUnit(variable?.unit_annual ?? seriesA.unit)
   const region = (id: string | null) => catalog.regions.find(r => r.id === id)
   const isSynthetic = seriesA.provenance.is_synthetic || seriesB.provenance.is_synthetic
   const smallRegion = Boolean(region(regionId)?.small_region || region(compareId)?.small_region)
 
   const verdictOf = (name: string, r: Individual) => explainTrend(r.row, {
-    regionName: name, variableId, unit: `${unit}/década`, from, to, alpha: catalog.alpha,
+    regionName: name, variableId, unit: `${localizeUnit(unit)}/decade`, from, to, alpha: catalog.alpha,
     fullPeriod: true, smallRegion: false, isSynthetic: false,
   }).verdict
   const a = individual(seriesA, variable, from, to)
@@ -105,7 +105,7 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
     pairLabel = COMPARE_COPY.order(first.name, second.name)
     const side = (r: Individual) => (r.row ? { status: r.status, slope: r.row.slope_decade } : null)
     explanation = explainComparison(lookup.row, {
-      firstName: first.name, secondName: second.name, unit: published.unit, basis: published.basis,
+      firstName: first.name, secondName: second.name, unit: localizeUnit(published.unit), basis: published.basis,
       from, to, alpha: catalog.alpha, minYears: catalog.period.min_window_years,
       first: side(first.result), second: side(second.result), smallRegion, isSynthetic,
     })
@@ -114,7 +114,7 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
 
   const label = variableCopy(variableId, variable).label
   const announcement = `${COMPARE_COPY.title(nameA, nameB)}, ${label.toLowerCase()} ${fmtYears(from, to)}: ${
-    explanation ? explanation.verdict : 'sin prueba de la diferencia para este caso'}.`
+    explanation ? explanation.verdict : 'no test of the difference for this case'}.`
 
   return (
     <div className="compare-result">
@@ -124,7 +124,7 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
 
       {lookup?.kind === 'row' && explanation && published && (
         <Difference
-          row={lookup.row} explanation={explanation} pairLabel={pairLabel} unit={published.unit} alpha={catalog.alpha}
+          row={lookup.row} explanation={explanation} pairLabel={pairLabel} unit={localizeUnit(published.unit)} alpha={catalog.alpha}
           basisText={published.basis === 'relative' ? COMPARE_COPY.relativeBasis : COMPARE_COPY.absoluteBasis}
         />
       )}
@@ -154,8 +154,8 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
       />
 
       {explanation && (
-        <section className="compare-words" aria-label="En palabras">
-          <h3 className="compare-heading">En palabras</h3>
+        <section className="compare-words" aria-label="In words">
+          <h3 className="compare-heading">In words</h3>
           <p className="compare-sentence">{explanation.sentence}</p>
           {explanation.pattern && <p>{explanation.pattern}</p>}
           {explanation.caveats.length > 0 && (
@@ -165,7 +165,7 @@ function Ready({ catalog, seriesA, seriesB, published, lookup, nameA, nameB }: {
       )}
 
       <details className="compare-details">
-        <summary>Cómo se compara</summary>
+        <summary>How the comparison works</summary>
         <p>{COMPARE_COPY.method}</p>
         <p>{`${fmtAlpha(catalog.alpha)}. ${UI_COPY.significanceNote}`}</p>
       </details>
@@ -222,7 +222,7 @@ export default function ComparePanel() {
 
       <div className="compare-pick">
         <span><span className="compare-tag">A</span>{nameA}</span>
-        <label htmlFor={selectId}><span className="compare-tag">B</span><span className="compare-vh">Estado comparado</span></label>
+        <label htmlFor={selectId}><span className="compare-tag">B</span><span className="compare-vh">State compared</span></label>
         <RegionSelect id={selectId} value={compareId} onChange={id => (id ? setCompare(id) : leave())} />
       </div>
 

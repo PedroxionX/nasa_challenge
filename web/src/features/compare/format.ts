@@ -45,7 +45,7 @@ export function fmtValue(x: number | null | undefined, maxDigits = 3): string {
 export const fmtYears = (from: number, to: number) => `${from}–${to}`
 
 export function fmtP(p: number | null | undefined): string {
-  if (!usable(p)) return 'p no evaluable'
+  if (!usable(p)) return 'p not available'
   if (p < 0.001) return 'p < 0.001'
   return `p = ${fmtNumber(p, 3)}`
 }
@@ -56,10 +56,10 @@ export function fmtAlpha(alpha: number): string {
 
 /** «de −0.10 a +0.30». */
 export const fmtInterval = (low: number | null | undefined, high: number | null | undefined, digits = 2) =>
-  usable(low) && usable(high) ? `de ${fmtSigned(low, digits)} a ${fmtSigned(high, digits)}` : MISSING
+  usable(low) && usable(high) ? `${fmtSigned(low, digits)} to ${fmtSigned(high, digits)}` : MISSING
 
 /** «°C/década» → «°C por década», para leerlo en una frase. */
-export const perDecade = (unit: string) => unit.replace(/\/década$/, ' por década')
+export const perDecade = (unit: string) => unit.replace(/\/decade$/, ' per decade')
 
 /** Etiquetas de eje: tantos decimales como pida el paso entre marcas. */
 export function fmtTick(x: number, step: number): string {

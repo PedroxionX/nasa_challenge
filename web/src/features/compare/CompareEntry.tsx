@@ -34,7 +34,7 @@ export default function CompareEntry() {
   const id = ENTRY_SELECT_ID
   if (!regionId) return null
   return (
-    <section className="compare-entry" aria-label="Comparación">
+    <section className="compare-entry" aria-label="Comparison">
       <label htmlFor={id}>{COMPARE_COPY.entryLabel}</label>
       <RegionSelect id={id} value={compareId} onChange={setCompare} />
     </section>

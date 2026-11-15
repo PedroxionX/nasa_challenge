@@ -19,7 +19,7 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('vecino')).toBeTruthy()
     expect(onError).toHaveBeenCalledOnce()
     explode = false
-    fireEvent.click(screen.getByRole('button', { name: 'Reintentar' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Retry' }))
     expect(screen.getByText('bien')).toBeTruthy()
   })
 

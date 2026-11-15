@@ -48,9 +48,9 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
   const plotted = rows.filter(r => HAS_TREND.has(r.status) && r.slope_decade !== null)
 
   return (
-    <section className="period-variation" aria-label="Aviso de periodo">
+    <section className="period-variation" aria-label="Period notice">
       <p className="period-variation-notice">
-        <strong>{`Estás viendo ${fmtYears(from, to)}.`}</strong> El resultado depende del periodo elegido.
+        <strong>{`You are viewing ${fmtYears(from, to)}.`}</strong> The result depends on the period chosen.
       </p>
       <button
         type="button"
@@ -59,17 +59,17 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
         aria-controls={`${uid}-view`}
         onClick={() => setOpen(o => !o)}
       >
-        {open ? 'Ocultar cómo cambia' : 'Ver cómo cambia según el año inicial'}
+        {open ? 'Hide how it changes' : 'See how it changes with the start year'}
       </button>
 
       <div id={`${uid}-view`} className="period-variation-view" hidden={!open} ref={ref}>
         {open && plotted.length > 0 && (
           <p className="period-variation-caption">
-            {`Cambio por década si el análisis empezara en cada año (eje horizontal), siempre hasta ${fmtYear(to)}. El círculo marca tu elección.`}
+            {`Change per decade if the analysis started in each year (horizontal axis), always ending in ${fmtYear(to)}. The circle marks your choice.`}
           </p>
         )}
         {open && (plotted.length === 0
-          ? <p className="analysis-muted">{`No hay ningún año inicial con tendencia evaluable que termine en ${fmtYear(to)}.`}</p>
+          ? <p className="analysis-muted">{`No start year has a trend that can be assessed ending in ${fmtYear(to)}.`}</p>
           : <VariationChart rows={plotted} from={from} to={to} unit={unit} width={width} uid={uid} />)}
 
         {open && (
@@ -81,17 +81,17 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
               aria-controls={`${uid}-table`}
               onClick={() => setShowTable(s => !s)}
             >
-              {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
+              {showTable ? 'Hide table' : 'View as table'}
             </button>
             <div id={`${uid}-table`} className="trend-chart-table-wrap" hidden={!showTable}>
               <table className="analysis-table">
-                <caption className="analysis-vh">{`Pendiente por década según el año inicial, con final en ${fmtYear(to)} (${unit} por década)`}</caption>
+                <caption className="analysis-vh">{`Slope per decade by start year, ending in ${fmtYear(to)} (${unit} per decade)`}</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Desde</th>
-                    <th scope="col">{`Pendiente (${unit}/década)`}</th>
-                    <th scope="col">Intervalo del 95 %</th>
-                    <th scope="col">Veredicto</th>
+                    <th scope="col">From</th>
+                    <th scope="col">{`Slope (${unit}/decade)`}</th>
+                    <th scope="col">95% interval</th>
+                    <th scope="col">Verdict</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,9 +150,9 @@ function VariationChart({ rows, from, to, unit, width, uid }: {
       role="img"
       aria-labelledby={`${uid}-vtitle ${uid}-vdesc`}
     >
-      <title id={`${uid}-vtitle`}>{`Pendiente por década según el año inicial, con final en ${fmtYear(to)}`}</title>
+      <title id={`${uid}-vtitle`}>{`Slope per decade by start year, ending in ${fmtYear(to)}`}</title>
       <desc id={`${uid}-vdesc`}>
-        {`Cada punto es el resultado de empezar en ese año. La banda es el intervalo del 95 %. ${current ? `El año inicial elegido, ${fmtYear(from)}, está marcado.` : ''} Los valores exactos están en «Ver como tabla».`}
+        {`Each point is the result of starting in that year. The band is the 95% interval. ${current ? `The start year chosen, ${fmtYear(from)}, is marked.` : ''} The exact values are in “View as table”.`}
       </desc>
       {yTicks.map(t => (
         <g key={`y${t}`}>
@@ -160,7 +160,7 @@ function VariationChart({ rows, from, to, unit, width, uid }: {
           <text className="trend-chart-tick" x={M.left - 6} y={y(t)} dy="0.32em" textAnchor="end">{fmtTick(t, yStep)}</text>
         </g>
       ))}
-      <text className="trend-chart-unit" x={M.left - 6} y={M.top - 4} textAnchor="end">{`${unit}/déc.`}</text>
+      <text className="trend-chart-unit" x={M.left - 6} y={M.top - 4} textAnchor="end">{`${unit}/dec.`}</text>
       {xTicks.map(t => (
         <text key={`x${t}`} className="trend-chart-tick" x={x(t)} y={HEIGHT - 8} textAnchor="middle">{fmtYear(t)}</text>
       ))}

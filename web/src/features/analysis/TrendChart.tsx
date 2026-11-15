@@ -48,12 +48,12 @@ function useWidth(fallback = 320) {
  */
 function noLineReason(row: TrendRow | null): { title: string; reason: string; muted: boolean } {
   if (!row || row.status === 'insufficient') {
-    return { title: 'Sin recta de tendencia', reason: 'Hay menos de 10 años completos en este periodo. Los puntos son solo los valores anuales.', muted: true }
+    return { title: 'No trend line', reason: 'There are fewer than 10 complete years in this period. The points are just the yearly values.', muted: true }
   }
   if (row.status === 'invalid') {
-    return { title: 'Sin recta de tendencia', reason: 'El análisis no es válido para estos datos (ver «Detalles técnicos»). Los puntos son solo los valores anuales.', muted: true }
+    return { title: 'No trend line', reason: 'The analysis is not valid for these data (see “Technical details”). The points are just the yearly values.', muted: true }
   }
-  return { title: 'Recta de tendencia pendiente', reason: 'El archivo aún no trae su posición.', muted: false }
+  return { title: 'Trend line pending', reason: 'The file does not include its position yet.', muted: false }
 }
 
 /** Inserta un hueco (`null`) entre años no consecutivos para que la línea no los una. */
@@ -130,8 +130,8 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
   const excludedText = excluded.length === 0
     ? null
     : excluded.length <= 4
-      ? `Años incompletos, excluidos: ${excluded.map(fmtYear).join(', ')}`
-      : `${excluded.length} años incompletos, excluidos (huecos)`
+      ? `Incomplete years, excluded: ${excluded.map(fmtYear).join(', ')}`
+      : `${excluded.length} incomplete years, excluded (gaps)`
 
   // Filas de la tabla: todos los años que aparecen en la gráfica, con su nota.
   const byYear = new Map(points.map(p => [p.year, p.value]))
@@ -140,9 +140,9 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
     .map(year => {
       const value = byYear.get(year)
       let note = ''
-      if (excluded.includes(year)) note = 'Año incompleto: excluido'
-      else if (partial && year === partial.year && value === undefined) note = `Año en curso: ${partial.months_valid} de 12 meses, no se usa`
-      else if (!inPeriod(year)) note = 'Fuera del periodo elegido'
+      if (excluded.includes(year)) note = 'Incomplete year: excluded'
+      else if (partial && year === partial.year && value === undefined) note = `Year in progress: ${partial.months_valid} of 12 months, not used`
+      else if (!inPeriod(year)) note = 'Outside the period chosen'
       return { year, value, note }
     })
 
@@ -164,11 +164,11 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         role="img"
         aria-labelledby={`${titleId} ${descId}`}
       >
-        <title id={titleId}>{`Serie anual de ${variableLabel.toLowerCase()} en ${regionName}`}</title>
+        <title id={titleId}>{`Yearly series of ${variableLabel.toLowerCase()} in ${regionName}`}</title>
         <desc id={descId}>
-          {`Un punto por año completo. Periodo analizado ${fmtYears(from, to)}. `}
-          {drawLine ? 'Incluye la recta de Sen y la banda del intervalo del 95 %. ' : 'Sin recta de tendencia. '}
-          Los valores exactos están en «Ver como tabla».
+          {`One point per complete year. Period analyzed: ${fmtYears(from, to)}. `}
+          {drawLine ? 'Includes the Sen line and the band of the 95% interval. ' : 'No trend line. '}
+          The exact values are in “View as table”.
         </desc>
         <defs>
           <clipPath id={clipId}>
@@ -218,7 +218,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         {partial && (
           <g className="trend-chart-partial">
             <line x1={x(partial.year)} x2={x(partial.year)} y1={plot.top} y2={plot.bottom} />
-            <text x={x(partial.year)} y={plot.top - 8} textAnchor="end">{`${fmtYear(partial.year)} parcial`}</text>
+            <text x={x(partial.year)} y={plot.top - 8} textAnchor="end">{`${fmtYear(partial.year)} partial`}</text>
           </g>
         )}
 
@@ -239,7 +239,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
       </svg>
 
       <figcaption className="trend-chart-legend">
-        <span className="legend-item"><i className="legend-swatch legend-point" aria-hidden="true" />Valor anual</span>
+        <span className="legend-item"><i className="legend-swatch legend-point" aria-hidden="true" />Yearly value</span>
         {drawLine
           ? (
             <>
@@ -253,11 +253,11 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         {excludedText && <span className="legend-item"><i className="legend-swatch legend-excluded" aria-hidden="true" />{excludedText}</span>}
         {partial && (
           <span className="legend-item"><i className="legend-swatch legend-partial" aria-hidden="true" />
-            {`${fmtYear(partial.year)}: ${partial.months_valid} de 12 meses, no se usa`}
+            {`${fmtYear(partial.year)}: ${partial.months_valid} of 12 months, not used`}
           </span>
         )}
         {(outsideBefore || outsideAfter) && (
-          <span className="legend-item"><i className="legend-swatch legend-outside" aria-hidden="true" />Fuera del periodo elegido</span>
+          <span className="legend-item"><i className="legend-swatch legend-outside" aria-hidden="true" />Outside the period chosen</span>
         )}
       </figcaption>
 
@@ -268,13 +268,13 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
         aria-controls={tableId}
         onClick={() => setShowTable(s => !s)}
       >
-        {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
+        {showTable ? 'Hide table' : 'View as table'}
       </button>
       <div id={tableId} className="trend-chart-table-wrap" hidden={!showTable}>
         <table className="analysis-table">
-          <caption className="analysis-vh">{`Valores anuales de ${variableLabel.toLowerCase()} en ${regionName} (${unit})`}</caption>
+          <caption className="analysis-vh">{`Yearly values of ${variableLabel.toLowerCase()} in ${regionName} (${unit})`}</caption>
           <thead>
-            <tr><th scope="col">Año</th><th scope="col">{`Valor (${unit})`}</th><th scope="col">Nota</th></tr>
+            <tr><th scope="col">Year</th><th scope="col">{`Value (${unit})`}</th><th scope="col">Note</th></tr>
           </thead>
           <tbody>
             {tableRows.map(r => (

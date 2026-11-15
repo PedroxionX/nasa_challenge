@@ -7,7 +7,7 @@
 import { useEffect } from 'react'
 import { useAppState } from '../../app/state'
 import { pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
-import { explainTrend, UI_COPY, variableCopy } from '../../content'
+import { explainTrend, localizeUnit, UI_COPY, variableCopy } from '../../content'
 import { HAS_TREND, digitsFor, isFullPeriod, readExtras } from './analysisData'
 import { fmtSlope, fmtYears } from './format'
 import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
@@ -20,7 +20,7 @@ import './analysis.css'
 /** Id del buscador de 004 (features/query/search.ts). Se usa por id: las carpetas de features no se importan entre sí. */
 const SEARCH_INPUT_ID = 'region-search'
 
-const COUNTRY: Record<CountryCode, string> = { MX: 'México', US: 'Estados Unidos' }
+const COUNTRY: Record<CountryCode, string> = { MX: 'Mexico', US: 'United States' }
 
 /**
  * El buscador vive en la cabecera y nunca se desmonta: se enfoca en el acto, sin esperar a que el panel
@@ -65,7 +65,7 @@ export default function AnalysisPanel() {
             {region && `${COUNTRY[region.country]} · `}{variable.label} · {fmtYears(from, to)}
           </p>
         </div>
-        <button type="button" className="analysis-close" onClick={close} aria-label="Cerrar análisis">
+        <button type="button" className="analysis-close" onClick={close} aria-label="Close analysis">
           <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" /></svg>
         </button>
       </div>
@@ -82,7 +82,7 @@ export default function AnalysisPanel() {
       {load.kind === 'no-data' && (
         <div className="analysis-state">
           <p>{UI_COPY.noData}</p>
-          <p className="analysis-muted">Puedes elegir otro estado en el buscador o en el globo.</p>
+          <p className="analysis-muted">You can choose another state in the search box or on the globe.</p>
         </div>
       )}
 
@@ -103,7 +103,7 @@ export default function AnalysisPanel() {
 function Skeleton() {
   return (
     <div className="analysis-skeleton">
-      <span className="analysis-vh">Cargando…</span>
+      <span className="analysis-vh">Loading…</span>
       <div className="sk sk-verdict" />
       <div className="sk sk-chart" />
       <div className="sk sk-line" />
@@ -124,7 +124,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const variableInfo = catalog.variables.find(v => v.id === series.variable)
   const variableLabel = variableCopy(series.variable, variableInfo).label
   const region = catalog.regions.find(r => r.id === series.region)
-  const unit = variableInfo?.unit_annual ?? series.unit
+  const unit = localizeUnit(variableInfo?.unit_annual ?? series.unit)
   const digits = digitsFor(unit)
   const row = pickWindow(series, from, to)
   const status = row?.status ?? 'insufficient'
@@ -135,7 +135,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const explanation = explainTrend(row, {
     regionName,
     variableId: series.variable,
-    unit: `${unit}/década`,
+    unit: `${unit}/decade`,
     from,
     to,
     alpha: catalog.alpha,
@@ -144,11 +144,11 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
     isSynthetic,
   })
   // El aviso de datos sintéticos va arriba y el de periodo junto al control (PeriodVariation): no se repiten.
-  const caveats = explanation.caveats.filter(c => c !== UI_COPY.synthetic && !c.startsWith('Estás viendo'))
+  const caveats = explanation.caveats.filter(c => c !== UI_COPY.synthetic && !c.startsWith('You are viewing'))
   const verdictOf = (r: TrendRow) => explainTrend(r, {
     regionName,
     variableId: series.variable,
-    unit: `${unit}/década`,
+    unit: `${unit}/decade`,
     from: r.start,
     to: r.end,
     alpha: catalog.alpha,

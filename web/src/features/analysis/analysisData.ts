@@ -36,8 +36,8 @@ export const HAS_TREND: ReadonlySet<TrendStatus> = new Set(['increasing', 'decre
 
 /** «Hay evidencia de tendencia» / «Sin evidencia suficiente» según `status` (FR-A05); `null` si no aplica. */
 export function evidenceLabel(status: TrendStatus): string | null {
-  if (status === 'increasing' || status === 'decreasing') return 'Hay evidencia de tendencia'
-  if (status === 'inconclusive') return 'Sin evidencia suficiente'
+  if (status === 'increasing' || status === 'decreasing') return 'There is evidence of a trend'
+  if (status === 'inconclusive') return 'Not enough evidence'
   return null
 }
 

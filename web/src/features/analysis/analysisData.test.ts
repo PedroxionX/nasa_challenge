@@ -51,9 +51,9 @@ describe('isFullPeriod (periodo por variable)', () => {
 
 describe('evidenceLabel (FR-A05)', () => {
   it('solo dos formas y nunca calificativos de fuerza', () => {
-    expect(evidenceLabel('increasing')).toBe('Hay evidencia de tendencia')
-    expect(evidenceLabel('decreasing')).toBe('Hay evidencia de tendencia')
-    expect(evidenceLabel('inconclusive')).toBe('Sin evidencia suficiente')
+    expect(evidenceLabel('increasing')).toBe('There is evidence of a trend')
+    expect(evidenceLabel('decreasing')).toBe('There is evidence of a trend')
+    expect(evidenceLabel('inconclusive')).toBe('Not enough evidence')
     expect(evidenceLabel('insufficient')).toBeNull()
     expect(evidenceLabel('invalid')).toBeNull()
   })
