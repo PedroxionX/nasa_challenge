@@ -1,0 +1,458 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "label": "initial",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 568,
+      "width": 320,
+      "height": 455,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "panel": null,
+    "body": null,
+    "heading": null,
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025"
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "selected",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 568,
+      "width": 320,
+      "height": 455,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 408.75,
+      "bottom": 568,
+      "width": 320,
+      "height": 159.25,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 453.75,
+      "bottom": 568,
+      "width": 320,
+      "height": 114.25,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 453.75,
+      "bottom": 475.34375,
+      "width": 59.84375,
+      "height": 21.59375,
+      "scrollWidth": 60,
+      "clientWidth": 60,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=MX-SON"
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "next-region",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 568,
+      "width": 320,
+      "height": 455,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 408.75,
+      "bottom": 568,
+      "width": 320,
+      "height": 159.25,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 453.75,
+      "bottom": 568,
+      "width": 320,
+      "height": 114.25,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 453.75,
+      "bottom": 475.34375,
+      "width": 46.21875,
+      "height": 21.59375,
+      "scrollWidth": 46,
+      "clientWidth": 46,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=US-TX"
+  },
+  {
+    "width": 320,
+    "height": 568,
+    "label": "new-variable",
+    "sheet": "half",
+    "stage": {
+      "y": 113,
+      "bottom": 568,
+      "width": 320,
+      "height": 455,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 295,
+      "bottom": 568,
+      "width": 320,
+      "height": 273,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 340,
+      "bottom": 568,
+      "width": 320,
+      "height": 228,
+      "scrollWidth": 320,
+      "clientWidth": 320,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 340,
+      "bottom": 368.796875,
+      "width": 232,
+      "height": 28.796875,
+      "scrollWidth": 232,
+      "clientWidth": 232,
+      "scrollTop": 0
+    },
+    "active": "BUTTON",
+    "url": "?var=precipitation&from=2001&to=2024&region=US-TX"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "initial",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 844,
+      "width": 390,
+      "height": 731,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "panel": null,
+    "body": null,
+    "heading": null,
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "selected",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 844,
+      "width": 390,
+      "height": 731,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 668,
+      "bottom": 844,
+      "width": 390,
+      "height": 176,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 713,
+      "bottom": 844,
+      "width": 390,
+      "height": 131,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 713,
+      "bottom": 734.59375,
+      "width": 59.84375,
+      "height": 21.59375,
+      "scrollWidth": 60,
+      "clientWidth": 60,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=MX-SON"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "next-region",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 844,
+      "width": 390,
+      "height": 731,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 668,
+      "bottom": 844,
+      "width": 390,
+      "height": 176,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 713,
+      "bottom": 844,
+      "width": 390,
+      "height": 131,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 713,
+      "bottom": 734.59375,
+      "width": 46.21875,
+      "height": 21.59375,
+      "scrollWidth": 46,
+      "clientWidth": 46,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=US-TX"
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "label": "new-variable",
+    "sheet": "half",
+    "stage": {
+      "y": 113,
+      "bottom": 844,
+      "width": 390,
+      "height": 731,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 405.40625,
+      "bottom": 844,
+      "width": 390,
+      "height": 438.59375,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 450.40625,
+      "bottom": 844,
+      "width": 390,
+      "height": 393.59375,
+      "scrollWidth": 390,
+      "clientWidth": 390,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 450.40625,
+      "bottom": 479.203125,
+      "width": 262.59375,
+      "height": 28.796875,
+      "scrollWidth": 263,
+      "clientWidth": 263,
+      "scrollTop": 0
+    },
+    "active": "BUTTON",
+    "url": "?var=precipitation&from=2001&to=2024&region=US-TX"
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "label": "initial",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 932,
+      "width": 430,
+      "height": 819,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "panel": null,
+    "body": null,
+    "heading": null,
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025"
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "label": "selected",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 932,
+      "width": 430,
+      "height": 819,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 756,
+      "bottom": 932,
+      "width": 430,
+      "height": 176,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 801,
+      "bottom": 932,
+      "width": 430,
+      "height": 131,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 801,
+      "bottom": 822.59375,
+      "width": 59.84375,
+      "height": 21.59375,
+      "scrollWidth": 60,
+      "clientWidth": 60,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=MX-SON"
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "label": "next-region",
+    "sheet": "peek",
+    "stage": {
+      "y": 113,
+      "bottom": 932,
+      "width": 430,
+      "height": 819,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 756,
+      "bottom": 932,
+      "width": 430,
+      "height": 176,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 801,
+      "bottom": 932,
+      "width": 430,
+      "height": 131,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 801,
+      "bottom": 822.59375,
+      "width": 46.21875,
+      "height": 21.59375,
+      "scrollWidth": 46,
+      "clientWidth": 46,
+      "scrollTop": 0
+    },
+    "active": "BODY",
+    "url": "?var=air_temperature&from=1980&to=2025&region=US-TX"
+  },
+  {
+    "width": 430,
+    "height": 932,
+    "label": "new-variable",
+    "sheet": "half",
+    "stage": {
+      "y": 113,
+      "bottom": 932,
+      "width": 430,
+      "height": 819,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "panel": {
+      "y": 440.609375,
+      "bottom": 932,
+      "width": 430,
+      "height": 491.390625,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "body": {
+      "y": 485.609375,
+      "bottom": 932,
+      "width": 430,
+      "height": 446.390625,
+      "scrollWidth": 430,
+      "clientWidth": 430,
+      "scrollTop": 0
+    },
+    "heading": {
+      "y": 485.609375,
+      "bottom": 514.40625,
+      "width": 262.59375,
+      "height": 28.796875,
+      "scrollWidth": 263,
+      "clientWidth": 263,
+      "scrollTop": 0
+    },
+    "active": "BUTTON",
+    "url": "?var=precipitation&from=2001&to=2024&region=US-TX"
+  }
+]

@@ -60,6 +60,20 @@ describe('RegionSearch (T001)', () => {
     expect(regionInUrl()).toBe('MX-SON')
     expect(input.getAttribute('aria-expanded')).toBe('false')
     expect((input as HTMLInputElement).value).toBe('Sonora')
+    expect(document.activeElement).toBe(input)
+  })
+
+  it('elegir una opción con tacto libera el campo para cerrar el teclado del teléfono', async () => {
+    await renderQuery()
+    const input = screen.getByRole('combobox', { name: 'Buscar un estado' })
+    input.focus()
+    fireEvent.change(input, { target: { value: 'Sonora' } })
+    const option = screen.getByRole('option', { name: 'Sonora' })
+    fireEvent(option, Object.assign(new Event('pointerdown', { bubbles: true }), { pointerType: 'touch' }))
+    fireEvent.mouseDown(option)
+    expect(regionInUrl()).toBe('MX-SON')
+    expect(document.activeElement).not.toBe(input)
+    expect(input.getAttribute('aria-expanded')).toBe('false')
   })
 
   it('agrupa por país y se recorre con flechas, Inicio y Fin', async () => {

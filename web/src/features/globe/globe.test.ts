@@ -85,6 +85,16 @@ describe('cámara y zona libre', () => {
     expect(altitudeFactor(1000, 800, { right: 0, bottom: 400 })).toBeCloseTo(1.8) // 2 → tope 1,8
     expect(altitudeFactor(1000, 800, { right: 250, bottom: 0 })).toBeCloseTo(1 / 0.75)
   })
+
+  it('centra entre las herramientas superiores y el resumen inferior', () => {
+    const top = 66, bottom = 150, height = 455
+    const offset = viewOffsetFor(320, height, { right: 0, top, bottom })
+    const projectedCenter = height / 2 - offset.y
+    expect(projectedCenter).toBeGreaterThan(top)
+    expect(projectedCenter).toBeLessThan(height - bottom)
+    // Con solo herramientas superiores, el desplazamiento hacia abajo debe conservarse.
+    expect(viewOffsetFor(320, height, { right: 0, top, bottom: 0 }).y).toBeLessThan(0)
+  })
 })
 
 describe('fronteras de fondo', () => {

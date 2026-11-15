@@ -83,7 +83,7 @@ export default function PeriodVariation({ series, from, to, unit, digits, verdic
             >
               {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
             </button>
-            <div id={`${uid}-table`} className="trend-chart-table-wrap" hidden={!showTable}>
+            <div id={`${uid}-table`} className="trend-chart-table-wrap" hidden={!showTable} role="region" aria-label="Tabla de variación según el año inicial" tabIndex={0}>
               <table className="analysis-table">
                 <caption className="analysis-vh">{`Pendiente por década según el año inicial, con final en ${fmtYear(to)} (${unit} por década)`}</caption>
                 <thead>

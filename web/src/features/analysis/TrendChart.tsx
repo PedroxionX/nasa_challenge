@@ -270,7 +270,7 @@ export default function TrendChart({ series, row, from, to, unit, variableLabel,
       >
         {showTable ? 'Ocultar tabla' : 'Ver como tabla'}
       </button>
-      <div id={tableId} className="trend-chart-table-wrap" hidden={!showTable}>
+      <div id={tableId} className="trend-chart-table-wrap" hidden={!showTable} role="region" aria-label={`Tabla anual de ${regionName}`} tabIndex={0}>
         <table className="analysis-table">
           <caption className="analysis-vh">{`Valores anuales de ${variableLabel.toLowerCase()} en ${regionName} (${unit})`}</caption>
           <thead>

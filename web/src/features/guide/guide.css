@@ -11,6 +11,10 @@
   flex-direction: column;
   gap: var(--space-3);
 }
+.welcome-intro summary { min-height: var(--tap); display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); cursor: pointer; font-size: var(--text-sm); }
+.welcome-intro summary::after { content: '+'; font-size: var(--text-lg); }
+.welcome-intro[open] summary::after { content: '−'; }
+.welcome-intro-body { display: grid; gap: var(--space-2); padding-bottom: var(--space-2); }
 
 .welcome-title {
   font-size: var(--text-xl);
@@ -101,7 +105,8 @@
 /* ── MethodsSheet ──────────────────────────────────────────── */
 
 .methods-sheet {
-  padding: var(--space-5);
+  padding: var(--space-4) 0 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -212,4 +217,11 @@
 .methods-citations strong {
   color: var(--text);
   font-weight: 500;
+}
+
+@media (max-width: 899px) {
+  .welcome-card { padding: var(--space-2) var(--space-3); gap: var(--space-1); }
+  .welcome-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .welcome-example-btn { min-width: 0; padding: var(--space-1) var(--space-2); overflow-wrap: anywhere; }
+  .welcome-example-btn .example-label, .welcome-example-btn .example-variable { display: none; }
 }
