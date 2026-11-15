@@ -12,20 +12,21 @@ interface Props {
   unit: string | null
   caption: string
   selectedId: string | null
+  compareId?: string | null
   onPick: (id: string) => void
   hrefFor: (id: string) => string
   /** El catálogo no cargó y no hay lista que mostrar (el armazón ya ofrece reintentar). */
   failed: boolean
 }
 
-export default function Fallback({ rows, unit, caption, selectedId, onPick, hrefFor, failed }: Props) {
+export default function Fallback({ rows, unit, caption, selectedId, compareId = null, onPick, hrefFor, failed }: Props) {
   return (
     <section className="globe-fallback" aria-label={GLOBE_COPY.fallbackRegions}>
       <p className="globe-fallback-notice" role="status">{UI_COPY.noWebgl}</p>
       {failed && rows.length === 0 ? (
         <p role="status">{GLOBE_COPY.listUnavailable}</p>
       ) : (
-        <RegionTable rows={rows} unit={unit} caption={caption} selectedId={selectedId} onPick={onPick} hrefFor={hrefFor} />
+        <RegionTable rows={rows} unit={unit} caption={caption} selectedId={selectedId} compareId={compareId} onPick={onPick} hrefFor={hrefFor} />
       )}
     </section>
   )
