@@ -20,9 +20,16 @@ import sys
 import time
 from pathlib import Path
 
+import socket
+
 import requests
+import urllib3.util.connection
 
 from sources.base import now_utc
+
+# En redes con IPv6 roto las conexiones a Giovanni y a Earthdata se quedan en SYN_SENT hasta agotar el plazo
+# antes de caer a IPv4, y cada tramo pierde hasta dos minutos (visto el 2026-11-15). Se fuerza IPv4.
+urllib3.util.connection.allowed_gai_family = lambda: socket.AF_INET
 
 BASE = "https://giovanni.gsfc.nasa.gov/giovanni/"
 OUT_DIR = Path(__file__).resolve().parent / "validation" / "giovanni"
@@ -46,7 +53,7 @@ def run_job(s: requests.Session, field: str, start: str, end: str, shape: str | 
     """Lanza el trabajo, espera a que termine y devuelve la URL del CSV."""
     q = {"service": "ArAvTs", "starttime": start, "endtime": end, "data": field, "portal": "GIOVANNI", "format": "json"}
     q.update({"shape": shape} if shape else {"bbox": bbox})
-    r = s.get(BASE + "daac-bin/service_manager.pl", params=q, timeout=120).json()["session"]
+    r = s.get(BASE + "daac-bin/service_manager.pl", params=q, timeout=(15, 120)).json()["session"]
     ids = {"session": r["id"], "resultset": r["resultset"][0]["id"], "result": r["resultset"][0]["result"][0]["id"]}
     for _ in range(360):
         time.sleep(5)
@@ -100,8 +107,10 @@ def fetch_field(s: requests.Session, field: str, first: int, last: int, shape: s
 
     out: dict[tuple[int, int], float] = {}
     with ThreadPoolExecutor(workers) as ex:
-        for part in ex.map(one, chunks):
+        for i, part in enumerate(ex.map(one, chunks), 1):
             out.update(part)
+            if i % 8 == 0 or i == len(chunks):
+                print(f"  {field}: {i}/{len(chunks)} tramos", flush=True)
     print(f"  {field}: {len(out)} meses en {len(chunks)} tramos", flush=True)
     return out
 
