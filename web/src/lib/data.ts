@@ -10,9 +10,14 @@ import { asset } from './assets'
 // ---------- Tipos del contrato ----------
 
 export const SCHEMA_VERSION = 1
-/** Ids neutrales y estables (contrato, revisión 2026-11-14); el producto exacto va en el catálogo y en provenance. */
-export const VARIABLE_IDS = ['air_temperature', 'precipitation'] as const
-export type VariableId = (typeof VARIABLE_IDS)[number]
+/**
+ * Id neutral y estable de una variable (contrato, revisión 2026-11-14), p. ej. `air_temperature`.
+ * La lista de variables NO está en el código: sale de `catalog.variables[].id` (ver `variableIds`),
+ * así una variable nueva del pipeline aparece en la web sin tocarla.
+ */
+export type VariableId = string
+/** Forma de un id de variable; sirve para validar la URL antes de que llegue el catálogo. */
+export const VARIABLE_ID_FORMAT = /^[a-z][a-z0-9_]*$/
 /** Ids anteriores (nombres de NASA POWER) que pueden llegar en enlaces viejos: ?var=T2M. */
 export const LEGACY_VARIABLE_IDS: Readonly<Record<string, VariableId>> = {
   T2M: 'air_temperature',
@@ -292,6 +297,11 @@ export function pickWindow(series: SeriesFile, from: number, to: number): TrendR
   }
   if (!Array.isArray(out.flags)) out.flags = []
   return out as unknown as TrendRow
+}
+
+/** Ids de las variables que publica el catálogo, en su orden. */
+export function variableIds(catalog: Catalog): VariableId[] {
+  return catalog.variables.map(v => v.id)
 }
 
 /** Periodo de una variable: el suyo si el catálogo lo declara; si no, el global. */

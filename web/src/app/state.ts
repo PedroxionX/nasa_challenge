@@ -7,7 +7,7 @@
  * Valores inexistentes en la URL se sustituyen por los predeterminados y se avisa (useStateNotice).
  */
 import { useSyncExternalStore } from 'react'
-import { LEGACY_VARIABLE_IDS, VARIABLE_IDS, type VariableId } from '../lib/data'
+import { LEGACY_VARIABLE_IDS, VARIABLE_ID_FORMAT, type VariableId } from '../lib/data'
 import { detectWebGL } from './webgl'
 
 export type { VariableId }
@@ -33,6 +33,8 @@ export interface YearRange { firstYear: number; lastYear: number }
 export interface StateLimits extends YearRange {
   /** `null` mientras no se conoce el catálogo: entonces solo se comprueba el formato del id. */
   regionIds: ReadonlySet<string> | null
+  /** Variables del catálogo; `null` mientras no se conoce: entonces solo se comprueba el formato del id. */
+  variableIds?: ReadonlySet<string> | null
   /** Periodo propio de cada variable; si falta, vale firstYear–lastYear. */
   periods?: Partial<Record<VariableId, YearRange>>
 }
@@ -45,7 +47,16 @@ type UrlState = Omit<AppState, 'webgl'>
 
 // ---------- Funciones puras (probadas por separado) ----------
 
-const isVariable = (v: string | null): v is VariableId => VARIABLE_IDS.includes(v as VariableId)
+function variableOk(id: string, limits: StateLimits): boolean {
+  return limits.variableIds ? limits.variableIds.has(id) : VARIABLE_ID_FORMAT.test(id)
+}
+
+/** La predeterminada si el catálogo la trae; si no, la primera del catálogo. */
+function defaultVariable(limits: StateLimits): VariableId {
+  const ids = limits.variableIds
+  if (!ids || ids.has(DEFAULT_VARIABLE)) return DEFAULT_VARIABLE
+  return ids.values().next().value ?? DEFAULT_VARIABLE
+}
 
 /** Periodo válido para una variable. */
 export function periodFor(variableId: VariableId, l: StateLimits): YearRange {
@@ -72,10 +83,11 @@ export function parseSearch(search: string, limits: StateLimits): { state: UrlSt
   }
 
   const rawVar = q.get('var')
-  let variableId: VariableId = DEFAULT_VARIABLE
+  let variableId = defaultVariable(limits)
   if (rawVar !== null) {
-    if (isVariable(rawVar)) variableId = rawVar
-    else if (rawVar in LEGACY_VARIABLE_IDS) variableId = LEGACY_VARIABLE_IDS[rawVar]
+    const legacy = Object.hasOwn(LEGACY_VARIABLE_IDS, rawVar) ? LEGACY_VARIABLE_IDS[rawVar] : null
+    if (legacy !== null && variableOk(legacy, limits)) variableId = legacy
+    else if (variableOk(rawVar, limits)) variableId = rawVar
     else notices.push(`La variable «${rawVar}» no existe; se muestra la predeterminada.`)
   }
 
@@ -157,7 +169,7 @@ const actions: AppActions = {
     update({ regionId: id })
   },
   setVariable(id) {
-    if (!isVariable(id)) {
+    if (!variableOk(id, limits)) {
       console.warn(`setVariable: variable desconocida «${String(id)}»`)
       return
     }
@@ -221,9 +233,18 @@ export function configureState(next: {
   firstYear: number
   lastYear: number
   regionIds: Iterable<string>
+  /** Ids de `catalog.variables`; si faltan se usan las claves de `periods`. */
+  variableIds?: Iterable<VariableId>
   periods?: Partial<Record<VariableId, YearRange>>
 }): void {
-  limits = { firstYear: next.firstYear, lastYear: next.lastYear, regionIds: new Set(next.regionIds), periods: next.periods }
+  const variableIds = next.variableIds ?? (next.periods ? Object.keys(next.periods) : null)
+  limits = {
+    firstYear: next.firstYear,
+    lastYear: next.lastYear,
+    regionIds: new Set(next.regionIds),
+    variableIds: variableIds ? new Set(variableIds) : null,
+    periods: next.periods,
+  }
   // Si el periodo no lo eligió nadie, no se valida (era el predeterminado): se adopta el de la variable sin avisar.
   const q = new URLSearchParams(toSearch(state))
   if (!periodChosen) { q.delete('from'); q.delete('to') }

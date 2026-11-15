@@ -7,7 +7,7 @@
 import { useEffect } from 'react'
 import { useAppState } from '../../app/state'
 import { pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
-import { explainTrend, UI_COPY, VARIABLE_COPY } from '../../content'
+import { explainTrend, UI_COPY, variableCopy } from '../../content'
 import { HAS_TREND, digitsFor, isFullPeriod, readExtras } from './analysisData'
 import { fmtSlope, fmtYears } from './format'
 import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
@@ -52,7 +52,7 @@ export default function AnalysisPanel() {
   const catalog = load.kind === 'ready' || load.kind === 'no-data' ? load.catalog : null
   const region = catalog?.regions.find(r => r.id === regionId)
   const regionName = region?.name ?? regionId
-  const variable = VARIABLE_COPY[variableId]
+  const variable = variableCopy(variableId, catalog?.variables.find(v => v.id === variableId))
 
   const close = () => { setRegion(null); focusSearch() }
 
@@ -122,6 +122,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   onReset: () => void
 }) {
   const variableInfo = catalog.variables.find(v => v.id === series.variable)
+  const variableLabel = variableCopy(series.variable, variableInfo).label
   const region = catalog.regions.find(r => r.id === series.region)
   const unit = variableInfo?.unit_annual ?? series.unit
   const digits = digitsFor(unit)
@@ -158,8 +159,8 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const trend = row !== null && HAS_TREND.has(status)
 
   const announcement = trend
-    ? `${regionName}, ${VARIABLE_COPY[series.variable].label.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}, ${fmtSlope(row.slope_decade, unit, digits)}.`
-    : `${regionName}, ${VARIABLE_COPY[series.variable].label.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}.`
+    ? `${regionName}, ${variableLabel.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}, ${fmtSlope(row.slope_decade, unit, digits)}.`
+    : `${regionName}, ${variableLabel.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}.`
 
   return (
     <div className="analysis-result">
@@ -187,7 +188,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
         from={from}
         to={to}
         unit={unit}
-        variableLabel={VARIABLE_COPY[series.variable].label}
+        variableLabel={variableLabel}
         regionName={regionName}
         lineMid={extras.lineMid}
       />
