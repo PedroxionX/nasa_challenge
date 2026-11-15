@@ -22,7 +22,7 @@ description: "Tareas de la base compartida e integración"
 ## Phase 2: Integración y publicación
 
 - [x] T009 Revisar y fusionar cada rama cuando llegue; comprobar que solo toca sus rutas — 2 h · Acepta: SC-F01
-- [ ] T010 Publicación del sitio estático en Vercel desde `main` (vercel.json en la raíz y `base: '/'` en web/vite.config.ts; falta vincular el repo en Vercel) — 2 h · Acepta: enlace público operativo
+- [x] T010 Publicación del sitio estático en Vercel desde `main` (vercel.json en la raíz y `base: '/'` en web/vite.config.ts) — 2 h · Acepta: enlace público operativo · **Resultado:** repo vinculado en Vercel (preset Other, raíz `./`, build desde vercel.json); producción en https://nasachallenge-nine.vercel.app desde el merge del PR #19. Comprobado: globo, 14 variables, Baja California, comparación con temperatura, «Métodos y fuentes» y consola sin errores
 - [ ] T011 Recorrido completo de quickstart, con y sin red, en móvil y portátil; actualizar README.md — 1,5 h · Acepta: SC-F03
 - [ ] T012 Margen de integración — 4 h · no se asigna a funciones nuevas
 
