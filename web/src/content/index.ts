@@ -230,6 +230,14 @@ export function variableCopy(id: VariableId, info?: Pick<VariableInfo, 'label' |
   return { label, short: label, definition: 'Variable del catálogo de datos de la NASA.' }
 }
 
+// ---------- Citas (FR-C04) ----------
+
+/** Cita de un producto; si no se conoce, solo su nombre y versión, sin inventar autores ni DOI. */
+export function productCitation(shortName: string | undefined, version: string | undefined): string {
+  if (!shortName) return 'Producto no declarado en el catálogo.'
+  return PRODUCT_CITATIONS[shortName] ?? `${shortName}${version ? ` versión ${version}` : ''}.`
+}
+
 // ---------- GLOSARIO (FR-C03) ----------
 // Definiciones de los términos que aparecen en la frase del análisis.
 // Definiciones tomadas de research.md D6. El panel (004) debe ofrecerlas junto a la primera cifra.
@@ -303,16 +311,49 @@ const VERDICT_LABEL: Record<TrendStatus, string> = {
 
 const NBSP = '\u00a0'
 
-/** Formatea un número con signo y dos decimales: «+1,23» o «−0,45». */
-function fmt(n: number): string {
-  const abs = Math.abs(n).toFixed(2)
-  return n >= 0 ? `+${abs}` : `\u2212${abs}` // − es U+2212, no guion
+/**
+ * Decimales según la unidad, igual que el panel (004, `digitsFor`): dos en °C, uno en mm y %.
+ * Así la frase y las tarjetas muestran la misma cifra.
+ */
+function digitsFor(unit: string): number {
+  return unit.includes('°') ? 2 : 1
 }
 
-/** «p = 0.012»; los valores menores que 0,001 se muestran como «p < 0.001», nunca como «0.000». */
+/**
+ * Formatea un número con signo en es-MX (punto decimal, FR-A08): «+1.23» o «−0.45».
+ * El menos es U+2212, no guion. Un valor que redondea a cero se muestra sin signo.
+ */
+function fmt(n: number, digits: number): string {
+  const abs = Math.abs(n).toFixed(digits)
+  if (Number(abs) === 0) return abs
+  return n >= 0 ? `+${abs}` : `−${abs}`
+}
+
+/** «p = 0.012»; los valores menores que 0.001 se muestran como «p < 0.001», nunca como «0.000». */
 function fmtP(p: number): string {
   if (p < 0.001) return `p${NBSP}<${NBSP}0.001`
   return `p${NBSP}=${NBSP}${p.toFixed(3)}`
+}
+
+/**
+ * Sujeto de la frase, con su artículo (género y número no se deducen de la etiqueta).
+ * Una variable sin entrada se nombra como «la variable «…»».
+ */
+const SUBJECT: Readonly<Record<VariableId, string>> = {
+  air_temperature: 'la temperatura del aire',
+  precipitation: 'la precipitación',
+  soil_moisture: 'la humedad del suelo',
+  evapotranspiration: 'la evapotranspiración',
+  soil_temperature: 'la temperatura del suelo',
+  runoff: 'la escorrentía',
+  snow_water_equivalent: 'la nieve acumulada',
+  specific_humidity: 'la humedad del aire',
+  total_precipitable_water: 'el vapor de agua total',
+  total_ozone: 'el ozono total',
+  max_air_temperature: 'la temperatura máxima',
+  min_air_temperature: 'la temperatura mínima',
+  aerosol_optical_depth: 'los aerosoles',
+  dust_optical_depth: 'el polvo en el aire',
 }
 
 // ---------- explainTrend — cuatro variantes (SC-C02) ----------
@@ -370,18 +411,23 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
   }
 
   // Variantes 1 y 2: increasing / decreasing — con cifras completas.
-  // La unidad ya trae «/década»; no se repite.
+  // La unidad ya trae «/década»; no se repite. El veredicto («Sube»/«Baja») va aparte:
+  // la frase no lo repite, la cuenta en palabras.
+  const digits = digitsFor(ctx.unit)
   const level = Math.round((1 - ctx.alpha) * 100)
   const slopeStr =
-    slope_decade !== null ? `${fmt(slope_decade)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
+    slope_decade !== null ? `${fmt(slope_decade, digits)}${NBSP}${ctx.unit}` : '(pendiente no disponible)'
   const ciStr =
     ci_low !== null && ci_high !== null
-      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low)} a ${fmt(ci_high)}${NBSP}${ctx.unit})`
+      ? ` (IC${NBSP}${level}${NBSP}%: de ${fmt(ci_low, digits)} a ${fmt(ci_high, digits)}${NBSP}${ctx.unit})`
       : ''
   const pStr = p !== null ? `; ${fmtP(p)}` : ''
 
+  const subject = SUBJECT[ctx.variableId] ?? `la variable «${variableCopy(ctx.variableId).label}»`
+  const plural = subject.startsWith('los ') || subject.startsWith('las ')
+  const verb = (status === 'increasing' ? 'sube' : 'baja') + (plural ? 'n' : '')
   const sentence =
-    `${slopeStr}${ciStr}` +
+    `En ${ctx.regionName}, ${subject} ${verb} ${slopeStr}${ciStr}` +
     ` entre ${ctx.from} y ${ctx.to} (${n}${NBSP}años)${pStr}. ` +
     `Un patrón así sería muy raro si no hubiera tendencia.`
 

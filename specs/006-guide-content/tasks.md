@@ -27,8 +27,16 @@ T001 no necesita la base. El resto requiere la base 002 fusionada.
 
 ## Phase 5: User Story 4 - Validación con personas (P1)
 
-- [ ] T006 [US4] Prueba con cinco personas según ux.md §8; resultados en docs/prueba-usuarios.md; peticiones de corrección a cada dueño — 3 h · requiere 004 y 005 integradas · Acepta: SC-C01 registrado
-- [ ] T007 [US4] Guion de la demo y atribuciones en docs/demo.md — 1,5 h · Acepta: FR-C05
+- [ ] T006 [US4] Prueba con cinco personas según ux.md §8; resultados en docs/prueba-usuarios.md; peticiones de corrección a cada dueño — 3 h · requiere 004 y 005 integradas · Acepta: SC-C01 registrado · **2026-11-14: protocolo, guion de moderación y hojas de registro listos en docs/prueba-usuarios.md; sesiones sin realizar (requieren personas; los datos reales ya están). Desviación declarada: la tarea 3 pasa de «desde 2000» a «desde 2005» porque la precipitación empieza en 2001.**
+- [x] T007 [US4] Guion de la demo y atribuciones en docs/demo.md — 1,5 h · Acepta: FR-C05 · 2026-11-14: 2 min 50 s, texto exacto por sección; los dos casos con texto fijo y valores de ensayo de los datos reales
 - [ ] T008 Ajuste de textos tras la prueba — 1 h · T006
 
 Esfuerzo: 13,5 h. No se recorta: T003 ni T006 (T006 puede bajar a tres personas).
+
+## Phase 6: Convergence (2026-11-14)
+
+- [x] T009 Cifras de `explainTrend` en formato es-MX (punto decimal) y con los decimales del panel (2 en °C, 1 en mm y %), per FR-A08 de 004: la frase mostraba «−30,15» junto a «−30.1» y rompía 3 pruebas de AnalysisPanel
+- [x] T010 La frase de `explainTrend` ya no empieza por el veredicto ni repite «Hay evidencia de tendencia» (el panel ya los muestra): «En Baja California, la temperatura del aire sube…»
+- [x] T011 `WelcomeCard` sin landmark propio: el armazón (002) ya lo envuelve en `<section aria-label="Bienvenida">` y la región salía duplicada
+- [x] T012 `MethodsSheet`: periodo por variable (`variablePeriod`), origen y naturaleza de cada producto desde el catálogo, cita de MERRA-2 e IMERG (`productCitation`, sin inventar DOI para productos desconocidos), definición de reanálisis si la precipitación llega por POWER, «φ = 0.75» con punto, per FR-C02 y FR-C04
+- [x] T013 Sustituir el marcador `TODO(003): segundo ejemplo` de WelcomeCard y el «caso elegido» de docs/demo.md §3 · 2026-11-14 con los datos reales: **Chihuahua · temperatura** (sube, p < 0.001) frente a Baja California (sin evidencia suficiente en 1980–2025; cambia según el año inicial). Sonora se descarta por ser la tarea 1 de la prueba
