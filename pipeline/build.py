@@ -70,16 +70,29 @@ def _p(x: Any) -> float | None:
 # --------------------------------------------------------------------------------------
 # Serie regional
 # --------------------------------------------------------------------------------------
-def regional_monthly(grid, cw: CellWeights) -> np.ndarray:
-    """Media ponderada por mes; NaN si falta cualquiera de las celdas con peso."""
+def regional_monthly(grid, cw: CellWeights, min_valid_fraction: float | None = None) -> np.ndarray:
+    """Media ponderada por mes.
+
+    Regla por omisión (`min_valid_fraction=None`): NaN si falta cualquiera de las celdas con peso.
+    Variables solo de tierra (FR-D10): media de las celdas con dato, con los pesos renormalizados, y NaN si esas
+    celdas suman menos de `min_valid_fraction` del peso total de la región.
+    """
     lookup = {(round(float(a), 4), round(float(o), 4)): i for i, (a, o) in enumerate(zip(grid.lats, grid.lons))}
     try:
         idx = np.array([lookup[(round(float(a), 4), round(float(o), 4))] for a, o in zip(cw.lats, cw.lons)])
     except KeyError as exc:
         raise KeyError(f"La lectura no incluye la celda {exc.args[0]}: revisa el recuadro de lectura.") from exc
     vals = grid.values[idx]
-    out = (cw.weights[:, None] * vals).sum(axis=0) / cw.weights.sum()
-    out[np.isnan(vals).any(axis=0)] = np.nan
+    w = cw.weights[:, None]
+    if min_valid_fraction is None:
+        out = (w * vals).sum(axis=0) / cw.weights.sum()
+        out[np.isnan(vals).any(axis=0)] = np.nan
+        return out
+    valid = ~np.isnan(vals)
+    wv = (w * valid).sum(axis=0)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        out = (w * np.where(valid, vals, 0.0)).sum(axis=0) / wv
+    out[wv < min_valid_fraction * cw.weights.sum()] = np.nan
     return out
 
 
@@ -160,11 +173,12 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
     r1 = float(acf(x - c.sen_slope * t, 1)[1])
     p = c.primary.p_value
     slope = c.sen_slope * 10
+    slope_out = _r(slope, 6)
     if not (np.isfinite(p) and np.isfinite(slope) and np.all(np.isfinite(c.sen_ci))):
         status = "invalid"
-    elif p < alpha and slope > 0:
+    elif slope_out is not None and slope_out > 0 and p < alpha:
         status = "increasing"
-    elif p < alpha and slope < 0:
+    elif slope_out is not None and slope_out < 0 and p < alpha:
         status = "decreasing"
     else:
         status = "inconclusive"
@@ -175,7 +189,6 @@ def analyze_window(start: int, end: int, years: np.ndarray, values: np.ndarray, 
     pct = list(_NO_PCT)
     if relative_change and status != "invalid":
         pct = pct_of_mean(slope, (c.sen_ci[0] * 10, c.sen_ci[1] * 10), mean)
-    slope_out = _r(slope, 6)
     line_mid = _r(sen_line_mid(t, x, c.sen_slope, start, end), 6) if slope_out is not None else None
     row = [start, end, n, slope_out, _r(c.sen_ci[0] * 10, 6), _r(c.sen_ci[1] * 10, 6), _p(p), _p(c.mk.p_value),
            _r(r1, 4), _r(ols_slope, 6), _p(ols_p), status, flags, line_mid] + pct
@@ -195,7 +208,7 @@ class SeriesResult:
 def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, first_year: int, last_year: int,
                  manifest_ref: str) -> SeriesResult:
     spec, info = var.spec, data.info
-    monthly = regional_monthly(data, cw)
+    monthly = regional_monthly(data, cw, var.min_valid_fraction)
     bundle = regional_bundle(region, spec, data.months, monthly, info.source, info.product, info.grid_text)
     clean, rep = clean_monthly(bundle, first_year, last_year)
     annual = to_annual(clean, spec)
@@ -228,7 +241,9 @@ def build_series(region: Region, cw: CellWeights, var: VarDef, data: GridData, f
         "relleno declarado por la fuente → faltante",
         var.conversion,
         f"promedio de área de {cw.n_cells} celdas de {info.grid_text} (peso = cos(latitud) × fracción cubierta); "
-        "un mes regional solo es válido si todas sus celdas lo son",
+        + ("un mes regional solo es válido si todas sus celdas lo son" if var.min_valid_fraction is None else
+           f"variable solo de tierra: media de las celdas con dato (pesos renormalizados); el mes es faltante si "
+           f"cubren menos del {var.min_valid_fraction:.0%} del peso de la región"),
     ]
     if rep.n_out_of_range:
         transformations.append(f"{rep.n_out_of_range} meses fuera de rango físico → faltante")
@@ -390,9 +405,32 @@ def default_sources(source: str) -> dict[str, Any]:
     if source == "gesdisc":
         from sources.gesdisc import GesDiscSource
         from sources.imerg import IMERG_PRECIP
-        from sources.merra2 import MERRA2_T2M
+        from sources.merra2 import (MERRA2_AOD, MERRA2_DUST_AOD, MERRA2_QV2M, MERRA2_T2M, MERRA2_T2MMAX,
+                                    MERRA2_T2MMIN, MERRA2_TO3, MERRA2_TQV)
+        from sources.gldas import (
+            GLDAS_EVAPOTRANSPIRATION,
+            GLDAS_RUNOFF,
+            GLDAS_SOIL_MOISTURE,
+            GLDAS_SURF_TEMP,
+            GLDAS_SWE,
+        )
 
-        return {"air_temperature": GesDiscSource(MERRA2_T2M), "precipitation": GesDiscSource(IMERG_PRECIP)}
+        return {
+            "air_temperature": GesDiscSource(MERRA2_T2M),
+            "precipitation": GesDiscSource(IMERG_PRECIP),
+            "soil_moisture": GesDiscSource(GLDAS_SOIL_MOISTURE),
+            "evapotranspiration": GesDiscSource(GLDAS_EVAPOTRANSPIRATION),
+            "specific_humidity": GesDiscSource(MERRA2_QV2M),
+            "total_precipitable_water": GesDiscSource(MERRA2_TQV),
+            "total_ozone": GesDiscSource(MERRA2_TO3),
+            "runoff": GesDiscSource(GLDAS_RUNOFF),
+            "snow_water_equivalent": GesDiscSource(GLDAS_SWE),
+            "soil_temperature": GesDiscSource(GLDAS_SURF_TEMP),
+            "aerosol_optical_depth": GesDiscSource(MERRA2_AOD),
+            "dust_optical_depth": GesDiscSource(MERRA2_DUST_AOD),
+            "max_air_temperature": GesDiscSource(MERRA2_T2MMAX),
+            "min_air_temperature": GesDiscSource(MERRA2_T2MMIN),
+        }
     if source == "power":
         from sources.power import PowerSource
 
@@ -436,7 +474,8 @@ def build(region_ids: list[str], var_ids: list[str], out_dir: Path, sources: dic
             union = {(round(float(a), 4), round(float(o), 4)) for w in w_all.values() for a, o in zip(w.lats, w.lons)}
             ulats, ulons = (np.array(c) for c in zip(*sorted(union)))
             w = {r.id: w_all[r.id] for r in regions}
-            data = src.read(var, regions, w, ulats, ulons, var.first_request_year, today.year)
+            req_end_year = min(today.year, last_year_max) if last_year_max is not None else today.year
+            data = src.read(var, regions, w, ulats, ulons, var.first_request_year, req_end_year)
             fy, ly = complete_period(data.months, var.first_request_year, last_year_max)
             periods[var_id], infos[var_id] = (fy, ly), data.info
             cells[var_id] = {r.id: w[r.id].n_cells for r in regions}
@@ -462,17 +501,18 @@ def build(region_ids: list[str], var_ids: list[str], out_dir: Path, sources: dic
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--regions", default=",".join(ALL_REGION_IDS), help="ids ISO 3166-2 separados por coma")
-    ap.add_argument("--variables", default=",".join(variables.VARIABLE_IDS))
+    ap.add_argument("--variables", default=None, help="ids separados por coma (por omisión, todas las de la fuente)")
     ap.add_argument("--source", default="gesdisc", choices=["gesdisc", "power"],
                     help="gesdisc (MERRA-2 e IMERG, por omisión) o power (alternativa; solo a mano)")
     ap.add_argument("--out", default=str(PIPELINE_DIR / "out" / "trends"))
     ap.add_argument("--last-year", type=int, default=None, help="tope del último año completo (por omisión, el año pasado)")
     args = ap.parse_args(argv)
     region_ids = [r.strip() for r in args.regions.split(",") if r.strip()]
-    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()]
+    sources = default_sources(args.source)
+    var_ids = [c.strip() for c in args.variables.split(",") if c.strip()] if args.variables else list(sources)
     t0 = _dt.datetime.now()
     try:
-        files = build(region_ids, var_ids, Path(args.out), default_sources(args.source), last_year_max=args.last_year)
+        files = build(region_ids, var_ids, Path(args.out), sources, last_year_max=args.last_year)
     except ReadFailed as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         print(f"Regiones afectadas: {', '.join(exc.affected_regions)}", file=sys.stderr)
