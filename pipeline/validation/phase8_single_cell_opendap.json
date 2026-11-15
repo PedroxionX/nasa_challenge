@@ -1,0 +1,138 @@
+{
+ "check": "serie regional de una celda = valor de la celda en el gránulo (≤ 0,01)",
+ "earthaccess": "0.19.0",
+ "checked_at_utc": "2026-11-15T09:25:55Z",
+ "checks": [
+  {
+   "variable": "max_air_temperature",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 7.92083,
+   "granule": 7.92083,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "max_air_temperature",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 30.9707,
+   "granule": 30.9707,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "max_air_temperature",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 34.07827,
+   "granule": 34.07827,
+   "abs_diff": 2e-06,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "min_air_temperature",
+   "month": "1990-01",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": -0.55906,
+   "granule": -0.55906,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "min_air_temperature",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 21.34115,
+   "granule": 21.34115,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "min_air_temperature",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 22.40512,
+   "granule": 22.40511,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 0.4133,
+   "granule": 0.4133,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "aerosol_optical_depth",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 0.25017,
+   "granule": 0.25017,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "dust_optical_depth",
+   "month": "2005-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 0.02249,
+   "granule": 0.02249,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  },
+  {
+   "variable": "dust_optical_depth",
+   "month": "2024-07",
+   "cell": [
+    39.0,
+    -76.875
+   ],
+   "pipeline": 0.02413,
+   "granule": 0.02413,
+   "abs_diff": 0.0,
+   "pass": true,
+   "note": "US-DC: región de una sola celda"
+  }
+ ],
+ "all_pass": true
+}
