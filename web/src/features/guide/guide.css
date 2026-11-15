@@ -14,7 +14,7 @@
 
 .welcome-title {
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   margin: 0;
   color: var(--text);
 }
@@ -79,7 +79,7 @@
 
 .example-place {
   font-size: var(--text-md);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }
 
 .example-variable {
@@ -110,7 +110,7 @@
 
 .methods-title {
   font-size: var(--text-xl);
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   margin: 0;
   color: var(--text);
 }
@@ -133,7 +133,7 @@
 
 .methods-section h3 {
   font-size: var(--text-md);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text);
   margin: 0;
   border-bottom: 1px solid var(--border);
@@ -156,7 +156,7 @@
 
 .methods-variable-item dt {
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
   color: var(--text);
 }
 
@@ -211,5 +211,5 @@
 
 .methods-citations strong {
   color: var(--text);
-  font-weight: 500;
+  font-weight: var(--weight-medium);
 }

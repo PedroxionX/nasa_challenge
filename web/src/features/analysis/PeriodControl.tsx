@@ -7,7 +7,7 @@ import { useAppState } from '../../app/state'
 import type { Catalog } from '../../lib/data'
 import { UI_COPY } from '../../content'
 import { isFullPeriod, periodOptions } from './analysisData'
-import { fmtYear } from './format'
+import { fmtYear } from '../../lib/format'
 
 /** `showReset = false` cuando el panel ya ofrece «Usar todo el periodo» en su aviso de datos insuficientes. */
 export default function PeriodControl({ catalog, showReset = true }: { catalog: Catalog; showReset?: boolean }) {

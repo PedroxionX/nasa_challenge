@@ -1,13 +1,10 @@
-/** Formato de cifras y ordenación de la tabla de regiones (005 T005). */
+/** Ordenación de la tabla de regiones (005 T005). Las cifras las formatea lib/format.ts, como en toda la app. */
+import { fmtSigned, fmtValue } from '../../lib/format'
 
-const signed = new Intl.NumberFormat('es', { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'exceptZero' })
-const plain = new Intl.NumberFormat('es', { maximumFractionDigits: 2 })
-const minus = (s: string) => s.replace('-', '−')
-
-/** Pendiente con signo y dos decimales: «+0,25», «−0,10», «0,00». */
-export const formatSlope = (v: number) => minus(signed.format(v))
-/** Corte de la leyenda, sin signo positivo: «−0,4», «0,1». */
-export const formatBreak = (v: number) => minus(plain.format(v))
+/** Pendiente con signo y dos decimales: «+0.25», «−0.10», «0.00». */
+export const formatSlope = (v: number) => fmtSigned(v, 2)
+/** Corte de la leyenda, sin signo positivo: «−0.4», «0.1». */
+export const formatBreak = (v: number) => fmtValue(v, 2)
 
 export interface RegionRow {
   id: string

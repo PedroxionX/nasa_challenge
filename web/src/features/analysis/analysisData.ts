@@ -74,6 +74,3 @@ export function windowsEndingAt(series: SeriesFile, end: number): TrendRow[] {
     .filter((r): r is TrendRow => r !== null)
     .sort((a, b) => a.start - b.start)
 }
-
-/** Decimales para mostrar según la unidad: °C con 2, cantidades grandes (mm) con 1. */
-export const digitsFor = (unit: string) => (unit.includes('°') ? 2 : 1)

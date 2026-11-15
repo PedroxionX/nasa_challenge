@@ -5,12 +5,13 @@
  * alternativa «Ver como tabla» con los valores del archivo.
  * El navegador solo traza: no calcula ninguna cifra estadística.
  */
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import { useId, useMemo, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
+import { useWidth } from '../../lib/ui/useWidth'
 import { area, line } from 'd3-shape'
 import type { SeriesFile, TrendRow } from '../../lib/data'
 import { HAS_TREND, yearPoints, type YearPoint } from './analysisData'
-import { fmtTick, fmtValue, fmtYear, fmtYears } from './format'
+import { fmtTick, fmtValue, fmtYear, fmtYears } from '../../lib/format'
 import Term from './Term'
 
 interface Props {
@@ -27,19 +28,6 @@ interface Props {
 
 const HEIGHT = 210
 const M = { top: 22, right: 14, bottom: 28, left: 46 }
-
-function useWidth(fallback = 320) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(fallback)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || typeof ResizeObserver === 'undefined') return
-    const ro = new ResizeObserver(([entry]) => setWidth(Math.max(240, Math.round(entry.contentRect.width))))
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-  return { ref, width }
-}
 
 /**
  * Por qué la gráfica no lleva recta. `muted` = no hay tendencia que mostrar (insuficiente o no válido):

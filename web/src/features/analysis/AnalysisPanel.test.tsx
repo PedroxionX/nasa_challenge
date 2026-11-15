@@ -71,7 +71,8 @@ describe('AnalysisPanel · los cinco estados (T004)', () => {
   it('decreasing: menos tipográfico y un decimal en mm', async () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
     expect(await screen.findByText('Falling')).toBeTruthy()
-    expect(screen.getByText('−30.1 mm per decade')).toBeTruthy()
+    // Con cambio relativo, el % es la cifra principal (la del mapa) y los mm van al lado.
+    expect(screen.getByText('(−30.1 mm per decade)')).toBeTruthy()
     expectMandatory()
   })
 
@@ -237,7 +238,7 @@ describe('AnalysisPanel · gráfica (T003) y % (T011)', () => {
   it('con line_mid y columnas de %: dibuja la recta y muestra el % sin calcularlo', async () => {
     await renderPanel('?region=MX-BCN&var=precipitation')
     expect(await screen.findByText('Falling')).toBeTruthy()
-    expect(screen.getByText('(−14.0 % per decade)')).toBeTruthy()
+    expect(screen.getByText('−14.0 % per decade')).toBeTruthy()
     expect(panel().textContent).toMatch(/−18\.8 to −7\.4 % per decade/)
     expect(document.querySelector('.trend-chart-sen')).not.toBeNull()
     expect(document.querySelector('.trend-chart-band')).not.toBeNull()

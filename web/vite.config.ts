@@ -11,5 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/app/test-setup.ts'],
+    // La primera prueba de cada archivo carga el catálogo real y el globo: 5 s se quedaban cortos con la máquina ocupada.
+    testTimeout: 15000,
   },
 })

@@ -48,7 +48,7 @@
   --color-overlay: rgba(22, 18, 31, 0.78);
 
   /* ---------- Ocaso: tipografía ---------- */
-  /* Inter autoalojada (latino, 400/500/700, font-display: swap): PENDIENTE de añadir la fuente (ver tasks.md de 002). */
+  /* Inter autoalojada con @fontsource/inter (latino, 400/500/700, font-display: swap); se importa en main.tsx. */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
   --text-xs: 0.75rem;    /* 400 · procedencia, notas (color --color-text-muted) */

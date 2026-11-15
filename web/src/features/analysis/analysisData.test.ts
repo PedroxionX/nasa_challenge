@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { pickWindow, type Catalog, type SeriesFile } from '../../lib/data'
-import { digitsFor, evidenceLabel, isFullPeriod, readExtras, yearPoints } from './analysisData'
+import { digitsFor } from '../../lib/format'
+import { evidenceLabel, isFullPeriod, readExtras, yearPoints } from './analysisData'
 import { TREND_FIXTURES } from '../../lib/testing/fixtures'
 import { withoutOptionalColumns } from './testData'
 
@@ -62,4 +63,7 @@ describe('evidenceLabel (FR-A05)', () => {
 it('digitsFor: dos decimales en °C y uno en mm', () => {
   expect(digitsFor('°C')).toBe(2)
   expect(digitsFor('mm')).toBe(1)
+  expect(digitsFor('mm', -30.15, -40.35, -15.93)).toBe(1)
+  // Cifras menores que 1 fuera de °C (aerosoles): los decimales que pida su tamaño, nunca «0.0».
+  expect(digitsFor('unitless', 0.005409, -0.005113, 0.022713)).toBe(3)
 })

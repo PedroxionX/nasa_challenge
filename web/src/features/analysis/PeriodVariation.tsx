@@ -4,13 +4,14 @@
  * la pendiente por década y su intervalo con cada año inicial posible. Todas las cifras son filas de
  * `windows`: el navegador no calcula ninguna.
  */
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
+import { useWidth } from '../../lib/ui/useWidth'
 import { area, line } from 'd3-shape'
 import type { SeriesFile, TrendRow } from '../../lib/data'
 import type { Explanation } from '../../content'
 import { HAS_TREND, windowsEndingAt } from './analysisData'
-import { fmtInterval, fmtSigned, fmtTick, fmtYear, fmtYears } from './format'
+import { fmtInterval, fmtSigned, fmtTick, fmtYear, fmtYears } from '../../lib/format'
 
 interface Props {
   series: SeriesFile
@@ -24,19 +25,6 @@ interface Props {
 
 const HEIGHT = 170
 const M = { top: 14, right: 12, bottom: 26, left: 46 }
-
-function useWidth(fallback = 320) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [width, setWidth] = useState(fallback)
-  useEffect(() => {
-    const el = ref.current
-    if (!el || typeof ResizeObserver === 'undefined') return
-    const ro = new ResizeObserver(([entry]) => setWidth(Math.max(240, Math.round(entry.contentRect.width))))
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-  return { ref, width }
-}
 
 export default function PeriodVariation({ series, from, to, unit, digits, verdictOf }: Props) {
   const [open, setOpen] = useState(false)

@@ -101,9 +101,9 @@
 
 .verdict-head { display: flex; align-items: center; gap: var(--space-2); margin: 0; }
 .verdict-icon { flex: 0 0 auto; fill: none; stroke: var(--text); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.verdict-word { font-size: var(--text-xl); font-weight: 700; }
+.verdict-word { font-size: var(--text-xl); font-weight: var(--weight-bold); }
 .verdict-change { margin: 0; font-size: var(--text-lg); }
-.verdict-slope { font-weight: 600; }
+.verdict-slope { font-weight: var(--weight-medium); }
 .verdict-pct { color: var(--muted); font-size: var(--text-md); }
 
 /* ---------- Gráfica ---------- */
@@ -111,7 +111,7 @@
 .trend-chart-svg { display: block; max-width: 100%; height: auto; overflow: visible; }
 .trend-chart-grid { stroke: var(--border); stroke-width: 1; }
 .trend-chart-tick, .trend-chart-unit { fill: var(--muted); font-size: 11px; }
-.trend-chart-unit { font-weight: 600; }
+.trend-chart-unit { font-weight: var(--weight-medium); }
 .trend-chart-outside { fill: var(--bg); opacity: 0.55; }
 .trend-chart-excluded { opacity: 0.9; }
 .trend-chart-hatch { stroke: var(--no-data); stroke-width: 2; }
@@ -174,7 +174,7 @@
 
 .analysis-table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
 .analysis-table th, .analysis-table td { padding: var(--space-1) var(--space-3); text-align: left; border-bottom: 1px solid var(--border); }
-.analysis-table thead th { position: sticky; top: 0; background: var(--surface); color: var(--muted); font-weight: 600; }
+.analysis-table thead th { position: sticky; top: 0; background: var(--surface); color: var(--muted); font-weight: var(--weight-medium); }
 .analysis-table td:nth-child(2) { text-align: right; }
 .analysis-table tr.is-noted td:last-child { color: var(--muted); }
 
@@ -187,7 +187,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
 }
-.period-control legend { padding: 0 var(--space-1); font-weight: 600; }
+.period-control legend { padding: 0 var(--space-1); font-weight: var(--weight-medium); }
 .period-control-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .period-control-row label { color: var(--muted); font-size: var(--text-sm); }
 .period-control-row select { min-width: 5.5rem; }
@@ -214,8 +214,8 @@
 .variation-point { fill: var(--accent); }
 .variation-current line { stroke: var(--text); stroke-width: 1; stroke-dasharray: 2 3; }
 .variation-current circle { fill: none; stroke: var(--text); stroke-width: 2; }
-.variation-current text { fill: var(--text); font-size: 11px; font-weight: 600; }
-.analysis-table tr.is-current th, .analysis-table tr.is-current td { background: var(--surface); font-weight: 600; }
+.variation-current text { fill: var(--text); font-size: 11px; font-weight: var(--weight-medium); }
+.analysis-table tr.is-current th, .analysis-table tr.is-current td { background: var(--surface); font-weight: var(--weight-medium); }
 
 /* ---------- Cifras ---------- */
 .result-facts {
@@ -244,7 +244,7 @@
   align-items: center;
   min-height: var(--tap);
   cursor: pointer;
-  font-weight: 600;
+  font-weight: var(--weight-medium);
   list-style: none;
 }
 .analysis-details summary::-webkit-details-marker { display: none; }
@@ -294,7 +294,7 @@
   width: 1.15rem;
   height: 1.15rem;
   font-size: 0.7rem;
-  font-weight: 700;
+  font-weight: var(--weight-bold);
   border: 1.5px solid currentColor;
   border-radius: 50%;
 }
@@ -305,7 +305,7 @@
   margin: var(--space-1) 0 var(--space-2);
   padding: var(--space-2) var(--space-3);
   font-size: var(--text-sm);
-  font-weight: 400;
+  font-weight: var(--weight-regular);
   line-height: 1.45;
   color: var(--text);
   white-space: normal;

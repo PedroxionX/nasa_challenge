@@ -8,8 +8,8 @@ import { useEffect } from 'react'
 import { useAppState } from '../../app/state'
 import { pickWindow, type Catalog, type SeriesFile, type CountryCode, type TrendRow } from '../../lib/data'
 import { explainTrend, localizeUnit, UI_COPY, variableCopy } from '../../content'
-import { HAS_TREND, digitsFor, isFullPeriod, readExtras } from './analysisData'
-import { fmtSlope, fmtYears } from './format'
+import { HAS_TREND, isFullPeriod, readExtras } from './analysisData'
+import { digitsFor, fmtPercent, fmtSlope, fmtYears } from '../../lib/format'
 import { InWords, ProvenanceDetails, ResultFacts, TechnicalDetails, Verdict } from './ResultCards'
 import PeriodControl from './PeriodControl'
 import PeriodVariation from './PeriodVariation'
@@ -125,8 +125,8 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const variableLabel = variableCopy(series.variable, variableInfo).label
   const region = catalog.regions.find(r => r.id === series.region)
   const unit = localizeUnit(variableInfo?.unit_annual ?? series.unit)
-  const digits = digitsFor(unit)
   const row = pickWindow(series, from, to)
+  const digits = digitsFor(unit, row?.slope_decade, row?.ci_low, row?.ci_high)
   const status = row?.status ?? 'insufficient'
   const extras = readExtras(row, variableInfo)
   const isSynthetic = series.provenance.is_synthetic
@@ -159,7 +159,7 @@ function Result({ series, catalog, regionName, from, to, onReset }: {
   const trend = row !== null && HAS_TREND.has(status)
 
   const announcement = trend
-    ? `${regionName}, ${variableLabel.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}, ${fmtSlope(row.slope_decade, unit, digits)}.`
+    ? `${regionName}, ${variableLabel.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}, ${extras.pct ? `${fmtPercent(extras.pct.slope)} per decade, ` : ''}${fmtSlope(row.slope_decade, unit, digits)}.`
     : `${regionName}, ${variableLabel.toLowerCase()} ${fmtYears(from, to)}: ${explanation.verdict}.`
 
   return (

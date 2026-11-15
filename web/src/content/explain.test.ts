@@ -122,7 +122,7 @@ describe('formato y redacción (FR-A08, coherencia con el panel)', () => {
   it('en mm usa un decimal, como las tarjetas del panel', () => {
     const r = explainTrend(makeRow({ status: 'decreasing', slope_decade: -30.15, ci_low: -40.35, ci_high: -15.93 }),
       { ...baseCtx, variableId: 'precipitation', unit: 'mm/decade' })
-    expect(r.sentence).toContain('−30.1 mm/decade')
+    expect(r.sentence).toContain('−30.2 mm/decade') // mismo redondeo que el panel (formateador único)
     expect(r.sentence).toContain('−40.4 to −15.9')
   })
 
@@ -164,7 +164,7 @@ describe('decreasing', () => {
 
   it('con precipitación relativa, la unidad que pasa quien llama se respeta', () => {
     const r = explainTrend(row, { ...baseCtx, variableId: 'precipitation', unit: '%/decade' })
-    expect(r.sentence).toContain('\u22120.1\u00a0%/decade') // un decimal fuera de °C, como el panel
+    expect(r.sentence).toContain('\u22120.15\u00a0%/decade') // cifras menores que 1: los decimales que pide su tamaño
     expect(r.sentence).not.toContain('°C')
   })
 })

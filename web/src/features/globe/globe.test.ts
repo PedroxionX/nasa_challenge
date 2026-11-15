@@ -36,7 +36,7 @@ describe('clases del mapa', () => {
 
   it('describe el intervalo de cada clase', () => {
     expect(classRanges(MAP.classes.breaks, formatBreak)).toEqual([
-      'below −0,4', '−0,4 to −0,1', '−0,1 to 0,1', '0,1 to 0,4', '0,4 or more',
+      'below −0.4', '−0.4 to −0.1', '−0.1 to 0.1', '0.1 to 0.4', '0.4 or more',
     ])
   })
 
@@ -60,9 +60,9 @@ describe('formato y tabla', () => {
   ]
 
   it('escribe la pendiente con signo y coma decimal', () => {
-    expect(formatSlope(0.456)).toBe('+0,46')
-    expect(formatSlope(-0.1)).toBe('−0,10')
-    expect(formatSlope(0)).toBe('0,00')
+    expect(formatSlope(0.456)).toBe('+0.46')
+    expect(formatSlope(-0.1)).toBe('−0.10')
+    expect(formatSlope(0)).toBe('0.00')
   })
 
   it('ordena por nombre y por valor, con «sin datos» siempre al final', () => {

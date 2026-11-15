@@ -1,11 +1,12 @@
 /**
- * Formateador único de cifras de 004 (FR-A08). Ningún otro archivo de 004 formatea números.
+ * Formateador único de cifras de toda la aplicación (FR-A08, FR-K09). Ningún otro archivo formatea números:
+ * panel, comparación, leyenda, tabla y textos muestran así la misma cifra con el mismo aspecto.
  * es-MX: punto decimal, sin separador de miles, signo explícito en pendientes y menos tipográfico (U+2212).
  * Solo redondea para mostrar: nunca cambia ni calcula valores.
  */
 
 export const MINUS = '−'
-const MISSING = '—'
+export const MISSING = '—'
 
 const formatters = new Map<string, Intl.NumberFormat>()
 
@@ -46,7 +47,7 @@ export function fmtValue(x: number | null | undefined, maxDigits = 3): string {
 
 /** Etiquetas de eje: tantos decimales como pida el paso entre marcas (0.5 → 1 decimal). */
 export function fmtTick(x: number, step: number): string {
-  const digits = step > 0 ? Math.max(0, Math.min(3, -Math.floor(Math.log10(step) + 1e-9))) : 0
+  const digits = step > 0 ? Math.max(0, Math.min(4, -Math.floor(Math.log10(step) + 1e-9))) : 0
   return fmtNumber(x, digits)
 }
 
@@ -76,3 +77,31 @@ export const fmtInterval = (low: number | null | undefined, high: number | null 
 /** Porcentaje ya calculado por el pipeline (FR-A09): «+3.1 %». */
 export const fmtPercent = (x: number | null | undefined, digits = 1) =>
   usable(x) ? `${fmtSigned(x, digits)} %` : MISSING
+
+/**
+ * Decimales para un grupo de cifras que se leen juntas (pendiente e intervalo), según su tamaño y no según
+ * la unidad: así vale para cualquier variable. Cifras grandes llevan menos decimales; las pequeñas, más.
+ */
+export function digitsForValues(...values: (number | null | undefined)[]): number {
+  const size = Math.max(0, ...values.filter(usable).map(Math.abs))
+  if (size >= 100) return 0
+  if (size >= 10) return 1
+  if (size >= 0.1 || size === 0) return 2
+  if (size >= 0.01) return 3
+  return 4
+}
+
+/** «°C/decade» → «°C per decade», para leerlo en una frase. */
+export const perDecade = (unit: string) => unit.replace(/\/decade$/, ' per decade')
+
+/**
+ * Decimales de una pendiente y su intervalo en el panel y en la frase: dos en °C y uno en el resto (mm, %…),
+ * salvo cuando todas las cifras son menores que 1 (p. ej. espesor óptico de aerosoles, ~0.005 por década):
+ * entonces se usan los que pida su tamaño, para que una cifra distinta de cero no se muestre como «0.0».
+ */
+export function digitsFor(unit: string, ...values: (number | null | undefined)[]): number {
+  if (unit.includes('°')) return 2
+  const sizes = values.filter(usable).map(Math.abs)
+  if (sizes.length > 0 && Math.max(...sizes) < 1) return digitsForValues(...values)
+  return 1
+}

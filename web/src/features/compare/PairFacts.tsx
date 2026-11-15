@@ -5,7 +5,7 @@
 import type { SeriesFile } from '../../lib/data'
 import { COMPARE_COPY, localizeSource } from '../../content'
 import { HAS_TREND, type Individual } from './compareData'
-import { digitsFor, fmtInterval, fmtP, fmtSigned, MISSING } from './format'
+import { digitsForValues, fmtInterval, fmtP, fmtSigned, MISSING } from '../../lib/format'
 
 export interface Side {
   /** «A» (región principal) o «B» (la comparada). */
@@ -22,7 +22,7 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
     <section aria-label={COMPARE_COPY.eachHeading}>
       <h3 className="compare-heading">{COMPARE_COPY.eachHeading}</h3>
       <div className="compare-table-wrap">
-        <table className="compare-table">
+        <table className="compare-table compare-each">
           <thead>
             <tr>
               <th scope="col">State</th>
@@ -37,18 +37,18 @@ export function EachRegion({ sides, unit }: { sides: Side[]; unit: string }) {
             {sides.map(({ tag, name, result, verdict }) => {
               const row = result.row
               const shown = row !== null && HAS_TREND.has(result.status)
-              const digits = digitsFor(row?.slope_decade, row?.ci_low, row?.ci_high)
+              const digits = digitsForValues(row?.slope_decade, row?.ci_low, row?.ci_high)
               return (
                 <tr key={tag}>
                   <th scope="row"><span className="compare-tag">{tag}</span>{name}</th>
-                  <td>{verdict}</td>
-                  <td>
+                  <td className="compare-each-verdict">{verdict}</td>
+                  <td data-label={`Change per decade (${unit})`}>
                     {shown ? fmtSigned(row.slope_decade, digits) : MISSING}
                     {shown && result.pct && <span className="compare-muted">{` (${fmtSigned(result.pct.slope, 1)} %)`}</span>}
                   </td>
-                  <td>{shown ? fmtInterval(row.ci_low, row.ci_high, digits) : MISSING}</td>
-                  <td>{shown ? fmtP(row.p) : MISSING}</td>
-                  <td>{row ? row.n : MISSING}</td>
+                  <td data-label="95% interval">{shown ? fmtInterval(row.ci_low, row.ci_high, digits) : MISSING}</td>
+                  <td data-label="p-value">{shown ? fmtP(row.p) : MISSING}</td>
+                  <td data-label="Complete years">{row ? row.n : MISSING}</td>
                 </tr>
               )
             })}

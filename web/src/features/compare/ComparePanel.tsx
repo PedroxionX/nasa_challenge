@@ -15,7 +15,7 @@ import {
 import { COMPARE_COPY, UI_COPY, explainComparison, explainTrend, localizeUnit, variableCopy, type ComparisonExplanation } from '../../content'
 import { RegionSelect } from './CompareEntry'
 import { ENTRY_SELECT_ID, individual, nearestStart, yearPoints, type Individual } from './compareData'
-import { digitsFor, fmtAlpha, fmtInterval, fmtP, fmtSigned, fmtYears, perDecade } from './format'
+import { digitsForValues, fmtAlpha, fmtInterval, fmtP, fmtSigned, fmtYears, perDecade } from '../../lib/format'
 import PairChart from './PairChart'
 import { EachRegion, PairProvenance, type Side } from './PairFacts'
 import StartSelect from './StartSelect'
@@ -33,7 +33,7 @@ function Difference({ row, explanation, pairLabel, unit, basisText, alpha }: {
   row: DifferenceRow; explanation: ComparisonExplanation; pairLabel: string; unit: string; basisText: string; alpha: number
 }) {
   const figures = row.status === 'differ' || row.status === 'inconclusive'
-  const digits = digitsFor(row.diff_decade, row.ci_low, row.ci_high)
+  const digits = digitsForValues(row.diff_decade, row.ci_low, row.ci_high)
   const level = Math.round((1 - alpha) * 100)
   return (
     <section className={`compare-verdict compare-verdict--${row.status}`} aria-label={COMPARE_COPY.differenceHeading}>

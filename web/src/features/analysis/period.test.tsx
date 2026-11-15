@@ -2,7 +2,7 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { pickWindow, type Catalog, type SeriesFile } from '../../lib/data'
 import { periodOptions, windowsEndingAt } from './analysisData'
-import { fmtInterval, fmtSigned } from './format'
+import { fmtInterval, fmtSigned } from '../../lib/format'
 import { fixtureFetch, TREND_FIXTURES } from '../../lib/testing/fixtures'
 import { configureLikeShell } from './testData'
 

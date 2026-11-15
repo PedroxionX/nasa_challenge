@@ -10,7 +10,7 @@ import { HAS_TREND, evidenceLabel, type Extras } from './analysisData'
 import Term from './Term'
 import {
   fmtAlpha, fmtInterval, fmtNumber, fmtP, fmtPercent, fmtSigned, fmtSlope, fmtYear, fmtYears,
-} from './format'
+} from '../../lib/format'
 
 // ---------- Veredicto ----------
 
@@ -44,9 +44,13 @@ export function Verdict({ status, explanation, row, unit, digits, extras }: {
         <span className="verdict-word">{explanation.verdict}</span>
       </p>
       {showSlope && (
+        // Con cambio relativo (FR-A09) la cifra principal es el %, la misma magnitud que colorea el mapa;
+        // la cifra en la unidad de la variable va al lado. Sin %, la principal es la de la unidad.
         <p className="verdict-change">
-          <span className="verdict-slope">{fmtSlope(row.slope_decade, unit, digits)}</span>
-          {extras.pct && <span className="verdict-pct">{` (${fmtPercent(extras.pct.slope)} per decade)`}</span>}
+          <span className="verdict-slope">
+            {extras.pct ? `${fmtPercent(extras.pct.slope)} per decade` : fmtSlope(row.slope_decade, unit, digits)}
+          </span>
+          {extras.pct && <span className="verdict-pct">{` (${fmtSlope(row.slope_decade, unit, digits)})`}</span>}
         </p>
       )}
     </section>
@@ -82,9 +86,13 @@ export function ResultFacts({ status, row, from, to, unit, digits, extras, catal
         <>
           <dt>95% interval</dt>
           <dd>
-            <Term k="ci">{`${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} per decade`}</Term>
-            {extras.pct && extras.pct.low !== null && extras.pct.high !== null && (
-              <span className="result-sub">{`(${fmtSigned(extras.pct.low, 1)} to ${fmtSigned(extras.pct.high, 1)} % per decade)`}</span>
+            {extras.pct && extras.pct.low !== null && extras.pct.high !== null ? (
+              <>
+                <Term k="ci">{`${fmtSigned(extras.pct.low, 1)} to ${fmtSigned(extras.pct.high, 1)} % per decade`}</Term>
+                <span className="result-sub">{`(${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} per decade)`}</span>
+              </>
+            ) : (
+              <Term k="ci">{`${fmtInterval(row.ci_low, row.ci_high, digits)} ${unit} per decade`}</Term>
             )}
           </dd>
         </>

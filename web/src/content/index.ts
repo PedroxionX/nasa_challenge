@@ -12,6 +12,7 @@
 import type {
   CompareBasis, DifferenceRow, NotComparableReason, TrendRow, TrendStatus, VariableId, VariableInfo,
 } from '../lib/data'
+import { digitsFor, fmtP as formatP, fmtSigned } from '../lib/format'
 
 // ---------- Tipos públicos (firma fijada por 002) ----------
 
@@ -341,23 +342,11 @@ const VERDICT_LABEL: Record<TrendStatus, string> = {
 
 const NBSP = ' '
 
-/** Decimals by unit, same as the panel: two in °C, one elsewhere. Sentence and cards show the same figure. */
-function digitsFor(unit: string): number {
-  return unit.includes('°') ? 2 : 1
-}
+/** Signed figure with the app-wide formatter (lib/format.ts): «+1.23», «−0.45»; zero has no sign. */
+const fmt = (n: number, digits: number): string => fmtSigned(n, digits)
 
-/** Signed number with a decimal point: «+1.23» or «−0.45» (U+2212). A value that rounds to zero has no sign. */
-function fmt(n: number, digits: number): string {
-  const abs = Math.abs(n).toFixed(digits)
-  if (Number(abs) === 0) return abs
-  return n >= 0 ? `+${abs}` : `−${abs}`
-}
-
-/** «p = 0.012»; values below 0.001 are shown as «p < 0.001», never «0.000». */
-function fmtP(p: number): string {
-  if (p < 0.001) return `p${NBSP}<${NBSP}0.001`
-  return `p${NBSP}=${NBSP}${p.toFixed(3)}`
-}
+/** «p = 0.012» / «p < 0.001», with non-breaking spaces so the figure never wraps. */
+const fmtP = (p: number): string => formatP(p).replace(/ /g, NBSP)
 
 /** Subject of the sentence. `plural` picks the verb form. A variable without an entry is named by its label. */
 const SUBJECT: Readonly<Record<VariableId, { text: string; plural?: boolean }>> = {
@@ -428,7 +417,7 @@ export function explainTrend(row: TrendRow | null, ctx: ExplainContext): Explana
   }
 
   // 1 and 2: increasing / decreasing — with full figures. The unit already carries «/decade».
-  const digits = digitsFor(ctx.unit)
+  const digits = digitsFor(ctx.unit, slope_decade, ci_low, ci_high)
   const level = Math.round((1 - ctx.alpha) * 100)
   const slopeStr =
     slope_decade !== null ? `${fmt(slope_decade, digits)}${NBSP}${ctx.unit}` : '(slope not available)'

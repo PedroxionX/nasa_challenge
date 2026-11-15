@@ -5,11 +5,12 @@
  */
 import { useId, useState } from 'react'
 import { scaleLinear } from 'd3-scale'
+import { useWidth } from '../../lib/ui/useWidth'
 import { line } from 'd3-shape'
 import type { TrendRow } from '../../lib/data'
 import { COMPARE_COPY } from '../../content'
 import { senSegment, type YearPoint } from './compareData'
-import { fmtTick, fmtValue } from './format'
+import { fmtTick, fmtValue } from '../../lib/format'
 
 export interface ChartItem {
   /** «A» o «B»: la marca que también lleva la región en el globo y en la tabla. */
@@ -19,13 +20,12 @@ export interface ChartItem {
   row: TrendRow | null
 }
 
-const W = 340
 const H = 128
 const M = { top: 22, right: 10, bottom: 8, left: 46 }
 const AXIS = 18
 
-function Mini({ item, unit, from, to, domain, withAxis }: {
-  item: ChartItem; unit: string; from: number; to: number; domain: [number, number]; withAxis: boolean
+function Mini({ item, unit, from, to, domain, withAxis, width: W }: {
+  item: ChartItem; unit: string; from: number; to: number; domain: [number, number]; withAxis: boolean; width: number
 }) {
   const height = H + (withAxis ? AXIS : 0)
   const values = item.points.map(p => p.value)
@@ -38,12 +38,12 @@ function Mini({ item, unit, from, to, domain, withAxis }: {
   const y = scaleLinear().domain([lo - pad, hi + pad]).nice(3).range([H - M.bottom, M.top])
   const yTicks = y.ticks(3)
   const step = yTicks.length > 1 ? yTicks[1] - yTicks[0] : 1
-  const xTicks = x.ticks(5).filter(Number.isInteger)
+  const xTicks = x.ticks(W < 420 ? 4 : 8).filter(Number.isInteger)
   const path = line<YearPoint>().x(p => x(p.year)).y(p => y(p.value))(item.points) ?? ''
   const plot = { left: M.left, right: W - M.right, top: M.top, bottom: H - M.bottom }
   const inPeriod = (year: number) => year >= from && year <= to
   return (
-    <svg className="compare-chart-svg" viewBox={`0 0 ${W} ${height}`} role="img"
+    <svg className="compare-chart-svg" width={W} height={height} viewBox={`0 0 ${W} ${height}`} role="img"
       aria-label={`Yearly values for ${item.name}, in ${unit}. The values are in the table.`}>
       <text className="compare-chart-title" x={0} y={12}>
         <tspan className="compare-chart-tag">{item.tag}</tspan>{` · ${item.name}`}
@@ -76,16 +76,17 @@ function Mini({ item, unit, from, to, domain, withAxis }: {
 export default function PairChart({ items, unit, from, to }: { items: ChartItem[]; unit: string; from: number; to: number }) {
   const [showTable, setShowTable] = useState(false)
   const tableId = useId()
+  const { ref, width } = useWidth<HTMLElement>()
   const years = [...new Set(items.flatMap(i => i.points.map(p => p.year)))].sort((a, b) => a - b)
   if (years.length === 0) return null
   const domain: [number, number] = [years[0], years[years.length - 1]]
   const valueAt = (item: ChartItem, year: number) => item.points.find(p => p.year === year)?.value
   const anySen = items.some(i => senSegment(i.row) !== null)
   return (
-    <figure className="compare-chart">
+    <figure className="compare-chart" ref={ref}>
       <h3 className="compare-heading">{COMPARE_COPY.chartHeading}</h3>
       {items.map((item, i) => (
-        <Mini key={item.tag} item={item} unit={unit} from={from} to={to} domain={domain} withAxis={i === items.length - 1} />
+        <Mini key={item.tag} item={item} unit={unit} from={from} to={to} domain={domain} withAxis={i === items.length - 1} width={width} />
       ))}
       <figcaption className="compare-chart-legend">
         <span><i className="compare-swatch compare-swatch--point" aria-hidden="true" />Yearly value</span>
